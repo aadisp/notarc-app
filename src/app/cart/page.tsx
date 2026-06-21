@@ -28,6 +28,10 @@ export default function CartPage() {
               <p>
                 ₹{item.price}
               </p>
+
+              <p>
+                Quantity: {item.quantity}
+              </p>
             </div>
           ))}
         </div>
