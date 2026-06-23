@@ -15,6 +15,7 @@ interface Product {
   slug: string;
   category: string;
   price: number;
+  imageUrl?: string;
 }
 
 export default function ProductGrid() {
@@ -45,15 +46,13 @@ export default function ProductGrid() {
       {products.map((product) => (
         <ProductCard
           key={product.id}
-          id={Number(
-            product.id
-              .replace(/\D/g, "")
-              .slice(0, 8) || "0"
-          )}
+          id={products.indexOf(product) + 1}
+          firestoreId={product.id}
           name={product.name}
           price={`₹${product.price}`}
           category={product.category}
           slug={product.slug}
+          imageUrl={product.imageUrl}
         />
       ))}
     </div>

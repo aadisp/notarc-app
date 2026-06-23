@@ -24,6 +24,9 @@ export default function AdminPage() {
   const [description, setDescription] =
     useState("");
 
+  const [imageUrl, setImageUrl] =
+    useState("");
+
   async function handleAddProduct() {
     try {
       await addDoc(
@@ -34,6 +37,7 @@ export default function AdminPage() {
           category,
           price: Number(price),
           description,
+          imageUrl,
         }
       );
 
@@ -55,6 +59,7 @@ export default function AdminPage() {
             price: product.price,
             description:
               product.description,
+            imageUrl: "",
           }
         );
       }
@@ -114,6 +119,15 @@ export default function AdminPage() {
           value={price}
           onChange={(e) =>
             setPrice(e.target.value)
+          }
+          className="w-full rounded border p-3"
+        />
+
+        <input
+          placeholder="Image URL"
+          value={imageUrl}
+          onChange={(e) =>
+            setImageUrl(e.target.value)
           }
           className="w-full rounded border p-3"
         />
