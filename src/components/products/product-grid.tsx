@@ -15,6 +15,7 @@ interface Product {
   slug: string;
   category: string;
   price: number;
+  description: string;
   imageUrl?: string;
 }
 
@@ -52,6 +53,7 @@ export default function ProductGrid() {
           price={`₹${product.price}`}
           category={product.category}
           slug={product.slug}
+          description={product.description}
           imageUrl={product.imageUrl}
         />
       ))}

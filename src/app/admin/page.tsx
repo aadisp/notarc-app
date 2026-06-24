@@ -27,6 +27,22 @@ export default function AdminPage() {
   const [imageUrl, setImageUrl] =
     useState("");
 
+  const [courseName, setCourseName] =
+  useState("");
+
+  const [courseLevel, setCourseLevel] =
+    useState("");
+
+  const [courseDuration, setCourseDuration] =
+    useState("");
+
+  const [courseDescription,
+    setCourseDescription] =
+    useState("");
+
+  const [courseImageUrl,
+    setCourseImageUrl] =
+    useState("");
   async function handleAddProduct() {
     try {
       await addDoc(
@@ -70,6 +86,30 @@ export default function AdminPage() {
     }
   }
 
+  async function handleAddCourse() {
+    try {
+      await addDoc(
+        collection(db, "courses"),
+        {
+          name: courseName,
+          slug: courseName
+            .toLowerCase()
+            .replace(/\s+/g, "-"),
+          level: courseLevel,
+          duration: courseDuration,
+          description:
+            courseDescription,
+          imageUrl:
+            courseImageUrl,
+        }
+      );
+
+      alert("Course added");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   if (role !== "admin") {
     return (
       <main className="p-10">
@@ -84,6 +124,10 @@ export default function AdminPage() {
       <h1 className="mb-8 text-4xl font-bold">
         Admin Dashboard
       </h1>
+
+      <h2 className="text-3xl font-bold">
+        Products
+      </h2>
 
       <div className="space-y-4">
 
@@ -155,6 +199,74 @@ export default function AdminPage() {
           className="rounded border p-3"
         >
           Import Default Products
+        </button>
+
+        <hr className="my-10" />
+
+        <h2 className="text-3xl font-bold">
+          Add Course
+        </h2>
+
+        <input
+          placeholder="Course Name"
+          value={courseName}
+          onChange={(e) =>
+            setCourseName(
+              e.target.value
+            )
+          }
+          className="w-full rounded border p-3"
+        />
+
+        <input
+          placeholder="Level"
+          value={courseLevel}
+          onChange={(e) =>
+            setCourseLevel(
+              e.target.value
+            )
+          }
+          className="w-full rounded border p-3"
+        />
+
+        <input
+          placeholder="Duration"
+          value={courseDuration}
+          onChange={(e) =>
+            setCourseDuration(
+              e.target.value
+            )
+          }
+          className="w-full rounded border p-3"
+        />
+
+        <input
+          placeholder="Image URL"
+          value={courseImageUrl}
+          onChange={(e) =>
+            setCourseImageUrl(
+              e.target.value
+            )
+          }
+          className="w-full rounded border p-3"
+        />
+
+        <textarea
+          placeholder="Description"
+          value={courseDescription}
+          onChange={(e) =>
+            setCourseDescription(
+              e.target.value
+            )
+          }
+          className="w-full rounded border p-3"
+        />
+
+        <button
+          onClick={handleAddCourse}
+          className="rounded border p-3"
+        >
+          Add Course
         </button>
 
       </div>

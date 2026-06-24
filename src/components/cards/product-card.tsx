@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useCartStore } from "@/store/cart-store";
 import { useUserRole } from "@/hooks/use-user-role";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
+import { useState } from "react";
 
 interface ProductCardProps {
   id: number;
@@ -14,6 +15,7 @@ interface ProductCardProps {
   price: string;
   category: string;
   slug: string;
+  description: string;
   imageUrl?: string;
 }
 
@@ -24,6 +26,7 @@ export default function ProductCard({
   price,
   category,
   slug,
+  description,
   imageUrl,
 }: ProductCardProps) {
 
@@ -31,6 +34,28 @@ export default function ProductCard({
     (state) => state.addItem
   );
   const role = useUserRole();
+
+  const [editing, setEditing] =
+  useState(false);
+
+  const [editName, setEditName] =
+    useState(name);
+
+  const [editCategory, setEditCategory] =
+    useState(category);
+
+  const [editPrice, setEditPrice] =
+    useState(
+      price.replace(/[^\d]/g, "")
+    );
+
+  const [editDescription,
+    setEditDescription] =
+    useState(description);
+
+  const [editImageUrl,
+    setEditImageUrl] =
+    useState(imageUrl || "");
 
   async function handleDelete() {
     try {
@@ -41,6 +66,31 @@ export default function ProductCard({
           firestoreId
         )
       );
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function handleUpdate() {
+    try {
+      await updateDoc(
+        doc(
+          db,
+          "products",
+          firestoreId
+        ),
+        {
+          name: editName,
+          category: editCategory,
+          price: Number(editPrice),
+          description: editDescription,
+          imageUrl: editImageUrl,
+        }
+      );
+
+      setEditing(false);
 
       window.location.reload();
     } catch (error) {
@@ -75,6 +125,68 @@ export default function ProductCard({
           </h3>
         </div>
 
+        {editing && (
+          <div className="space-y-2 rounded border p-3">
+
+            <input
+              value={editName}
+              onChange={(e) =>
+                setEditName(
+                  e.target.value
+                )
+              }
+              className="w-full rounded border p-2"
+            />
+
+            <input
+              value={editCategory}
+              onChange={(e) =>
+                setEditCategory(
+                  e.target.value
+                )
+              }
+              className="w-full rounded border p-2"
+            />
+
+            <input
+              value={editPrice}
+              onChange={(e) =>
+                setEditPrice(
+                  e.target.value
+                )
+              }
+              className="w-full rounded border p-2"
+            />
+
+            <input
+              value={editImageUrl}
+              onChange={(e) =>
+                setEditImageUrl(
+                  e.target.value
+                )
+              }
+              className="w-full rounded border p-2"
+            />
+
+            <textarea
+              value={editDescription}
+              onChange={(e) =>
+                setEditDescription(
+                  e.target.value
+                )
+              }
+              className="w-full rounded border p-2"
+            />
+
+            <Button
+              onClick={handleUpdate}
+            >
+              Save Changes
+            </Button>
+
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
           <span className="font-bold">
             {price}
@@ -89,13 +201,25 @@ export default function ProductCard({
             </Link>
 
             {role === "admin" && (
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={handleDelete}
-              >
-                Delete
-              </Button>
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    setEditing(!editing)
+                  }
+                >
+                  Edit
+                </Button>
+
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+              </>
             )}
 
             <Button
