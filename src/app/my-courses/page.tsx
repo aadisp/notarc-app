@@ -2,7 +2,7 @@
 
 import SiteLayout from "@/components/layout/site-layout";
 import { useEffect, useState } from "react";
-
+import Link from "next/link";
 import { auth, db } from "@/firebase/firebase";
 
 import {
@@ -16,6 +16,7 @@ interface Enrollment {
   id: string;
   courseId: string;
   courseName: string;
+  courseSlug: string;
   userEmail: string;
 }
 
@@ -88,27 +89,40 @@ export default function MyCoursesPage() {
 
         <div className="grid gap-6">
 
+          {enrollments.length === 0 && (
+            <div className="rounded-xl border p-6">
+              You haven't enrolled in any courses yet.
+            </div>
+          )}
+
           {enrollments.map(
             (enrollment) => (
 
-            <div
-              key={enrollment.id}
-              className="
-                rounded-xl
-                border
-                p-6
-              "
-            >
+              <Link
+                key={enrollment.id}
+                href={`/courses/${enrollment.courseSlug}`}
+              >
+                <div
+                  className="
+                    rounded-xl
+                    border
+                    p-6
+                    hover:bg-muted
+                    transition
+                    cursor-pointer
+                  "
+                >
 
-              <h2 className="text-2xl font-bold">
-                {enrollment.courseName}
-              </h2>
+                  <h2 className="text-2xl font-bold">
+                    {enrollment.courseName}
+                  </h2>
 
-              <p>
-                {enrollment.userEmail}
-              </p>
+                  <p>
+                    {enrollment.userEmail}
+                  </p>
 
-            </div>
+                </div>
+              </Link>
 
           ))}
 

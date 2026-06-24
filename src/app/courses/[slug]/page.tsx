@@ -38,7 +38,8 @@ export default function CoursePage() {
   const [isEnrolled, setIsEnrolled] =
     useState(false);
 
-  const user = auth.currentUser;
+  const getCurrentUser = () =>
+    auth.currentUser;
   useEffect(() => {
     async function loadCourse() {
 
@@ -164,6 +165,9 @@ export default function CoursePage() {
             className="mt-8"
             onClick={async () => {
 
+              const user =
+                getCurrentUser();
+
               if (!user) {
                 alert(
                   "Please login first"
@@ -180,14 +184,11 @@ export default function CoursePage() {
                   ),
                   {
                     userId: user.uid,
-                    userEmail:
-                      user.email,
-                    courseId:
-                      course.id,
-                    courseName:
-                      course.name,
-                    enrolledAt:
-                      new Date(),
+                    userEmail: user.email,
+                    courseId: course.id,
+                    courseName: course.name,
+                    courseSlug: course.slug,
+                    enrolledAt: new Date(),
                   }
                 );
 
