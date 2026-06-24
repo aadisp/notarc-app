@@ -10,7 +10,10 @@ export default function SignupPage() {
   const [email, setEmail] =
     useState("");
 
-  const [password, setPassword] =
+    const [username, setUsername] =
+    useState("");
+
+    const [password, setPassword] =
     useState("");
 
   async function handleSignup() {
@@ -29,6 +32,7 @@ export default function SignupPage() {
           userCredential.user.uid
         ),
         {
+          username,
           email,
           role: "user",
         }
@@ -46,7 +50,25 @@ export default function SignupPage() {
         Create Account
       </h1>
 
-      <div className="space-y-4">
+      <form
+        className="space-y-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSignup();
+        }}
+      >
+
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) =>
+            setUsername(
+              e.target.value
+            )
+          }
+          className="w-full rounded border p-3"
+        />
 
         <input
           type="email"
@@ -71,13 +93,13 @@ export default function SignupPage() {
         />
 
         <button
-          onClick={handleSignup}
+          type="submit"
           className="w-full rounded border p-3"
         >
           Create Account
         </button>
 
-      </div>
+      </form>
     </main>
   );
 }

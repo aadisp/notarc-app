@@ -1,45 +1,129 @@
 "use client";
 
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/firebase/firebase";
+import {
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+
+import { auth, db } from "@/firebase/firebase";
+
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 
 export default function LoginPage() {
-  const [email, setEmail] =
+
+  const [identifier,
+    setIdentifier] =
     useState("");
 
-  const [password, setPassword] =
+  const [password,
+    setPassword] =
     useState("");
 
   async function handleLogin() {
+
     try {
+
+      let loginEmail =
+        identifier;
+
+      if (
+        !identifier.includes("@")
+      ) {
+
+        const userQuery =
+          query(
+            collection(
+              db,
+              "users"
+            ),
+            where(
+              "username",
+              "==",
+              identifier
+            )
+          );
+
+        const snapshot =
+          await getDocs(
+            userQuery
+          );
+
+console.log(
+  "Username search:",
+  identifier
+);
+
+console.log(
+  "Documents found:",
+  snapshot.size
+);
+
+        if (
+          snapshot.empty
+        ) {
+          alert(
+            "Username not found"
+          );
+          return;
+        }
+
+        loginEmail =
+          snapshot.docs[0]
+            .data().email;
+        console.log(
+  "Resolved email:",
+  loginEmail
+);
+      }
+
       await signInWithEmailAndPassword(
         auth,
-        email,
+        loginEmail,
         password
       );
 
-      alert("Logged in!");
+      alert(
+        "Logged in!"
+      );
+
     } catch (error) {
+
       console.error(error);
-      alert("Login failed");
+
+      alert(
+        String(error)
+      );
     }
   }
 
   return (
     <main className="mx-auto max-w-md p-10">
+
       <h1 className="mb-6 text-4xl font-bold">
         Login
       </h1>
 
-      <div className="space-y-4">
+      <form
+        className="space-y-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleLogin();
+        }}
+      >
 
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
+          type="text"
+          placeholder="Email or Username"
+          value={identifier}
           onChange={(e) =>
-            setEmail(e.target.value)
+            setIdentifier(
+              e.target.value
+            )
           }
           className="w-full rounded border p-3"
         />
@@ -57,13 +141,14 @@ export default function LoginPage() {
         />
 
         <button
-          onClick={handleLogin}
+          type="submit"
           className="w-full rounded border p-3"
         >
           Login
         </button>
 
-      </div>
+      </form>
+
     </main>
   );
 }
