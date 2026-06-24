@@ -24,9 +24,6 @@ export default function AdminPage() {
   const [description, setDescription] =
     useState("");
 
-  const [imageUrl, setImageUrl] =
-    useState("");
-
   const [courseName, setCourseName] =
   useState("");
 
@@ -40,11 +37,23 @@ export default function AdminPage() {
     setCourseDescription] =
     useState("");
 
-  const [courseImageUrl,
-    setCourseImageUrl] =
-    useState("");
+  const [productFile,
+    setProductFile] =
+    useState<File | null>(null);
+
+  const [courseFile,
+    setCourseFile] =
+    useState<File | null>(null);
   async function handleAddProduct() {
     try {
+      let uploadedImageUrl = "";
+
+      if (productFile) {
+        uploadedImageUrl =
+          await uploadToCloudinary(
+            productFile
+          );
+      }
       await addDoc(
         collection(db, "products"),
         {
@@ -53,7 +62,8 @@ export default function AdminPage() {
           category,
           price: Number(price),
           description,
-          imageUrl,
+          imageUrl:
+            uploadedImageUrl,
         }
       );
 
@@ -86,8 +96,53 @@ export default function AdminPage() {
     }
   }
 
+  async function uploadToCloudinary(
+    file: File
+  ) {
+    const formData =
+      new FormData();
+
+    formData.append(
+      "file",
+      file
+    );
+
+    formData.append(
+      "upload_preset",
+      "mtedftib"
+    );
+
+    const response =
+      await fetch(
+        "https://api.cloudinary.com/v1_1/dhozramhs/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if (!data.secure_url) {
+      throw new Error(
+        "Cloudinary upload failed"
+      );
+    }
+
+    return data.secure_url;
+  }
+
   async function handleAddCourse() {
     try {
+      let uploadedImageUrl = "";
+
+      if (courseFile) {
+        uploadedImageUrl =
+          await uploadToCloudinary(
+            courseFile
+          );
+      }
       await addDoc(
         collection(db, "courses"),
         {
@@ -100,7 +155,7 @@ export default function AdminPage() {
           description:
             courseDescription,
           imageUrl:
-            courseImageUrl,
+            uploadedImageUrl,
         }
       );
 
@@ -168,12 +223,13 @@ export default function AdminPage() {
         />
 
         <input
-          placeholder="Image URL"
-          value={imageUrl}
+          type="file"
+          accept="image/*"
           onChange={(e) =>
-            setImageUrl(e.target.value)
+            setProductFile(
+              e.target.files?.[0] || null
+            )
           }
-          className="w-full rounded border p-3"
         />
 
         <textarea
@@ -241,14 +297,13 @@ export default function AdminPage() {
         />
 
         <input
-          placeholder="Image URL"
-          value={courseImageUrl}
+          type="file"
+          accept="image/*"
           onChange={(e) =>
-            setCourseImageUrl(
-              e.target.value
+            setCourseFile(
+              e.target.files?.[0] || null
             )
           }
-          className="w-full rounded border p-3"
         />
 
         <textarea
