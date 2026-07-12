@@ -26,6 +26,8 @@ interface CartStore {
   removeItem: (
     id: number
   ) => void;
+
+  clearCart: () => void;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -105,6 +107,11 @@ export const useCartStore = create<CartStore>()(
               (item) => item.id !== id
             ),
           })),
+
+          clearCart: () =>
+          set({
+            items: [],
+          }),
     }),
     {
       name: "notarc-cart",

@@ -90,9 +90,28 @@ export default function CartPage() {
         </div>
 
         <div className="mt-10 rounded-xl border p-6">
+
           <h2 className="text-2xl font-bold">
             Total: ₹{total}
           </h2>
+
+          <a href="/checkout">
+            <button
+              className="
+                mt-6
+                w-full
+                rounded-lg
+                bg-black
+                py-3
+                text-white
+                transition
+                hover:bg-neutral-800
+              "
+            >
+              Proceed to Checkout
+            </button>
+          </a>
+
         </div>
       </section>
     </SiteLayout>

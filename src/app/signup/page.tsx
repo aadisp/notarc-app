@@ -1,23 +1,47 @@
 "use client";
 
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+
+import {
+  Eye,
+  EyeOff,
+} from "lucide-react";
+
+import {
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+
 import { auth } from "@/firebase/firebase";
-import { doc, setDoc } from "firebase/firestore";
+
+import {
+  doc,
+  setDoc,
+} from "firebase/firestore";
+
 import { db } from "@/firebase/firebase";
 
 export default function SignupPage() {
-  const [email, setEmail] =
+
+  const [email,
+    setEmail] =
     useState("");
 
-    const [username, setUsername] =
+  const [username,
+    setUsername] =
     useState("");
 
-    const [password, setPassword] =
+  const [password,
+    setPassword] =
     useState("");
+
+  const [showPassword,
+    setShowPassword] =
+    useState(false);
 
   async function handleSignup() {
+
     try {
+
       const userCredential =
         await createUserWithEmailAndPassword(
           auth,
@@ -38,14 +62,22 @@ export default function SignupPage() {
         }
       );
 
-      alert("Account created!");
+      alert(
+        "Account created!"
+      );
+
     } catch (error) {
+
       console.error(error);
+
     }
+
   }
 
   return (
+
     <main className="mx-auto max-w-md p-10">
+
       <h1 className="mb-6 text-4xl font-bold">
         Create Account
       </h1>
@@ -53,8 +85,11 @@ export default function SignupPage() {
       <form
         className="space-y-4"
         onSubmit={(e) => {
+
           e.preventDefault();
+
           handleSignup();
+
         }}
       >
 
@@ -67,7 +102,12 @@ export default function SignupPage() {
               e.target.value
             )
           }
-          className="w-full rounded border p-3"
+          className="
+            w-full
+            rounded
+            border
+            p-3
+          "
         />
 
         <input
@@ -75,31 +115,94 @@ export default function SignupPage() {
           placeholder="Email"
           value={email}
           onChange={(e) =>
-            setEmail(e.target.value)
-          }
-          className="w-full rounded border p-3"
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) =>
-            setPassword(
+            setEmail(
               e.target.value
             )
           }
-          className="w-full rounded border p-3"
+          className="
+            w-full
+            rounded
+            border
+            p-3
+          "
         />
+
+        <div className="relative">
+
+          <input
+            type={
+              showPassword
+                ? "text"
+                : "password"
+            }
+            placeholder="Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(
+                e.target.value
+              )
+            }
+            className="
+              w-full
+              rounded
+              border
+              p-3
+              pr-12
+            "
+          />
+
+          <button
+            type="button"
+            onClick={() =>
+              setShowPassword(
+                !showPassword
+              )
+            }
+            className="
+              absolute
+              right-3
+              top-1/2
+              -translate-y-1/2
+              text-slate-500
+              transition
+              hover:text-slate-900
+            "
+          >
+
+            {showPassword ? (
+
+              <EyeOff
+                size={18}
+              />
+
+            ) : (
+
+              <Eye
+                size={18}
+              />
+
+            )}
+
+          </button>
+
+        </div>
 
         <button
           type="submit"
-          className="w-full rounded border p-3"
+          className="
+            w-full
+            rounded
+            border
+            p-3
+          "
         >
           Create Account
         </button>
 
       </form>
+
     </main>
+
   );
+
 }
