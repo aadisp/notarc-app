@@ -1,7 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  Package,
+  ShoppingCart,
+  GraduationCap,
+  ArrowRight,
+} from "lucide-react";
+import { toast } from "sonner";
+import ProductTable from "@/components/admin/products/product-table";
+import ProductForm from "@/components/admin/product-form";
+import UploadBox from "@/components/admin/upload-box";
+import AdminInput from "@/components/admin/admin-input";
+import DashboardCard from "@/components/admin/dashboard-card";
+import Link from "next/link";
+import SiteLayout from "@/components/layout/site-layout";
+import { useEffect, useState } from "react";
+import {
+  addDoc,
+  collection,
+  getCountFromServer,
+} from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import { useUserRole } from "@/hooks/use-user-role";
 import { products } from "@/data/products";
@@ -44,6 +62,19 @@ export default function AdminPage() {
   const [courseFile,
     setCourseFile] =
     useState<File | null>(null);
+
+  const [productCount,
+    setProductCount] =
+    useState(0);
+
+  const [courseCount,
+    setCourseCount] =
+    useState(0);
+
+  const [orderCount,
+    setOrderCount] =
+    useState(0);
+
   async function handleAddProduct() {
     try {
       let uploadedImageUrl = "";
@@ -67,9 +98,18 @@ export default function AdminPage() {
         }
       );
 
-      alert("Product added");
+      toast.success("Product added successfully!");
+
+      setName("");
+      setSlug("");
+      setCategory("");
+      setPrice("");
+      setDescription("");
+      setProductFile(null);
     } catch (error) {
       console.error(error);
+
+      toast.error("Failed to add product.");
     }
   }
 
@@ -159,11 +199,66 @@ export default function AdminPage() {
         }
       );
 
-      alert("Course added");
+      toast.success("Course added successfully!");
+
+      setCourseName("");
+      setCourseLevel("");
+      setCourseDuration("");
+      setCourseDescription("");
+      setCourseFile(null);
     } catch (error) {
       console.error(error);
+      toast.error("Failed to add course.");
     }
   }
+
+  useEffect(() => {
+
+    async function loadCounts() {
+
+      const products =
+        await getCountFromServer(
+          collection(
+            db,
+            "products"
+          )
+        );
+
+      const courses =
+        await getCountFromServer(
+          collection(
+            db,
+            "courses"
+          )
+        );
+
+      const orders =
+        await getCountFromServer(
+          collection(
+            db,
+            "orders"
+          )
+        );
+
+      setProductCount(
+        products.data().count
+      );
+
+      setCourseCount(
+        courses.data().count
+      );
+
+      setOrderCount(
+        orders.data().count
+      );
+
+    }
+
+    if (role === "admin") {
+      loadCounts();
+    }
+
+  }, [role]);
 
   if (role !== "admin") {
     return (
@@ -174,136 +269,163 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="mx-auto max-w-xl p-10">
 
-      <h1 className="mb-8 text-4xl font-bold">
-        Admin Dashboard
-      </h1>
+    <SiteLayout>
 
-      <h2 className="text-3xl font-bold">
-        Products
-      </h2>
+      <main className="mx-auto max-w-7xl px-6 py-24">
 
-      <div className="space-y-4">
+      <div className="mb-12">
 
-        <input
-          placeholder="Name"
-          value={name}
-          onChange={(e) =>
-            setName(e.target.value)
-          }
-          className="w-full rounded border p-3"
+        <h1 className="text-5xl font-bold">
+          Dashboard
+        </h1>
+
+        <p className="mt-3 text-slate-500">
+          Manage orders, products and courses from one place.
+        </p>
+
+      </div>
+
+      <div
+        className="
+          mb-16
+          grid
+          gap-6
+          md:grid-cols-3
+        "
+      >
+
+        <DashboardCard
+          title="Orders"
+          count={orderCount}
+          subtitle="Total Orders"
+          href="/admin/orders"
+          icon={Package}
+          bgColor="bg-blue-100"
+          iconColor="text-blue-600"
+          numberColor="text-blue-600"
         />
 
-        <input
-          placeholder="Slug"
-          value={slug}
-          onChange={(e) =>
-            setSlug(e.target.value)
-          }
-          className="w-full rounded border p-3"
+        <DashboardCard
+          title="Products"
+          count={productCount}
+          subtitle="Products"
+          href="#products"
+          icon={ShoppingCart}
+          bgColor="bg-emerald-100"
+          iconColor="text-emerald-600"
+          numberColor="text-emerald-600"
         />
 
-        <input
-          placeholder="Category"
-          value={category}
-          onChange={(e) =>
-            setCategory(e.target.value)
-          }
-          className="w-full rounded border p-3"
+        <DashboardCard
+          title="Courses"
+          count={courseCount}
+          subtitle="Courses"
+          href="#courses"
+          icon={GraduationCap}
+          bgColor="bg-violet-100"
+          iconColor="text-violet-600"
+          numberColor="text-violet-600"
         />
 
-        <input
-          placeholder="Price"
-          value={price}
-          onChange={(e) =>
-            setPrice(e.target.value)
-          }
-          className="w-full rounded border p-3"
-        />
+      </div>
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) =>
-            setProductFile(
-              e.target.files?.[0] || null
-            )
-          }
-        />
+      <ProductForm
+        name={name}
+        setName={setName}
+        slug={slug}
+        setSlug={setSlug}
+        category={category}
+        setCategory={setCategory}
+        price={price}
+        setPrice={setPrice}
+        description={description}
+        setDescription={setDescription}
+        productFile={productFile}
+        setProductFile={setProductFile}
+        onAddProduct={handleAddProduct}
+        onImportProducts={importDefaultProducts}
+      />
 
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) =>
-            setDescription(
-              e.target.value
-            )
-          }
-          className="w-full rounded border p-3"
-        />
+      <ProductTable />
 
-        <button
-          onClick={handleAddProduct}
-          className="rounded border p-3"
+        <div
+          id="courses"
+          className="
+            rounded-3xl
+            border
+            bg-white
+            p-8
+            shadow-sm
+          "
         >
-          Add Product
-        </button>
 
-        <button
-          onClick={importDefaultProducts}
-          className="rounded border p-3"
-        >
-          Import Default Products
-        </button>
+          <div className="mb-8 flex items-center gap-5">
 
-        <hr className="my-10" />
+            <div
+              className="
+                flex
+                h-16
+                w-16
+                items-center
+                justify-center
+                rounded-2xl
+                bg-violet-100
+              "
+            >
 
-        <h2 className="text-3xl font-bold">
-          Add Course
-        </h2>
+              <GraduationCap
+                className="
+                  h-8
+                  w-8
+                  text-violet-600
+                "
+              />
 
-        <input
-          placeholder="Course Name"
+            </div>
+
+            <div>
+
+              <h2 className="text-3xl font-bold">
+                Add Course
+              </h2>
+
+              <p className="text-slate-500">
+                Create and publish training courses.
+              </p>
+
+            </div>
+
+          </div>
+
+          <div className="space-y-6">
+
+        <AdminInput
+          placeholder="Enter course name"
           value={courseName}
-          onChange={(e) =>
-            setCourseName(
-              e.target.value
-            )
-          }
-          className="w-full rounded border p-3"
+          onChange={setCourseName}
+          color="violet"
         />
 
-        <input
-          placeholder="Level"
+        <AdminInput
+          placeholder="Enter course level"
           value={courseLevel}
-          onChange={(e) =>
-            setCourseLevel(
-              e.target.value
-            )
-          }
-          className="w-full rounded border p-3"
+          onChange={setCourseLevel}
+          color="violet"
         />
 
-        <input
-          placeholder="Duration"
+        <AdminInput
+          placeholder="e.g. 4 Weeks"
           value={courseDuration}
-          onChange={(e) =>
-            setCourseDuration(
-              e.target.value
-            )
-          }
-          className="w-full rounded border p-3"
+          onChange={setCourseDuration}
+          color="violet"
         />
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) =>
-            setCourseFile(
-              e.target.files?.[0] || null
-            )
-          }
+        <UploadBox
+          file={courseFile}
+          onChange={setCourseFile}
+          title="Upload Course Image"
+          accent="violet"
         />
 
         <textarea
@@ -314,7 +436,23 @@ export default function AdminPage() {
               e.target.value
             )
           }
-          className="w-full rounded border p-3"
+          className="
+          min-h-36
+          w-full
+          resize-none
+          rounded-xl
+          border
+          border-slate-200
+          bg-slate-50
+          px-4
+          py-3
+          transition
+          outline-none
+          focus:border-violet-500
+          focus:bg-white
+          focus:ring-4
+          focus:ring-violet-100
+          "
         />
 
         <button
@@ -324,8 +462,12 @@ export default function AdminPage() {
           Add Course
         </button>
 
+        </div>
+
       </div>
 
     </main>
+
+  </SiteLayout>
   );
 }

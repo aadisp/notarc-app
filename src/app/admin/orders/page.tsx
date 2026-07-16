@@ -14,11 +14,11 @@ import {
 
 import {
   collection,
-  getDocs,
   orderBy,
   query,
   doc,
   updateDoc,
+  onSnapshot,
 } from "firebase/firestore";
 
 import { useEffect, useState } from "react";
@@ -54,6 +54,31 @@ export default function AdminOrdersPage() {
   const [orders,
     setOrders] =
     useState<Order[]>([]);
+    
+
+  const totalOrders =
+    orders.length;
+
+  const totalRevenue =
+    orders.reduce(
+      (sum, order) =>
+        sum + order.total,
+      0
+    );
+
+  const pendingOrders =
+    orders.filter(
+      (order) =>
+        order.orderStatus ===
+        "Pending"
+    ).length;
+
+  const deliveredOrders =
+    orders.filter(
+      (order) =>
+        order.orderStatus ===
+        "Delivered"
+    ).length;
 
   const [search,
     setSearch] =
@@ -69,41 +94,43 @@ export default function AdminOrdersPage() {
 
   useEffect(() => {
 
-    async function loadOrders() {
+    if (role !== "admin")
+      return;
 
-      const snapshot =
-        await getDocs(
-          query(
-            collection(
-              db,
-              "orders"
-            ),
-            orderBy(
-              "createdAt",
-              "desc"
-            )
-          )
-        );
-
-      const orderList =
-        snapshot.docs.map(
-          (doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          })
-        ) as Order[];
-
-      setOrders(
-        orderList
+    const q =
+      query(
+        collection(
+          db,
+          "orders"
+        ),
+        orderBy(
+          "createdAt",
+          "desc"
+        )
       );
 
-    }
+    const unsubscribe =
+      onSnapshot(
+        q,
+        (snapshot) => {
 
-    if (
-      role === "admin"
-    ) {
-      loadOrders();
-    }
+          const orderList =
+            snapshot.docs.map(
+              (doc) => ({
+                id: doc.id,
+                ...doc.data(),
+              })
+            ) as Order[];
+
+          setOrders(
+            orderList
+          );
+
+        }
+      );
+
+    return () =>
+      unsubscribe();
 
   }, [role]);
 
@@ -185,7 +212,15 @@ export default function AdminOrdersPage() {
           .toLowerCase()
           .includes(
             search.toLowerCase()
-          );
+          ) ||
+
+        order.items.some((item) =>
+          item.name
+            .toLowerCase()
+            .includes(
+              search.toLowerCase()
+            )
+        );
 
       const matchesStatus =
         statusFilter === "All" ||
@@ -224,6 +259,91 @@ export default function AdminOrdersPage() {
         <h1 className="mb-10 text-5xl font-bold">
           Orders
         </h1>
+
+        <div
+          className="
+            mb-10
+            grid
+            gap-6
+            sm:grid-cols-2
+            xl:grid-cols-4
+          "
+        >
+
+          <div
+            className="
+              rounded-2xl
+              border
+              bg-white
+              p-6
+              shadow-sm
+            "
+          >
+            <p className="text-sm text-gray-500">
+              Total Orders
+            </p>
+
+            <h2 className="mt-2 text-4xl font-bold">
+              {totalOrders}
+            </h2>
+          </div>
+
+          <div
+            className="
+              rounded-2xl
+              border
+              bg-white
+              p-6
+              shadow-sm
+            "
+          >
+            <p className="text-sm text-gray-500">
+              Revenue
+            </p>
+
+            <h2 className="mt-2 text-4xl font-bold">
+              ₹
+              {totalRevenue.toLocaleString()}
+            </h2>
+          </div>
+
+          <div
+            className="
+              rounded-2xl
+              border
+              bg-white
+              p-6
+              shadow-sm
+            "
+          >
+            <p className="text-sm text-gray-500">
+              Pending
+            </p>
+
+            <h2 className="mt-2 text-4xl font-bold text-yellow-600">
+              {pendingOrders}
+            </h2>
+          </div>
+
+          <div
+            className="
+              rounded-2xl
+              border
+              bg-white
+              p-6
+              shadow-sm
+            "
+          >
+            <p className="text-sm text-gray-500">
+              Delivered
+            </p>
+
+            <h2 className="mt-2 text-4xl font-bold text-green-600">
+              {deliveredOrders}
+            </h2>
+          </div>
+
+        </div>
 
         <div
           className="

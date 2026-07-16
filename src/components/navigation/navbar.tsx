@@ -1,5 +1,6 @@
 "use client";
 
+import { useUserRole } from "@/hooks/use-user-role";
 import { useAuth } from "@/hooks/use-auth";
 import { signOut } from "firebase/auth";
 import { auth, db } from "@/firebase/firebase";
@@ -24,6 +25,9 @@ interface SavedAccount {
 export default function Navbar() {
 
   const { user } = useAuth();
+
+  const role =
+  useUserRole();
 
   const router = useRouter();
 
@@ -402,6 +406,23 @@ export default function Navbar() {
                 >
                   My Orders
                 </Link>
+
+                {role === "admin" && (
+
+                  <Link
+                    href="/admin"
+                    className="
+                      block
+                      px-4
+                      py-3
+                      transition
+                      hover:bg-slate-50
+                    "
+                  >
+                    Dashboard
+                  </Link>
+
+                )}
 
                 <hr />
 
