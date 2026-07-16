@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ShoppingCart,
   Package,
   Tag,
   Link2,
@@ -55,53 +54,9 @@ export default function ProductForm({
 
   return (
 
-    <section
-      id="products"
-      className="
-        mb-16
-        rounded-3xl
-        border
-        bg-white
-        p-8
-        shadow-sm
-      "
-    >
+    <div className="space-y-6">
 
-      <div className="mb-8 flex items-center gap-5">
-
-        <div
-          className="
-            flex
-            h-16
-            w-16
-            items-center
-            justify-center
-            rounded-2xl
-            bg-emerald-100
-          "
-        >
-          <ShoppingCart
-            className="
-              h-8
-              w-8
-              text-emerald-600
-            "
-          />
-        </div>
-
-        <div>
-
-          <h2 className="text-3xl font-bold">
-            Add Product
-          </h2>
-
-          <p className="text-slate-500">
-            Create and publish products.
-          </p>
-
-        </div>
-
-      </div>
+      
 
       <div className="grid gap-6 md:grid-cols-2">
 
@@ -246,7 +201,7 @@ export default function ProductForm({
 
       </div>
 
-    </section>
+    </div>
 
   );
 

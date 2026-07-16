@@ -10,17 +10,18 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
+import {
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+
+import { db } from "@/firebase/firebase";
+
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  category: string;
-  price: number;
-  description: string;
-  imageUrl?: string;
-}
+import type { Product } from "@/types/product";
 
 interface EditProductDialogProps {
   open: boolean;
@@ -49,6 +50,39 @@ export default function EditProductDialog({
   const [description,
     setDescription] =
     useState(product.description);
+
+async function handleSave() {
+
+  try {
+
+    await updateDoc(
+      doc(db, "products", product.id),
+      {
+        name,
+        slug,
+        category,
+        price,
+        description,
+      }
+    );
+
+    toast.success(
+      "Product updated successfully!"
+    );
+
+    onOpenChange(false);
+
+  } catch (error) {
+
+    console.error(error);
+
+    toast.error(
+      "Failed to update product."
+    );
+
+  }
+
+}
 
   return (
 
@@ -123,7 +157,9 @@ export default function EditProductDialog({
             Cancel
           </Button>
 
-          <Button>
+          <Button
+            onClick={handleSave}
+            >
             Save Changes
           </Button>
 

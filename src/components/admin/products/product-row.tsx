@@ -7,18 +7,19 @@ import {
 } from "lucide-react";
 
 import { useState } from "react";
+import { toast } from "sonner";
+import {
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+
+import { db } from "@/firebase/firebase";
 
 import EditProductDialog from "./edit-product-dialog";
+import DeleteProductDialog from "./delete-product-dialog";
+import ViewProductDialog from "./view-product-dialog";
+import type { Product } from "@/types/product";
 
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  category: string;
-  price: number;
-  description: string;
-  imageUrl?: string;
-}
 
 interface ProductRowProps {
   product: Product;
@@ -28,8 +29,44 @@ export default function ProductRow({
   product,
 }: ProductRowProps) {
 
-  const [open, setOpen] =
+  const [editOpen, setEditOpen] =
     useState(false);
+
+  const [deleteOpen, setDeleteOpen] =
+    useState(false);
+
+  const [viewOpen, setViewOpen] =
+    useState(false);
+
+  async function handleDelete() {
+
+  try {
+
+    await deleteDoc(
+      doc(
+        db,
+        "products",
+        product.id
+      )
+    );
+
+    toast.success(
+      "Product deleted successfully!"
+    );
+
+    setDeleteOpen(false);
+
+  } catch (error) {
+
+    console.error(error);
+
+    toast.error(
+      "Failed to delete product."
+    );
+
+  }
+
+}
 
   return (
 
@@ -102,6 +139,9 @@ export default function ProductRow({
         >
 
           <button
+            onClick={() =>
+              setViewOpen(true)
+            }
             className="
               rounded-xl
               p-3
@@ -114,7 +154,7 @@ export default function ProductRow({
 
           <button
             onClick={() =>
-              setOpen(true)
+              setEditOpen(true)
             }
             className="
               rounded-xl
@@ -133,6 +173,9 @@ export default function ProductRow({
           </button>
 
           <button
+            onClick={() =>
+              setDeleteOpen(true)
+            }
             className="
               rounded-xl
               p-3
@@ -155,11 +198,23 @@ export default function ProductRow({
 
     </tr>
 
+    <ViewProductDialog
+      open={viewOpen}
+      onOpenChange={setViewOpen}
+      product={product}
+    />
 
     <EditProductDialog
-      open={open}
-      onOpenChange={setOpen}
+      open={editOpen}
+      onOpenChange={setEditOpen}
       product={product}
+    />
+
+    <DeleteProductDialog
+      open={deleteOpen}
+      onOpenChange={setDeleteOpen}
+      productName={product.name}
+      onDelete={handleDelete}
     />
 
     </>

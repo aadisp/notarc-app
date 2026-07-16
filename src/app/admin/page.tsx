@@ -15,6 +15,7 @@ import DashboardCard from "@/components/admin/dashboard-card";
 import Link from "next/link";
 import SiteLayout from "@/components/layout/site-layout";
 import { useEffect, useState } from "react";
+import AddProductDialog from "@/components/admin/products/add-product-dialog";
 import {
   addDoc,
   collection,
@@ -74,6 +75,9 @@ export default function AdminPage() {
   const [orderCount,
     setOrderCount] =
     useState(0);
+
+  const [addProductOpen, setAddProductOpen] =
+    useState(false);
 
   async function handleAddProduct() {
     try {
@@ -330,24 +334,39 @@ export default function AdminPage() {
 
       </div>
 
-      <ProductForm
-        name={name}
-        setName={setName}
-        slug={slug}
-        setSlug={setSlug}
-        category={category}
-        setCategory={setCategory}
-        price={price}
-        setPrice={setPrice}
-        description={description}
-        setDescription={setDescription}
-        productFile={productFile}
-        setProductFile={setProductFile}
-        onAddProduct={handleAddProduct}
-        onImportProducts={importDefaultProducts}
+      <div className="mb-6 flex items-center justify-end">
+
+
+
+      </div>
+
+      <ProductTable
+        onAddProduct={() => setAddProductOpen(true)}
       />
 
-      <ProductTable />
+      <AddProductDialog
+        open={addProductOpen}
+        onOpenChange={setAddProductOpen}
+      >
+
+        <ProductForm
+          name={name}
+          setName={setName}
+          slug={slug}
+          setSlug={setSlug}
+          category={category}
+          setCategory={setCategory}
+          price={price}
+          setPrice={setPrice}
+          description={description}
+          setDescription={setDescription}
+          productFile={productFile}
+          setProductFile={setProductFile}
+          onAddProduct={handleAddProduct}
+          onImportProducts={importDefaultProducts}
+        />
+
+      </AddProductDialog>
 
         <div
           id="courses"
