@@ -8,7 +8,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-
+import UploadBox from "@/components/admin/upload-box";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import {
   doc,
   updateDoc,
@@ -49,17 +50,28 @@ export default function EditCourseDialog({
   const [description, setDescription] =
     useState(course.description);
 
+  const [newImage, setNewImage] =
+    useState<File | null>(null);
+
   useEffect(() => {
     setName(course.name);
     setSlug(course.slug);
     setLevel(course.level);
     setDuration(course.duration);
     setDescription(course.description);
+    setNewImage(null);
   }, [course]);
 
 async function handleSave() {
 
   try {
+
+    let imageUrl = course.imageUrl;
+
+    if (newImage) {
+      imageUrl =
+        await uploadToCloudinary(newImage);
+    }
 
     await updateDoc(
       doc(db, "courses", course.id),
@@ -69,12 +81,15 @@ async function handleSave() {
         level,
         duration,
         description,
+        imageUrl,
       }
     );
 
     toast.success(
       "Course updated successfully!"
     );
+
+    setNewImage(null);
 
     onOpenChange(false);
 
@@ -108,6 +123,61 @@ async function handleSave() {
         </DialogHeader>
 
         <div className="space-y-5">
+
+          <div className="space-y-3">
+
+            {newImage ? (
+
+              <img
+                src={URL.createObjectURL(newImage)}
+                alt="New course preview"
+                className="
+                  h-48
+                  w-full
+                  rounded-xl
+                  object-cover
+                "
+              />
+
+            ) : course.imageUrl ? (
+
+              <img
+                src={course.imageUrl}
+                alt={course.name}
+                className="
+                  h-48
+                  w-full
+                  rounded-xl
+                  object-cover
+                "
+              />
+
+            ) : (
+
+              <div
+                className="
+                  flex
+                  h-48
+                  items-center
+                  justify-center
+                  rounded-xl
+                  bg-slate-100
+                  text-slate-400
+                "
+              >
+                No Image
+              </div>
+
+            )}
+
+            <UploadBox
+              file={newImage}
+              onChange={setNewImage}
+              accent="violet"
+              title="Replace Course Image"
+            />
+
+          </div>
 
           <input
             value={name}

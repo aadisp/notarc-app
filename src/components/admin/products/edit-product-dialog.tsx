@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import UploadBox from "@/components/admin/upload-box";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import {
   Dialog,
   DialogContent,
@@ -51,9 +52,27 @@ export default function EditProductDialog({
     setDescription] =
     useState(product.description);
 
+  const [newImage, setNewImage] =
+    useState<File | null>(null);
+
+  useEffect(() => {
+    setName(product.name);
+    setSlug(product.slug);
+    setCategory(product.category);
+    setPrice(product.price);
+    setDescription(product.description);
+    setNewImage(null);
+  }, [product]);
+
 async function handleSave() {
 
   try {
+
+    let imageUrl = product.imageUrl;
+
+    if (newImage) {
+      imageUrl = await uploadToCloudinary(newImage);
+    }
 
     await updateDoc(
       doc(db, "products", product.id),
@@ -63,12 +82,16 @@ async function handleSave() {
         category,
         price,
         description,
+        imageUrl,
       }
     );
 
     toast.success(
       "Product updated successfully!"
     );
+
+    setNewImage(null);
+
 
     onOpenChange(false);
 
@@ -102,6 +125,61 @@ async function handleSave() {
         </DialogHeader>
 
         <div className="space-y-5">
+
+          <div className="space-y-3">
+
+          {newImage ? (
+
+            <img
+              src={URL.createObjectURL(newImage)}
+              alt="New product preview"
+              className="
+                h-48
+                w-full
+                rounded-xl
+                object-cover
+              "
+            />
+
+          ) : product.imageUrl ? (
+
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="
+                h-48
+                w-full
+                rounded-xl
+                object-cover
+              "
+            />
+
+          ) : (
+
+            <div
+              className="
+                flex
+                h-48
+                items-center
+                justify-center
+                rounded-xl
+                bg-slate-100
+                text-slate-400
+              "
+            >
+              No Image
+            </div>
+
+          )}
+
+          <UploadBox
+            file={newImage}
+            onChange={setNewImage}
+            accent="emerald"
+            title="Replace Product Image"
+          />
+
+        </div>
 
           <input
             value={name}

@@ -5,6 +5,7 @@ import {
   ShoppingCart,
   GraduationCap,
 } from "lucide-react";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import CourseTable from "@/components/admin/courses/course-table";
 import CourseForm from "@/components/admin/courses/course-form";
 import AddCourseDialog from "@/components/admin/courses/add-course-dialog";
@@ -144,42 +145,7 @@ export default function AdminPage() {
     }
   }
 
-  async function uploadToCloudinary(
-    file: File
-  ) {
-    const formData =
-      new FormData();
 
-    formData.append(
-      "file",
-      file
-    );
-
-    formData.append(
-      "upload_preset",
-      "mtedftib"
-    );
-
-    const response =
-      await fetch(
-        "https://api.cloudinary.com/v1_1/dhozramhs/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if (!data.secure_url) {
-      throw new Error(
-        "Cloudinary upload failed"
-      );
-    }
-
-    return data.secure_url;
-  }
 
   async function handleAddCourse() {
     try {
