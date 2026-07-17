@@ -4,15 +4,16 @@ import {
   Package,
   ShoppingCart,
   GraduationCap,
-  ArrowRight,
 } from "lucide-react";
+import CourseTable from "@/components/admin/courses/course-table";
+import CourseForm from "@/components/admin/courses/course-form";
+import AddCourseDialog from "@/components/admin/courses/add-course-dialog";
 import { toast } from "sonner";
 import ProductTable from "@/components/admin/products/product-table";
 import ProductForm from "@/components/admin/product-form";
-import UploadBox from "@/components/admin/upload-box";
-import AdminInput from "@/components/admin/admin-input";
+
 import DashboardCard from "@/components/admin/dashboard-card";
-import Link from "next/link";
+
 import SiteLayout from "@/components/layout/site-layout";
 import { useEffect, useState } from "react";
 import AddProductDialog from "@/components/admin/products/add-product-dialog";
@@ -77,6 +78,9 @@ export default function AdminPage() {
     useState(0);
 
   const [addProductOpen, setAddProductOpen] =
+    useState(false);
+
+  const [addCourseOpen, setAddCourseOpen] =
     useState(false);
 
   async function handleAddProduct() {
@@ -334,11 +338,6 @@ export default function AdminPage() {
 
       </div>
 
-      <div className="mb-6 flex items-center justify-end">
-
-
-
-      </div>
 
       <ProductTable
         onAddProduct={() => setAddProductOpen(true)}
@@ -368,122 +367,28 @@ export default function AdminPage() {
 
       </AddProductDialog>
 
-        <div
-          id="courses"
-          className="
-            rounded-3xl
-            border
-            bg-white
-            p-8
-            shadow-sm
-          "
+        <CourseTable
+          onAddCourse={() => setAddCourseOpen(true)}
+        />
+
+        <AddCourseDialog
+          open={addCourseOpen}
+          onOpenChange={setAddCourseOpen}
         >
-
-          <div className="mb-8 flex items-center gap-5">
-
-            <div
-              className="
-                flex
-                h-16
-                w-16
-                items-center
-                justify-center
-                rounded-2xl
-                bg-violet-100
-              "
-            >
-
-              <GraduationCap
-                className="
-                  h-8
-                  w-8
-                  text-violet-600
-                "
-              />
-
-            </div>
-
-            <div>
-
-              <h2 className="text-3xl font-bold">
-                Add Course
-              </h2>
-
-              <p className="text-slate-500">
-                Create and publish training courses.
-              </p>
-
-            </div>
-
-          </div>
-
-          <div className="space-y-6">
-
-        <AdminInput
-          placeholder="Enter course name"
-          value={courseName}
-          onChange={setCourseName}
-          color="violet"
-        />
-
-        <AdminInput
-          placeholder="Enter course level"
-          value={courseLevel}
-          onChange={setCourseLevel}
-          color="violet"
-        />
-
-        <AdminInput
-          placeholder="e.g. 4 Weeks"
-          value={courseDuration}
-          onChange={setCourseDuration}
-          color="violet"
-        />
-
-        <UploadBox
-          file={courseFile}
-          onChange={setCourseFile}
-          title="Upload Course Image"
-          accent="violet"
-        />
-
-        <textarea
-          placeholder="Description"
-          value={courseDescription}
-          onChange={(e) =>
-            setCourseDescription(
-              e.target.value
-            )
-          }
-          className="
-          min-h-36
-          w-full
-          resize-none
-          rounded-xl
-          border
-          border-slate-200
-          bg-slate-50
-          px-4
-          py-3
-          transition
-          outline-none
-          focus:border-violet-500
-          focus:bg-white
-          focus:ring-4
-          focus:ring-violet-100
-          "
-        />
-
-        <button
-          onClick={handleAddCourse}
-          className="rounded border p-3"
-        >
-          Add Course
-        </button>
-
-        </div>
-
-      </div>
+          <CourseForm
+            courseName={courseName}
+            setCourseName={setCourseName}
+            courseLevel={courseLevel}
+            setCourseLevel={setCourseLevel}
+            courseDuration={courseDuration}
+            setCourseDuration={setCourseDuration}
+            courseDescription={courseDescription}
+            setCourseDescription={setCourseDescription}
+            courseFile={courseFile}
+            setCourseFile={setCourseFile}
+            onAddCourse={handleAddCourse}
+          />
+        </AddCourseDialog>
 
     </main>
 
