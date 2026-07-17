@@ -1,16 +1,17 @@
 "use client";
 
+import OrderCard from "@/components/admin/orders/order-card";
+import OrderItems from "@/components/admin/orders/order-items";
+import PaymentStatusSelect from "@/components/admin/orders/payment-status-select";
+import OrderStatusSelect from "@/components/admin/orders/order-status-select";
+import OrderFilters from "@/components/admin/orders/order-filters";
+import OrderSearch from "@/components/admin/orders/order-search";
+import OrderStats from "@/components/admin/orders/order-stats";
 import SiteLayout from "@/components/layout/site-layout";
 import { useUserRole } from "@/hooks/use-user-role";
 import { db } from "@/firebase/firebase";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 
 import {
   collection,
@@ -55,7 +56,8 @@ export default function AdminOrdersPage() {
     setOrders] =
     useState<Order[]>([]);
     
-
+  const [loading, setLoading] =
+    useState(true);
   const totalOrders =
     orders.length;
 
@@ -122,10 +124,12 @@ export default function AdminOrdersPage() {
               })
             ) as Order[];
 
-          setOrders(
-            orderList
-          );
+          setOrders(orderList);
+          setLoading(false);
 
+        },
+        () => {
+          setLoading(false);
         }
       );
 
@@ -250,6 +254,18 @@ export default function AdminOrdersPage() {
     );
   }
 
+  if (loading) {
+    return (
+      <SiteLayout>
+        <section className="mx-auto max-w-7xl px-6 py-24">
+          <p className="text-center text-lg text-gray-500">
+            Loading orders...
+          </p>
+        </section>
+      </SiteLayout>
+    );
+  }
+
   return (
 
     <SiteLayout>
@@ -260,90 +276,12 @@ export default function AdminOrdersPage() {
           Orders
         </h1>
 
-        <div
-          className="
-            mb-10
-            grid
-            gap-6
-            sm:grid-cols-2
-            xl:grid-cols-4
-          "
-        >
-
-          <div
-            className="
-              rounded-2xl
-              border
-              bg-white
-              p-6
-              shadow-sm
-            "
-          >
-            <p className="text-sm text-gray-500">
-              Total Orders
-            </p>
-
-            <h2 className="mt-2 text-4xl font-bold">
-              {totalOrders}
-            </h2>
-          </div>
-
-          <div
-            className="
-              rounded-2xl
-              border
-              bg-white
-              p-6
-              shadow-sm
-            "
-          >
-            <p className="text-sm text-gray-500">
-              Revenue
-            </p>
-
-            <h2 className="mt-2 text-4xl font-bold">
-              ₹
-              {totalRevenue.toLocaleString()}
-            </h2>
-          </div>
-
-          <div
-            className="
-              rounded-2xl
-              border
-              bg-white
-              p-6
-              shadow-sm
-            "
-          >
-            <p className="text-sm text-gray-500">
-              Pending
-            </p>
-
-            <h2 className="mt-2 text-4xl font-bold text-yellow-600">
-              {pendingOrders}
-            </h2>
-          </div>
-
-          <div
-            className="
-              rounded-2xl
-              border
-              bg-white
-              p-6
-              shadow-sm
-            "
-          >
-            <p className="text-sm text-gray-500">
-              Delivered
-            </p>
-
-            <h2 className="mt-2 text-4xl font-bold text-green-600">
-              {deliveredOrders}
-            </h2>
-          </div>
-
-        </div>
+        <OrderStats
+          totalOrders={totalOrders}
+          totalRevenue={totalRevenue}
+          pendingOrders={pendingOrders}
+          deliveredOrders={deliveredOrders}
+        />
 
         <div
           className="
@@ -354,286 +292,61 @@ export default function AdminOrdersPage() {
           "
         >
 
-          <input
-            placeholder="
-              Search username,
-              email or order ID...
-            "
+          <OrderSearch
             value={search}
-            onChange={(e) =>
-              setSearch(
-                e.target.value
-              )
-            }
-            className="
-              min-w-[280px]
-              flex-1
-              rounded-xl
-              border
-              px-4
-              py-3
-            "
+            onChange={setSearch}
           />
 
-          <Select
-            value={statusFilter}
-            onValueChange={
-              setStatusFilter
-            }
-          >
-
-            <SelectTrigger className="w-48">
-              <SelectValue />
-            </SelectTrigger>
-
-            <SelectContent>
-
-              <SelectItem value="All">
-                All Statuses
-              </SelectItem>
-
-              <SelectItem value="Pending">
-                Pending
-              </SelectItem>
-
-              <SelectItem value="Processing">
-                Processing
-              </SelectItem>
-
-              <SelectItem value="Shipped">
-                Shipped
-              </SelectItem>
-
-              <SelectItem value="Delivered">
-                Delivered
-              </SelectItem>
-
-              <SelectItem value="Cancelled">
-                Cancelled
-              </SelectItem>
-
-            </SelectContent>
-
-          </Select>
-
-          <Select
-            value={paymentFilter}
-            onValueChange={
-              setPaymentFilter
-            }
-          >
-
-            <SelectTrigger className="w-44">
-              <SelectValue />
-            </SelectTrigger>
-
-            <SelectContent>
-
-              <SelectItem value="All">
-                All Payments
-              </SelectItem>
-
-              <SelectItem value="Pending">
-                Pending
-              </SelectItem>
-
-              <SelectItem value="Paid">
-                Paid
-              </SelectItem>
-
-              <SelectItem value="Refunded">
-                Refunded
-              </SelectItem>
-
-            </SelectContent>
-
-          </Select>
+        <OrderFilters
+          statusFilter={statusFilter}
+          paymentFilter={paymentFilter}
+          onStatusChange={setStatusFilter}
+          onPaymentChange={setPaymentFilter}
+        />
 
         </div>
 
         <div className="space-y-6">
 
-          {filteredOrders.map((order) => (
+        {filteredOrders.length === 0 ? (
 
-            <div
+          <div
+            className="
+              rounded-2xl
+              border
+              bg-white
+              p-16
+              text-center
+              shadow-sm
+            "
+          >
+
+            <h2 className="text-2xl font-semibold">
+              No orders found
+            </h2>
+
+            <p className="mt-2 text-gray-500">
+              Try changing your search or filters.
+            </p>
+
+          </div>
+
+        ) : (
+
+          filteredOrders.map((order) => (
+
+            <OrderCard
               key={order.id}
-              className="
-                rounded-2xl
-                border
-                bg-white
-                p-8
-                shadow-sm
-              "
-            >
+              order={order}
+              onOrderStatusChange={updateOrderStatus}
+              onPaymentStatusChange={updatePaymentStatus}
+            />
 
-              <div className="flex justify-between">
+          ))
 
-                <div>
+        )}
 
-                  <h2 className="text-2xl font-bold">
-                    {order.username}
-                  </h2>
-
-                  <p className="text-gray-500">
-                    {order.userEmail}
-                  </p>
-
-                </div>
-
-                <div className="text-right">
-
-                  <h2 className="text-3xl font-bold">
-                    ₹{order.total}
-                  </h2>
-
-                  <p className="text-sm text-gray-500">
-                    {order.id.slice(0, 8)}
-                  </p>
-
-                </div>
-
-              </div>
-
-              <div className="mt-6 flex gap-8">
-
-                <div>
-
-                  <p className="mb-2 text-sm text-gray-500">
-                    Order Status
-                  </p>
-
-                  <Select
-                    value={order.orderStatus}
-                    onValueChange={(value) =>
-                      updateOrderStatus(
-                        order.id,
-                        value
-                      )
-                    }
-                  >
-
-                    <SelectTrigger className="w-44">
-                      <SelectValue />
-                    </SelectTrigger>
-
-                    <SelectContent>
-
-                      <SelectItem value="Pending">
-                        🟡 Pending
-                      </SelectItem>
-
-                      <SelectItem value="Processing">
-                        🔵 Processing
-                      </SelectItem>
-
-                      <SelectItem value="Shipped">
-                        🟣 Shipped
-                      </SelectItem>
-
-                      <SelectItem value="Delivered">
-                        🟢 Delivered
-                      </SelectItem>
-
-                      <SelectItem value="Cancelled">
-                        🔴 Cancelled
-                      </SelectItem>
-
-                    </SelectContent>
-
-                  </Select>
-
-                </div>
-
-                <div>
-
-                  <p className="mb-2 text-sm text-gray-500">
-                    Payment Status
-                  </p>
-
-                  <Select
-                    value={order.paymentStatus}
-                    onValueChange={(value) =>
-                      updatePaymentStatus(
-                        order.id,
-                        value
-                      )
-                    }
-                  >
-
-                    <SelectTrigger className="w-40">
-                      <SelectValue />
-                    </SelectTrigger>
-
-                    <SelectContent>
-
-                      <SelectItem value="Pending">
-                        🟡 Pending
-                      </SelectItem>
-
-                      <SelectItem value="Paid">
-                        🟢 Paid
-                      </SelectItem>
-
-                      <SelectItem value="Refunded">
-                        🔴 Refunded
-                      </SelectItem>
-
-                    </SelectContent>
-
-                  </Select>
-
-                </div>
-
-              </div>
-
-              <hr className="my-6" />
-
-              <h3 className="mb-4 font-semibold">
-                Items
-              </h3>
-
-              <div className="space-y-3">
-
-                {order.items.map((item) => (
-
-                  <div
-                    key={item.id}
-                    className="
-                      flex
-                      justify-between
-                    "
-                  >
-
-                    <div>
-
-                      <p>
-                        {item.name}
-                      </p>
-
-                      <p className="text-sm text-gray-500">
-                        Qty:{" "}
-                        {item.quantity}
-                      </p>
-
-                    </div>
-
-                    <p>
-                      ₹
-                      {item.price *
-                        item.quantity}
-                    </p>
-
-                  </div>
-
-                ))}
-
-              </div>
-
-            </div>
-
-          ))}
-
-        </div>
+      </div>
 
       </section>
 

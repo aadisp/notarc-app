@@ -4,6 +4,7 @@ import {
   Package,
   ShoppingCart,
   GraduationCap,
+  Users,
 } from "lucide-react";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import CourseTable from "@/components/admin/courses/course-table";
@@ -76,6 +77,10 @@ export default function AdminPage() {
 
   const [orderCount,
     setOrderCount] =
+    useState(0);
+
+  const [userCount,
+    setUserCount] =
     useState(0);
 
   const [addProductOpen, setAddProductOpen] =
@@ -214,6 +219,14 @@ export default function AdminPage() {
           )
         );
 
+      const users =
+        await getCountFromServer(
+          collection(
+            db,
+            "users"
+          )
+        );
+
       setProductCount(
         products.data().count
       );
@@ -224,6 +237,10 @@ export default function AdminPage() {
 
       setOrderCount(
         orders.data().count
+      );
+
+      setUserCount(
+        users.data().count
       );
 
     }
@@ -265,7 +282,8 @@ export default function AdminPage() {
           mb-16
           grid
           gap-6
-          md:grid-cols-3
+          md:grid-cols-2
+          xl:grid-cols-4
         "
       >
 
@@ -300,6 +318,17 @@ export default function AdminPage() {
           bgColor="bg-violet-100"
           iconColor="text-violet-600"
           numberColor="text-violet-600"
+        />
+
+        <DashboardCard
+          title="Users"
+          count={userCount}
+          subtitle="Registered Users"
+          href="/admin/users"
+          icon={Users}
+          bgColor="bg-orange-100"
+          iconColor="text-orange-600"
+          numberColor="text-orange-600"
         />
 
       </div>
