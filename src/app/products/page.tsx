@@ -95,7 +95,14 @@ export default function ProductsPage() {
                 {error}
             </div>
         ) : (
-            <ProductGrid products={filteredProducts} />
+            <ProductGrid
+                products={filteredProducts}
+                onClearFilters={() => {
+                    setSearch("");
+                    setCategory("All");
+                    setSort("newest");
+                }}
+            />
         )}
       </section>
     </SiteLayout>
