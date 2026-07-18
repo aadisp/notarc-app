@@ -14,20 +14,46 @@ export default function ProductsPage() {
   } = useProducts();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [sort, setSort] = useState("newest");
   const filteredProducts = useMemo(() => {
-        return products.filter((product) => {
-            const matchesSearch =
-                product.name
-                    .toLowerCase()
-                    .includes(search.toLowerCase());
+    const filtered = products.filter((product) => {
+        const matchesSearch = product.name
+            .toLowerCase()
+            .includes(search.toLowerCase());
 
-            const matchesCategory =
-                category === "All" ||
-                product.category === category;
+        const matchesCategory =
+            category === "All" ||
+            product.category === category;
 
-            return matchesSearch && matchesCategory;
-        });
-    }, [products, search, category]);
+        return matchesSearch && matchesCategory;
+    });
+
+    switch (sort) {
+        case "price-low":
+            return [...filtered].sort(
+                (a, b) => a.price - b.price
+            );
+
+        case "price-high":
+            return [...filtered].sort(
+                (a, b) => b.price - a.price
+            );
+
+        case "name-asc":
+            return [...filtered].sort((a, b) =>
+                a.name.localeCompare(b.name)
+            );
+
+        case "name-desc":
+            return [...filtered].sort((a, b) =>
+                b.name.localeCompare(a.name)
+            );
+
+        case "newest":
+        default:
+            return filtered;
+    }
+}, [products, search, category, sort]);
   return (
     <SiteLayout>
       <section className="mx-auto max-w-7xl px-6 py-24">
@@ -52,11 +78,13 @@ export default function ProductsPage() {
       </div>
 
       <ProductToolbar
-          search={search}
-          onSearchChange={setSearch}
-          category={category}
-          onCategoryChange={setCategory}
-      />
+        search={search}
+        onSearchChange={setSearch}
+        category={category}
+        onCategoryChange={setCategory}
+        sort={sort}
+        onSortChange={setSort}
+    />
 
       {loading ? (
             <div className="py-24 text-center">

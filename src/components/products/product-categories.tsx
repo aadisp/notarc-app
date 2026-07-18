@@ -10,11 +10,12 @@ export default function ProductCategories({
 
     const categories = [
         "All",
-        "Drones",
-        "Motors",
-        "Frames",
+        "Drone",
+        "Motor",
+        "Frame",
         "Electronics",
-        "Batteries",
+        "Power",
+        "Navigation",
     ];
 
     return (

@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useCartStore } from "@/store/cart-store";
 import { useUserRole } from "@/hooks/use-user-role";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "@/firebase/firebase";
-import { useState } from "react";
+import ProductAdminControls from "./product-admin-controls";
 
 interface ProductCardProps {
   id: number;
@@ -35,216 +33,105 @@ export default function ProductCard({
   );
   const role = useUserRole();
 
-  const [editing, setEditing] =
-  useState(false);
-
-  const [editName, setEditName] =
-    useState(name);
-
-  const [editCategory, setEditCategory] =
-    useState(category);
-
-  const [editPrice, setEditPrice] =
-    useState(
-      price.replace(/[^\d]/g, "")
-    );
-
-  const [editDescription,
-    setEditDescription] =
-    useState(description);
-
-  const [editImageUrl,
-    setEditImageUrl] =
-    useState(imageUrl || "");
-
-  async function handleDelete() {
-    try {
-      await deleteDoc(
-        doc(
-          db,
-          "products",
-          firestoreId
-        )
-      );
-
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function handleUpdate() {
-    try {
-      await updateDoc(
-        doc(
-          db,
-          "products",
-          firestoreId
-        ),
-        {
-          name: editName,
-          category: editCategory,
-          price: Number(editPrice),
-          description: editDescription,
-          imageUrl: editImageUrl,
-        }
-      );
-
-      setEditing(false);
-
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   return (
-    <div className="group overflow-hidden rounded-xl border bg-background transition-all hover:-translate-y-1 hover:shadow-lg">
+    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
 
-     <div className="aspect-[4/3] overflow-hidden bg-slate-200">
+     <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted to-muted/50">
 
       {imageUrl ? (
-        <img
-          src={imageUrl}
-          alt={name}
-          className="h-full w-full object-cover"
-        />
-      ) : null}
+          <img
+              src={imageUrl}
+              alt={name}
+              className="h-full w-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
+          />
+      ) : (
+          <div className="flex h-full items-center justify-center text-muted-foreground">
+              <span className="text-sm">
+                  No Image Available
+              </span>
+          </div>
+      )}
 
     </div>
 
-      <div className="space-y-4 p-6">
+      <div className="flex flex-1 flex-col p-6">
 
-        <div>
-          <p className="text-sm text-muted-foreground">
-            {category}
-          </p>
+        <div className="space-y-3">
 
-          <h3 className="text-xl font-semibold">
-            {name}
-          </h3>
-        </div>
-
-        {editing && (
-          <div className="space-y-2 rounded border p-3">
-
-            <input
-              value={editName}
-              onChange={(e) =>
-                setEditName(
-                  e.target.value
-                )
-              }
-              className="w-full rounded border p-2"
-            />
-
-            <input
-              value={editCategory}
-              onChange={(e) =>
-                setEditCategory(
-                  e.target.value
-                )
-              }
-              className="w-full rounded border p-2"
-            />
-
-            <input
-              value={editPrice}
-              onChange={(e) =>
-                setEditPrice(
-                  e.target.value
-                )
-              }
-              className="w-full rounded border p-2"
-            />
-
-            <input
-              value={editImageUrl}
-              onChange={(e) =>
-                setEditImageUrl(
-                  e.target.value
-                )
-              }
-              className="w-full rounded border p-2"
-            />
-
-            <textarea
-              value={editDescription}
-              onChange={(e) =>
-                setEditDescription(
-                  e.target.value
-                )
-              }
-              className="w-full rounded border p-2"
-            />
-
-            <Button
-              onClick={handleUpdate}
-            >
-              Save Changes
-            </Button>
-
-          </div>
-        )}
-
-        <div className="flex items-center justify-between">
-          <span className="font-bold">
-            {price}
+          <span className="inline-flex w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+              {category}
           </span>
 
-          <div className="flex gap-2">
+          <h3 className="line-clamp-2 text-xl font-bold tracking-tight">
+              {name}
+          </h3>
 
-            <Link href={`/products/${slug}`}>
-              <Button size="sm" variant="outline">
-                View
+          <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted-foreground">
+              {description}
+          </p>
+
+      </div>
+
+     
+
+        <div className="mt-auto pt-6">
+          <p className="mb-5 text-3xl font-extrabold tracking-tight text-primary">
+            {price}
+          </p>
+
+          <>
+            {/* Customer Actions */}
+            <div className="flex gap-2">
+
+              <Link href={`/products/${slug}`} className="flex-1">
+                <Button
+                    variant="outline"
+                    className="h-11 w-full"
+                >
+                
+                  View
+                </Button>
+              </Link>
+
+              <Button
+                className="h-11 flex-1 font-semibold"
+                onClick={() => {
+                  console.log("ADD CLICKED", name);
+
+                  addItem({
+                    id,
+                    name,
+                    price: Number(
+                      price.replace(/[^\d]/g, "")
+                    ),
+                  });
+
+                  console.log(
+                    "AFTER ADD",
+                    useCartStore.getState().items
+                  );
+                }}
+              >
+                Add to Cart
               </Button>
-            </Link>
 
+            </div>
+
+            {/* Admin Actions */}
             {role === "admin" && (
-              <>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() =>
-                    setEditing(!editing)
-                  }
-                >
-                  Edit
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={handleDelete}
-                >
-                  Delete
-                </Button>
-              </>
+              <div className="mt-3 flex flex-wrap gap-2 border-t pt-3">
+                <ProductAdminControls
+                  firestoreId={firestoreId}
+                  name={name}
+                  category={category}
+                  price={price}
+                  description={description}
+                  imageUrl={imageUrl}
+                />
+              </div>
             )}
+          </>
 
-            <Button
-              size="sm"
-              onClick={() => {
-                console.log("ADD CLICKED", name);
-
-                addItem({
-                  id,
-                  name,
-                  price: Number(
-                    price.replace(/[^\d]/g, "")
-                  ),
-                });
-
-                console.log(
-                  "AFTER ADD",
-                  useCartStore.getState().items
-                );
-              }}
-            >
-              Add
-            </Button>
-
-          </div>
         </div>
 
       </div>
