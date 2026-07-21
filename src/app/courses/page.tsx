@@ -1,7 +1,15 @@
+"use client";
+
+import { useCourses } from "@/hooks/use-courses";
 import CourseGrid from "@/components/courses/course-grid";
 import SiteLayout from "@/components/layout/site-layout";
 
 export default function CoursesPage() {
+  const {
+    courses,
+    loading,
+    error,
+} = useCourses();
   return (
     <SiteLayout>
       <section className="mx-auto max-w-7xl px-6 py-24">
@@ -14,7 +22,9 @@ export default function CoursesPage() {
         </p>
 
         <div className="mt-12">
-            <CourseGrid />
+            <CourseGrid
+                courses={courses}
+            />
         </div>
       </section>
     </SiteLayout>

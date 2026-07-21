@@ -1,212 +1,101 @@
 "use client";
 
+import { Clock3, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useUserRole } from "@/hooks/use-user-role";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "@/firebase/firebase";
-import { useState } from "react";
 import Link from "next/link";
+import CourseAdminControls from "@/components/cards/course-admin-controls";
 
 interface CourseCardProps {
-  firestoreId: string;
-  slug: string;
-  name: string;
-  level: string;
-  duration: string;
-  description: string;
-  imageUrl?: string;
+    firestoreId: string;
+    slug: string;
+    name: string;
+    level: string;
+    duration: string;
+    description: string;
+    imageUrl?: string;
 }
 
 export default function CourseCard({
-  firestoreId,
-  slug,
-  name,
-  level,
-  duration,
-  description,
-  imageUrl,
+    firestoreId,
+    slug,
+    name,
+    level,
+    duration,
+    description,
+    imageUrl,
 }: CourseCardProps) {
-  const role = useUserRole();
 
-  const [editing, setEditing] =
-  useState(false);
-
-  const [editName, setEditName] =
-  useState(name);
-
-  const [editLevel, setEditLevel] =
-  useState(level);
-
-  const [editDuration,
-    setEditDuration] =
-    useState(duration);
-
-  const [editDescription,
-    setEditDescription] =
-    useState(description);
-
-  const [editImageUrl,
-    setEditImageUrl] =
-    useState(imageUrl || "");
-
-  async function handleDelete() {
-    try {
-      await deleteDoc(
-        doc(
-          db,
-          "courses",
-          firestoreId
-        )
-      );
-
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function handleUpdate() {
-    try {
-        await updateDoc(
-        doc(
-            db,
-            "courses",
-            firestoreId
-        ),
-        {
-            name: editName,
-            level: editLevel,
-            duration: editDuration,
-            description:
-            editDescription,
-            imageUrl:
-            editImageUrl,
-        }
-        );
-
-        setEditing(false);
-
-        window.location.reload();
-    } catch (error) {
-        console.error(error);
-    }
-    }
   return (
-    <div className="rounded-xl border overflow-hidden">
+    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
 
       <Link href={`/courses/${slug}`}>
 
-        <div className="aspect-[4/3] bg-slate-200">
-          {imageUrl && (
+        <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted to-muted/50">
+
+          {imageUrl ? (
             <img
               src={imageUrl}
               alt={name}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
+          ) : (
+            <div className="flex h-full items-center justify-center text-muted-foreground">
+              <GraduationCap className="h-14 w-14" />
+            </div>
           )}
+
         </div>
 
-        <div className="p-6 space-y-3">
+        <div className="flex flex-1 flex-col p-6">
 
-          <h3 className="text-xl font-bold">
-            {name}
-          </h3>
+          <div className="space-y-3">
 
-          <p>{level}</p>
+            <span className="inline-flex w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+              {level}
+            </span>
 
-          <p>{duration}</p>
+            <h3 className="line-clamp-2 text-xl font-bold tracking-tight">
+              {name}
+            </h3>
 
-          <p>{description}</p>
+            <p className="line-clamp-3 text-sm leading-6 text-muted-foreground">
+              {description}
+            </p>
+
+          </div>
+
+          <div className="mt-auto pt-6">
+
+            <div className="mb-5 flex items-center gap-2 text-muted-foreground">
+
+              <Clock3 className="h-4 w-4" />
+
+              <span className="text-sm font-medium">
+                {duration}
+              </span>
+
+            </div>
+
+            <Button className="h-11 w-full font-semibold">
+              View Course
+            </Button>
+
+          </div>
 
         </div>
 
       </Link>
 
-      <div className="p-6 pt-0">
+      <div className="border-t p-6">
 
-        {editing && (
-          <div className="space-y-2 border rounded p-3 mb-4">
-
-            <input
-              value={editName}
-              onChange={(e) =>
-                setEditName(
-                  e.target.value
-                )
-              }
-              className="w-full border rounded p-2"
-            />
-
-            <input
-              value={editLevel}
-              onChange={(e) =>
-                setEditLevel(
-                  e.target.value
-                )
-              }
-              className="w-full border rounded p-2"
-            />
-
-            <input
-              value={editDuration}
-              onChange={(e) =>
-                setEditDuration(
-                  e.target.value
-                )
-              }
-              className="w-full border rounded p-2"
-            />
-
-            <input
-              value={editImageUrl}
-              onChange={(e) =>
-                setEditImageUrl(
-                  e.target.value
-                )
-              }
-              className="w-full border rounded p-2"
-            />
-
-            <textarea
-              value={editDescription}
-              onChange={(e) =>
-                setEditDescription(
-                  e.target.value
-                )
-              }
-              className="w-full border rounded p-2"
-            />
-
-            <Button
-              onClick={handleUpdate}
-            >
-              Save Changes
-            </Button>
-
-          </div>
-        )}
-
-        {role === "admin" && (
-          <div className="flex gap-2">
-
-            <Button
-              variant="outline"
-              onClick={() =>
-                setEditing(!editing)
-              }
-            >
-              Edit
-            </Button>
-
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-            >
-              Delete
-            </Button>
-
-          </div>
-        )}
+        <CourseAdminControls
+          firestoreId={firestoreId}
+          name={name}
+          level={level}
+          duration={duration}
+          description={description}
+          imageUrl={imageUrl}
+        />
 
       </div>
 

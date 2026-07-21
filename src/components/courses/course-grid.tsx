@@ -1,46 +1,17 @@
 "use client";
 
 import CourseCard from "@/components/courses/course-card";
-import { useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-} from "firebase/firestore";
 
-import { db } from "@/firebase/firebase";
+import { Course } from "@/types/course";
 
-interface Course {
-  id: string;
-  name: string;
-  level: string;
-  duration: string;
-  description: string;
-  imageUrl?: string;
-  slug: string;
+interface CourseGridProps {
+    courses: Course[];
 }
 
-export default function CourseGrid() {
-  const [courses, setCourses] =
-    useState<Course[]>([]);
-
-  useEffect(() => {
-    async function loadCourses() {
-      const snapshot =
-        await getDocs(
-          collection(db, "courses")
-        );
-
-      const courseList =
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Course[];
-
-      setCourses(courseList);
-    }
-
-    loadCourses();
-  }, []);
+export default function CourseGrid({
+    courses,
+}: CourseGridProps) {
+  
 
   return (
     <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">

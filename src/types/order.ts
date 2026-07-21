@@ -1,23 +1,35 @@
-import type { Timestamp } from "firebase/firestore";
+export type OrderStatus =
+    | "pending"
+    | "paid"
+    | "processing"
+    | "completed"
+    | "cancelled";
+
 export interface OrderItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
+    id: string;
+    type: "product" | "course";
+    name: string;
+    quantity: number;
+    price: number;
+    imageUrl?: string;
 }
 
 export interface Order {
-  id: string;
+    id: string;
+    userId: string;
+    userEmail: string;
 
-  username: string;
-  userEmail: string;
+    items: OrderItem[];
 
-  total: number;
+    subtotal: number;
+    tax: number;
+    shipping: number;
+    total: number;
 
-  orderStatus: string;
-  paymentStatus: string;
+    status: OrderStatus;
 
-  items: OrderItem[];
+    paymentMethod: string;
 
-  createdAt?: Timestamp;
+    createdAt: Date;
+    updatedAt: Date;
 }
