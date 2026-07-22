@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type OrderStatus =
     | "pending"
     | "paid"
@@ -30,6 +32,6 @@ export interface Order {
 
     paymentMethod: string;
 
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
 }
