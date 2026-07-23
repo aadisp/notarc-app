@@ -2,14 +2,14 @@ interface OrderStatsProps {
   totalOrders: number;
   totalRevenue: number;
   pendingOrders: number;
-  deliveredOrders: number;
+  completedOrders: number;
 }
 
 export default function OrderStats({
   totalOrders,
   totalRevenue,
   pendingOrders,
-  deliveredOrders,
+  completedOrders,
 }: OrderStatsProps) {
   return (
     <div
@@ -85,11 +85,11 @@ export default function OrderStats({
         "
       >
         <p className="text-sm text-gray-500">
-          Delivered
+            Completed
         </p>
 
         <h2 className="mt-2 text-4xl font-bold text-green-600">
-          {deliveredOrders}
+            {completedOrders}
         </h2>
       </div>
     </div>

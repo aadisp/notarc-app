@@ -1,9 +1,4 @@
-interface OrderItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
+import type { OrderItem } from "@/types/order";
 
 interface OrderItemsProps {
   items: OrderItem[];

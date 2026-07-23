@@ -1,16 +1,13 @@
 "use client";
 
 import OrderCard from "@/components/admin/orders/order-card";
-import OrderItems from "@/components/admin/orders/order-items";
-import PaymentStatusSelect from "@/components/admin/orders/payment-status-select";
-import OrderStatusSelect from "@/components/admin/orders/order-status-select";
 import OrderFilters from "@/components/admin/orders/order-filters";
 import OrderSearch from "@/components/admin/orders/order-search";
 import OrderStats from "@/components/admin/orders/order-stats";
 import SiteLayout from "@/components/layout/site-layout";
 import { useUserRole } from "@/hooks/use-user-role";
 import { db } from "@/firebase/firebase";
-
+import AdminNav from "@/components/admin/admin-nav";
 
 
 import {
@@ -23,29 +20,7 @@ import {
 } from "firebase/firestore";
 
 import { useEffect, useState } from "react";
-
-interface OrderItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-interface Order {
-  id: string;
-
-  username: string;
-  userEmail: string;
-
-  total: number;
-
-  orderStatus: string;
-  paymentStatus: string;
-
-  items: OrderItem[];
-
-  createdAt?: any;
-}
+import type { Order, OrderStatus } from "@/types/order";
 
 export default function AdminOrdersPage() {
 
@@ -70,29 +45,26 @@ export default function AdminOrdersPage() {
 
   const pendingOrders =
     orders.filter(
-      (order) =>
-        order.orderStatus ===
-        "Pending"
+        (order) =>
+            order.status ===
+            "pending"
     ).length;
 
-  const deliveredOrders =
+  const completedOrders =
     orders.filter(
-      (order) =>
-        order.orderStatus ===
-        "Delivered"
+        (order) =>
+            order.status ===
+            "completed"
     ).length;
 
   const [search,
     setSearch] =
     useState("");
 
-  const [statusFilter,
-    setStatusFilter] =
-    useState("All");
+  const [statusFilter, setStatusFilter] =
+    useState<OrderStatus | "All">("All");
 
-  const [paymentFilter,
-    setPaymentFilter] =
-    useState("All");
+  
 
   useEffect(() => {
 
@@ -138,69 +110,40 @@ export default function AdminOrdersPage() {
 
   }, [role]);
 
-  async function updateOrderStatus(
-    orderId: string,
-    value: string
-  ) {
+async function updateOrderStatus(
+  orderId: string,
+  value: OrderStatus
+) {
+  await updateDoc(
+    doc(
+      db,
+      "orders",
+      orderId
+    ),
+    {
+      status: value,
+    }
+  );
 
-    await updateDoc(
-      doc(
-        db,
-        "orders",
-        orderId
-      ),
-      {
-        orderStatus: value,
-      }
-    );
+  setOrders((orders) =>
+    orders.map((order) =>
+      order.id === orderId
+        ? {
+            ...order,
+            status: value,
+          }
+        : order
+    )
+  );
+}
 
-    setOrders((orders) =>
-      orders.map((order) =>
-        order.id === orderId
-          ? {
-              ...order,
-              orderStatus: value,
-            }
-          : order
-      )
-    );
-
-  }
-
-  async function updatePaymentStatus(
-    orderId: string,
-    value: string
-  ) {
-
-    await updateDoc(
-      doc(
-        db,
-        "orders",
-        orderId
-      ),
-      {
-        paymentStatus: value,
-      }
-    );
-
-    setOrders((orders) =>
-      orders.map((order) =>
-        order.id === orderId
-          ? {
-              ...order,
-              paymentStatus: value,
-            }
-          : order
-      )
-    );
-
-  }
+ 
   
   const filteredOrders =
     orders.filter((order) => {
 
       const matchesSearch =
-        order.username
+        (order.username ?? "")
           .toLowerCase()
           .includes(
             search.toLowerCase()
@@ -228,18 +171,14 @@ export default function AdminOrdersPage() {
 
       const matchesStatus =
         statusFilter === "All" ||
-        order.orderStatus ===
+        order.status ===
           statusFilter;
 
-      const matchesPayment =
-        paymentFilter === "All" ||
-        order.paymentStatus ===
-          paymentFilter;
+      
 
       return (
-        matchesSearch &&
-        matchesStatus &&
-        matchesPayment
+          matchesSearch &&
+          matchesStatus
       );
 
     });
@@ -276,11 +215,13 @@ export default function AdminOrdersPage() {
           Orders
         </h1>
 
+        <AdminNav />
+
         <OrderStats
-          totalOrders={totalOrders}
-          totalRevenue={totalRevenue}
-          pendingOrders={pendingOrders}
-          deliveredOrders={deliveredOrders}
+            totalOrders={totalOrders}
+            totalRevenue={totalRevenue}
+            pendingOrders={pendingOrders}
+            completedOrders={completedOrders}
         />
 
         <div
@@ -298,10 +239,8 @@ export default function AdminOrdersPage() {
           />
 
         <OrderFilters
-          statusFilter={statusFilter}
-          paymentFilter={paymentFilter}
-          onStatusChange={setStatusFilter}
-          onPaymentChange={setPaymentFilter}
+            statusFilter={statusFilter}
+            onStatusChange={setStatusFilter}
         />
 
         </div>
@@ -336,10 +275,9 @@ export default function AdminOrdersPage() {
           filteredOrders.map((order) => (
 
             <OrderCard
-              key={order.id}
-              order={order}
-              onOrderStatusChange={updateOrderStatus}
-              onPaymentStatusChange={updatePaymentStatus}
+                key={order.id}
+                order={order}
+                onOrderStatusChange={updateOrderStatus}
             />
 
           ))

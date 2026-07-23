@@ -5,20 +5,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import type { OrderStatus } from "@/types/order";
 interface OrderFiltersProps {
-  statusFilter: string;
-  paymentFilter: string;
-
-  onStatusChange: (value: string) => void;
-  onPaymentChange: (value: string) => void;
+    statusFilter: OrderStatus | "All";
+    onStatusChange: (value: OrderStatus | "All") => void;
 }
-
 export default function OrderFilters({
-  statusFilter,
-  paymentFilter,
-  onStatusChange,
-  onPaymentChange,
+    statusFilter,
+    onStatusChange,
 }: OrderFiltersProps) {
 
   return (
@@ -40,23 +34,20 @@ export default function OrderFilters({
             All Statuses
           </SelectItem>
 
-          <SelectItem value="Pending">
+          <SelectItem value="pending">
             Pending
           </SelectItem>
 
-          <SelectItem value="Processing">
+          <SelectItem value="processing">
             Processing
           </SelectItem>
 
-          <SelectItem value="Shipped">
-            Shipped
-          </SelectItem>
 
-          <SelectItem value="Delivered">
+          <SelectItem value="completed">
             Delivered
           </SelectItem>
 
-          <SelectItem value="Cancelled">
+          <SelectItem value="cancelled">
             Cancelled
           </SelectItem>
 
@@ -64,36 +55,7 @@ export default function OrderFilters({
 
       </Select>
 
-      <Select
-        value={paymentFilter}
-        onValueChange={onPaymentChange}
-      >
-
-        <SelectTrigger className="w-44">
-          <SelectValue />
-        </SelectTrigger>
-
-        <SelectContent>
-
-          <SelectItem value="All">
-            All Payments
-          </SelectItem>
-
-          <SelectItem value="Pending">
-            Pending
-          </SelectItem>
-
-          <SelectItem value="Paid">
-            Paid
-          </SelectItem>
-
-          <SelectItem value="Refunded">
-            Refunded
-          </SelectItem>
-
-        </SelectContent>
-
-      </Select>
+      
 
     </>
 

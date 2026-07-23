@@ -5,10 +5,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import type { OrderStatus } from "@/types/order";
 interface OrderStatusSelectProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: OrderStatus;
+  onChange: (value: OrderStatus) => void;
 }
 
 export default function OrderStatusSelect({
@@ -30,25 +30,21 @@ export default function OrderStatusSelect({
         </SelectTrigger>
 
         <SelectContent>
-          <SelectItem value="Pending">
+          <SelectItem value="pending">
             🟡 Pending
-          </SelectItem>
+        </SelectItem>
 
-          <SelectItem value="Processing">
+        <SelectItem value="processing">
             🔵 Processing
-          </SelectItem>
+        </SelectItem>
 
-          <SelectItem value="Shipped">
-            🟣 Shipped
-          </SelectItem>
+        <SelectItem value="completed">
+            🟢 Completed
+        </SelectItem>
 
-          <SelectItem value="Delivered">
-            🟢 Delivered
-          </SelectItem>
-
-          <SelectItem value="Cancelled">
+        <SelectItem value="cancelled">
             🔴 Cancelled
-          </SelectItem>
+        </SelectItem>
         </SelectContent>
       </Select>
     </div>

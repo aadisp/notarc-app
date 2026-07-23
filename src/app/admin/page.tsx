@@ -13,7 +13,7 @@ import AddCourseDialog from "@/components/admin/courses/add-course-dialog";
 import { toast } from "sonner";
 import ProductTable from "@/components/admin/products/product-table";
 import ProductForm from "@/components/admin/product-form";
-
+import AdminNav from "@/components/admin/admin-nav";
 import DashboardCard from "@/components/admin/dashboard-card";
 
 import SiteLayout from "@/components/layout/site-layout";
@@ -270,6 +270,8 @@ export default function AdminPage() {
         <h1 className="text-5xl font-bold">
           Dashboard
         </h1>
+
+        <AdminNav />
 
         <p className="mt-3 text-slate-500">
           Manage orders, products and courses from one place.

@@ -1,49 +1,35 @@
 import OrderItems from "./order-items";
 import OrderStatusSelect from "./order-status-select";
-import PaymentStatusSelect from "./payment-status-select";
-import type { Timestamp } from "firebase/firestore";
+import type { Order, OrderStatus } from "@/types/order";
 
-interface OrderItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
+const statusClasses = {
+    pending:
+        "bg-yellow-100 text-yellow-800",
 
-interface Order {
-  id: string;
+    processing:
+        "bg-blue-100 text-blue-800",
 
-  username: string;
-  userEmail: string;
+    completed:
+        "bg-green-100 text-green-800",
 
-  total: number;
+    cancelled:
+        "bg-red-100 text-red-800",
+};
 
-  orderStatus: string;
-  paymentStatus: string;
 
-  items: OrderItem[];
-
-  createdAt?: Timestamp;
-}
 
 interface OrderCardProps {
   order: Order;
 
   onOrderStatusChange: (
     orderId: string,
-    value: string
-  ) => void;
-
-  onPaymentStatusChange: (
-    orderId: string,
-    value: string
+    value: OrderStatus
   ) => void;
 }
 
 export default function OrderCard({
   order,
   onOrderStatusChange,
-  onPaymentStatusChange,
 }: OrderCardProps) {
 
   return (
@@ -60,48 +46,86 @@ export default function OrderCard({
 
       <div className="flex justify-between">
 
-        <div>
+        <div className="flex items-center gap-4">
 
-          <h2 className="text-2xl font-bold">
-            {order.username}
-          </h2>
+    <div
+        className="
+            flex
+            h-14
+            w-14
+            items-center
+            justify-center
+            rounded-full
+            bg-blue-100
+            text-lg
+            font-bold
+            text-blue-700
+        "
+    >
+        {(order.username || order.userEmail)
+            .charAt(0)
+            .toUpperCase()}
+    </div>
 
-          <p className="text-gray-500">
+    <div>
+
+        <h2 className="text-2xl font-bold">
+            {order.username || "Unknown User"}
+        </h2>
+
+        <p className="text-gray-500">
             {order.userEmail}
-          </p>
+        </p>
 
-        </div>
+    </div>
+
+</div>
 
         <div className="text-right">
 
-          <h2 className="text-3xl font-bold">
-            ₹{order.total.toLocaleString()}
+          <span
+              className={`
+                  inline-block
+                  rounded-full
+                  px-3
+                  py-1
+                  text-xs
+                  font-semibold
+                  capitalize
+                  ${statusClasses[order.status]}
+              `}
+          >
+              {order.status}
+          </span>
+
+          <h2 className="mt-3 text-3xl font-bold">
+              ₹{order.total.toLocaleString()}
           </h2>
 
           <p className="text-sm text-gray-500">
-            #{order.id.slice(0, 8)}
+              #{order.id.slice(0, 8)}
           </p>
 
           {order.createdAt && (
-            <p className="mt-1 text-sm text-gray-500">
-              {order.createdAt
-                .toDate()
-                .toLocaleDateString("en-IN", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}
-            </p>
+              <p className="mt-1 text-sm text-gray-500">
+                  {order.createdAt
+                      .toDate()
+                      .toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                      })}
+              </p>
           )}
 
-        </div>
+      </div>
 
       </div>
 
       <div className="mt-6 flex gap-8">
 
         <OrderStatusSelect
-          value={order.orderStatus}
+          value={order.status}
           onChange={(value) =>
             onOrderStatusChange(
               order.id,
@@ -110,15 +134,7 @@ export default function OrderCard({
           }
         />
 
-        <PaymentStatusSelect
-          value={order.paymentStatus}
-          onChange={(value) =>
-            onPaymentStatusChange(
-              order.id,
-              value
-            )
-          }
-        />
+        
 
       </div>
 

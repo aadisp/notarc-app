@@ -1,7 +1,7 @@
 "use client";
 
 import { useUserRole } from "@/hooks/use-user-role";
-
+import AdminNav from "@/components/admin/admin-nav";
 export default function AdminProductsPage() {
 
   const role =
@@ -22,6 +22,8 @@ export default function AdminProductsPage() {
       <h1 className="mb-8 text-4xl font-bold">
         Products
       </h1>
+
+      <AdminNav />
 
     </main>
 

@@ -7,6 +7,7 @@ import UserStats from "@/components/admin/users/user-stats";
 import UserSearch from "@/components/admin/users/user-search";
 import UserTable from "@/components/admin/users/user-table";
 import { getAuth } from "firebase/auth";
+import AdminNav from "@/components/admin/admin-nav";
 
 import {
   collection,
@@ -18,16 +19,7 @@ import {
 
 import { useEffect, useState } from "react";
 
-interface User {
-  id: string;
-
-  email: string;
-  username?: string;
-
-  role: string;
-
-  createdAt?: any;
-}
+import type { User } from "@/types/user";
 
 export default function AdminUsersPage() {
 
@@ -169,6 +161,8 @@ export default function AdminUsersPage() {
         <h1 className="mb-10 text-5xl font-bold">
           Users
         </h1>
+
+        <AdminNav />
 
         <UserStats
           totalUsers={totalUsers}
