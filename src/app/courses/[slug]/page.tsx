@@ -3,6 +3,7 @@
 import CourseGrid from "@/components/courses/course-grid";
 import SiteLayout from "@/components/layout/site-layout";
 import { db } from "@/firebase/firebase";
+import { toast } from "sonner";
 import {
   collection,
   getDocs,
@@ -167,7 +168,7 @@ export default function CoursePage() {
                   const user = auth.currentUser;
 
                   if (!user) {
-                    alert("Please login first");
+                    toast.error("Please log in first.");
                     return;
                   }
 
@@ -187,7 +188,7 @@ export default function CoursePage() {
 
                     setIsEnrolled(true);
 
-                    alert("Enrollment successful");
+                    toast.success("Successfully enrolled!");
 
                   } catch (error) {
                     console.error(error);

@@ -7,7 +7,7 @@ import { useUserRole } from "@/hooks/use-user-role";
 import ProductAdminControls from "./product-admin-controls";
 
 interface ProductCardProps {
-  id: number;
+  id: string;
   firestoreId: string;
   name: string;
   price: string;
@@ -28,9 +28,17 @@ export default function ProductCard({
   imageUrl,
 }: ProductCardProps) {
 
-  const addItem = useCartStore(
-    (state) => state.addItem
+  const {
+    items,
+    addItem,
+    increaseQuantity,
+    decreaseQuantity,
+  } = useCartStore();
+
+  const cartItem = items.find(
+    (item) => item.id === id
   );
+
   const role = useUserRole();
 
   return (
@@ -93,27 +101,46 @@ export default function ProductCard({
                 </Button>
               </Link>
 
-              <Button
-                className="h-11 flex-1 font-semibold"
-                onClick={() => {
-                  console.log("ADD CLICKED", name);
+              {cartItem ? (
+  <div className="flex h-11 flex-1 items-center justify-between rounded-md border">
 
-                  addItem({
-                    id,
-                    name,
-                    price: Number(
-                      price.replace(/[^\d]/g, "")
-                    ),
-                  });
+    <Button
+      variant="ghost"
+      className="h-full px-3"
+      onClick={() => decreaseQuantity(id)}
+    >
+      -
+    </Button>
 
-                  console.log(
-                    "AFTER ADD",
-                    useCartStore.getState().items
-                  );
-                }}
-              >
-                Add to Cart
-              </Button>
+    <span className="font-semibold">
+      {cartItem.quantity}
+    </span>
+
+    <Button
+      variant="ghost"
+      className="h-full px-3"
+      onClick={() => increaseQuantity(id)}
+    >
+      +
+    </Button>
+
+  </div>
+                ) : (
+                  <Button
+                    className="h-11 flex-1 font-semibold"
+                    onClick={() =>
+                      addItem({
+                        id,
+                        name,
+                        price: Number(
+                          price.replace(/[^\d]/g, "")
+                        ),
+                      })
+                    }
+                  >
+                    Add to Cart
+                  </Button>
+                )}
 
             </div>
 

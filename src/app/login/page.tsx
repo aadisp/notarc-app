@@ -4,7 +4,7 @@ import {
   useEffect,
   useState,
 } from "react";
-
+import { toast } from "sonner";
 import {
   Eye,
   EyeOff,
@@ -15,7 +15,7 @@ import {
 } from "firebase/auth";
 
 import { auth, db } from "@/firebase/firebase";
-
+import { useRouter } from "next/navigation";
 import {
   collection,
   getDocs,
@@ -24,6 +24,8 @@ import {
 } from "firebase/firestore";
 
 export default function LoginPage() {
+
+  const router = useRouter();
 
   const [identifier,
     setIdentifier] =
@@ -106,7 +108,7 @@ export default function LoginPage() {
           snapshot.empty
         ) {
 
-          alert(
+          toast.error(
             "Username not found"
           );
 
@@ -206,17 +208,18 @@ export default function LoginPage() {
 
       }
 
-      alert(
+      toast.success(
         "Logged in!"
       );
+
+      router.push("/");
 
     } catch (error) {
 
       console.error(error);
 
-      alert(
-        String(error)
-      );
+      toast.error("Login failed. Please check your credentials.");
+      console.error(error);
 
     }
 

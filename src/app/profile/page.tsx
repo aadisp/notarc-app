@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { toast } from "sonner";
 import { auth, db } from "@/firebase/firebase";
 
 import {
@@ -89,7 +89,7 @@ export default function ProfilePage() {
         }
       );
 
-      alert(
+      toast.success(
         "Profile updated"
       );
 

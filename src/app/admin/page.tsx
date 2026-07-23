@@ -144,7 +144,7 @@ export default function AdminPage() {
         );
       }
 
-      alert("Products imported");
+      toast.success("Products imported");
     } catch (error) {
       console.error(error);
     }

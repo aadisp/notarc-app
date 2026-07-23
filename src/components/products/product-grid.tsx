@@ -48,7 +48,7 @@ export default function ProductGrid({
             {products.map((product, index) => (
                 <ProductCard
                     key={product.id}
-                    id={index + 1}
+                    id={product.id}
                     firestoreId={product.id}
                     name={product.name}
                     price={`₹${product.price}`}

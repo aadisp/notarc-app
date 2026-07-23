@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
+import { toast } from "sonner";
 import {
   Eye,
   EyeOff,
@@ -12,7 +12,7 @@ import {
 } from "firebase/auth";
 
 import { auth } from "@/firebase/firebase";
-
+import { useRouter } from "next/navigation";
 import {
   doc,
   setDoc,
@@ -21,6 +21,8 @@ import {
 import { db } from "@/firebase/firebase";
 
 export default function SignupPage() {
+
+  const router = useRouter();
 
   const [email,
     setEmail] =
@@ -62,11 +64,16 @@ export default function SignupPage() {
         }
       );
 
-      alert(
+      toast.success(
         "Account created!"
       );
 
+      router.push("/");
+
     } catch (error) {
+
+      toast.error("Failed to create account.");
+      console.error(error);
 
       console.error(error);
 
