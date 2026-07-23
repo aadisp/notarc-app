@@ -5,7 +5,7 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
-
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -35,8 +35,7 @@ export default function ProductRow({
   const [deleteOpen, setDeleteOpen] =
     useState(false);
 
-  const [viewOpen, setViewOpen] =
-    useState(false);
+
 
   async function handleDelete() {
 
@@ -138,10 +137,8 @@ export default function ProductRow({
           "
         >
 
-          <button
-            onClick={() =>
-              setViewOpen(true)
-            }
+          <Link
+            href={`/products/${product.slug}`}
             className="
               rounded-xl
               p-3
@@ -150,7 +147,7 @@ export default function ProductRow({
             "
           >
             <Eye className="h-5 w-5" />
-          </button>
+          </Link>
 
           <button
             onClick={() =>
@@ -198,11 +195,7 @@ export default function ProductRow({
 
     </tr>
 
-    <ViewProductDialog
-      open={viewOpen}
-      onOpenChange={setViewOpen}
-      product={product}
-    />
+   
 
     <EditProductDialog
       open={editOpen}

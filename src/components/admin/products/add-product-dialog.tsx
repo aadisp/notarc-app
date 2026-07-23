@@ -27,13 +27,13 @@ export default function AddProductDialog({
     >
 
       <DialogContent
-      className="
-        w-[95vw]
-        max-w-6xl
-        max-h-[90vh]
-        overflow-y-auto
-        p-8
-      "
+        className="
+          w-[95vw]
+          max-w-[95vw]
+          h-[90vh]
+          overflow-y-auto
+        "
+
     >
 
         <DialogHeader>

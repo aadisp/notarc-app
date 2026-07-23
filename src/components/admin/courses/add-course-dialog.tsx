@@ -23,7 +23,14 @@ export default function AddCourseDialog({
       open={open}
       onOpenChange={onOpenChange}
     >
-      <DialogContent className="max-w-3xl">
+      <DialogContent
+        className="
+          w-[95vw]
+          max-w-[95vw]
+          h-[90vh]
+          overflow-y-auto
+        "
+      >
         <DialogHeader>
           <DialogTitle>
             Add Course
