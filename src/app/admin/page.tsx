@@ -281,24 +281,15 @@ export default function AdminPage() {
 
       <div
         className="
-          mb-16
-          grid
-          gap-6
-          md:grid-cols-2
-          xl:grid-cols-4
-        "
+  mb-16
+  grid
+  gap-6
+  md:grid-cols-2
+  max-w-3xl
+"
       >
 
-        <DashboardCard
-          title="Orders"
-          count={orderCount}
-          subtitle="Total Orders"
-          href="/admin/orders"
-          icon={Package}
-          bgColor="bg-blue-100"
-          iconColor="text-blue-600"
-          numberColor="text-blue-600"
-        />
+        
 
         <DashboardCard
           title="Products"
@@ -322,23 +313,16 @@ export default function AdminPage() {
           numberColor="text-violet-600"
         />
 
-        <DashboardCard
-          title="Users"
-          count={userCount}
-          subtitle="Registered Users"
-          href="/admin/users"
-          icon={Users}
-          bgColor="bg-orange-100"
-          iconColor="text-orange-600"
-          numberColor="text-orange-600"
-        />
+        
 
       </div>
 
 
-      <ProductTable
-        onAddProduct={() => setAddProductOpen(true)}
-      />
+      <section id="products" className="scroll-mt-28">
+        <ProductTable
+          onAddProduct={() => setAddProductOpen(true)}
+        />
+      </section>
 
       <AddProductDialog
         open={addProductOpen}
@@ -364,9 +348,11 @@ export default function AdminPage() {
 
       </AddProductDialog>
 
-        <CourseTable
-          onAddCourse={() => setAddCourseOpen(true)}
-        />
+        <section id="courses" className="mt-16 scroll-mt-28">
+          <CourseTable
+            onAddCourse={() => setAddCourseOpen(true)}
+          />
+        </section>
 
         <AddCourseDialog
           open={addCourseOpen}
