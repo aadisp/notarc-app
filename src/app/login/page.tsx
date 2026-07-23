@@ -1,5 +1,7 @@
 "use client";
 
+import AuthInput from "@/components/auth/auth-input";
+import { Mail, Lock } from "lucide-react";
 import {
   useEffect,
   useState,
@@ -9,11 +11,13 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-
+import AuthBackground from "@/components/auth/auth-background";
+import AuthCard from "@/components/auth/auth-card";
 import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
-
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { auth, db } from "@/firebase/firebase";
 import { useRouter } from "next/navigation";
 import {
@@ -22,10 +26,13 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 
 export default function LoginPage() {
 
   const router = useRouter();
+  const googleProvider = new GoogleAuthProvider();
 
   const [identifier,
     setIdentifier] =
@@ -225,175 +232,176 @@ export default function LoginPage() {
 
   }
 
+  async function handleGoogleLogin() {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+
+      const user = result.user;
+
+      const userRef = doc(db, "users", user.uid);
+
+      const snapshot = await getDoc(userRef);
+
+      // First Google login
+      if (!snapshot.exists()) {
+        await setDoc(userRef, {
+          uid: user.uid,
+          username:
+            user.displayName?.replace(/\s+/g, "").toLowerCase() ??
+            `user${Date.now()}`,
+          email: user.email,
+          role: "user",
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      // Save account locally (same behavior as email login)
+      const previousAccounts = JSON.parse(
+        localStorage.getItem("notarcAccounts") || "[]"
+      );
+
+      const exists = previousAccounts.some(
+        (account: any) => account.uid === user.uid
+      );
+
+      if (!exists) {
+        previousAccounts.push({
+          uid: user.uid,
+          username:
+            snapshot.exists()
+              ? snapshot.data().username
+              : user.displayName,
+          email: user.email,
+        });
+
+        localStorage.setItem(
+          "notarcAccounts",
+          JSON.stringify(previousAccounts)
+        );
+      }
+
+      localStorage.removeItem("notarcSelectedAccount");
+
+      toast.success("Welcome!");
+
+      router.push("/");
+    } catch (error) {
+      console.error(error);
+      toast.error("Google sign-in failed.");
+    }
+  }
+
   return (
-
-    <main className="mx-auto max-w-md p-10">
-
-      <h1 className="mb-6 text-4xl font-bold">
-        Login
-      </h1>
-
-      {selectedAccount && (
-
-        <div
-          className="
-            mb-6
-            flex
-            items-center
-            gap-4
-            rounded-xl
-            border
-            p-4
-          "
-        >
-
-          <div
-            className="
-              flex
-              h-12
-              w-12
-              items-center
-              justify-center
-              rounded-full
-              bg-slate-900
-              text-white
-              font-bold
-            "
-          >
-            {selectedAccount.username
-              .charAt(0)
-              .toUpperCase()}
-          </div>
-
-          <div>
-
-            <p className="font-semibold">
-              {selectedAccount.username}
-            </p>
-
-            <p
-              className="
-                text-sm
-                text-slate-500
-              "
-            >
-              {selectedAccount.email}
-            </p>
-
-          </div>
-
-        </div>
-
-      )}
-
-      <form
-        className="space-y-4"
-        onSubmit={(e) => {
-
-          e.preventDefault();
-
-          handleLogin();
-
-        }}
+    <AuthBackground>
+      <AuthCard
+        title="Welcome Back"
+        subtitle="Sign in to continue your engineering journey."
       >
-
-        {!selectedAccount && (
-
-          <input
-            type="text"
-            placeholder="Email or Username"
-            value={identifier}
-            onChange={(e) =>
-              setIdentifier(
-                e.target.value
-              )
-            }
-            className="
-              w-full
-              rounded
-              border
-              p-3
-            "
-          />
-
-        )}
-
-        <div className="relative">
-
-          <input
-            type={
-              showPassword
-                ? "text"
-                : "password"
-            }
-            placeholder="Password"
-            value={password}
-            onChange={(e) =>
-              setPassword(
-                e.target.value
-              )
-            }
-            className="
-              w-full
-              rounded
-              border
-              p-3
-              pr-12
-            "
-          />
-
-          <button
-            type="button"
-            onClick={() =>
-              setShowPassword(
-                !showPassword
-              )
-            }
-            className="
-              absolute
-              right-3
-              top-1/2
-              -translate-y-1/2
-              text-slate-500
-              transition
-              hover:text-slate-900
-            "
-          >
-
-            {showPassword ? (
-
-              <EyeOff
-                size={18}
-              />
-
-            ) : (
-
-              <Eye
-                size={18}
-              />
-
-            )}
-
-          </button>
-
-        </div>
-
-        <button
-          type="submit"
-          className="
-            w-full
-            rounded
-            border
-            p-3
-          "
+        <form
+          className="space-y-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
         >
-          Login
-        </button>
 
-      </form>
+          {!selectedAccount && (
+            <AuthInput
+              icon={<Mail size={18} />}
+              placeholder="Email or Username"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+            />
+          )}
 
-    </main>
+          <div className="relative">
 
+            <AuthInput
+              icon={<Lock size={18} />}
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              endIcon={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-muted-foreground hover:text-foreground transition"
+                >
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+              }
+            />
+
+            
+
+          </div>
+
+          <Button
+            type="submit"
+            className="h-12 w-full rounded-xl text-base font-semibold"
+          >
+            Login
+          </Button>
+
+          <div className="relative my-6">
+  <div className="absolute inset-0 flex items-center">
+    <span className="w-full border-t" />
+  </div>
+
+  <div className="relative flex justify-center text-xs uppercase">
+    <span className="bg-white/70 px-3 text-muted-foreground">
+      Or continue with
+    </span>
+  </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="h-12 w-full rounded-xl"
+              onClick={handleGoogleLogin}
+            >
+              <svg
+                className="mr-2 h-5 w-5"
+                viewBox="0 0 48 48"
+              >
+                <path
+                  fill="#FFC107"
+                  d="M43.6 20.5H42V20H24v8h11.3C33.6 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3 0 5.7 1.1 7.8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.3-.4-3.5z"
+                />
+                <path
+                  fill="#FF3D00"
+                  d="M6.3 14.7l6.6 4.8C14.7 15.4 19 12 24 12c3 0 5.7 1.1 7.8 3l5.7-5.7C34 6.1 29.3 4 24 4c-7.7 0-14.4 4.3-17.7 10.7z"
+                />
+                <path
+                  fill="#4CAF50"
+                  d="M24 44c5.2 0 10-2 13.6-5.3l-6.3-5.3C29.2 36 26.8 37 24 37c-5.2 0-9.6-3.3-11.2-8l-6.5 5C9.6 39.6 16.2 44 24 44z"
+                />
+                <path
+                  fill="#1976D2"
+                  d="M43.6 20.5H42V20H24v8h11.3c-1.1 3.1-3.3 5.6-6.3 7.2l6.3 5.3C39.4 36.8 44 31 44 24c0-1.3-.1-2.3-.4-3.5z"
+                />
+              </svg>
+
+              Continue with Google
+            </Button>
+
+    
+
+          <p className="text-center text-sm text-muted-foreground">
+            Don't have an account?{" "}
+            <Link
+              href="/signup"
+              className="font-semibold text-primary hover:underline"
+            >
+              Create one
+            </Link>
+          </p>
+
+        </form>
+      </AuthCard>
+    </AuthBackground>
   );
 
 }
