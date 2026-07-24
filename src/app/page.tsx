@@ -4,6 +4,7 @@ import ProductsPreview from "@/components/sections/products-preview";
 import CoursesPreview from "@/components/sections/courses-preview";
 import GallerySection from "@/components/sections/gallery-section";
 import VisionSection from "@/components/sections/vision-section";
+import ClientsSection from "@/components/sections/clients-section";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <ProductsPreview />
       <CoursesPreview />
       <GallerySection />
+      <ClientsSection />
       <VisionSection />
     </SiteLayout>
   );
