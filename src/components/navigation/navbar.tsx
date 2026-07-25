@@ -275,8 +275,8 @@ export default function Navbar() {
             Book a Course
           </Link>
 
-          <Link href="/gallery" className="transition hover:text-blue-600">
-            Gallery
+          <Link href="/contact-us" className="transition hover:text-blue-600">
+            Reach Us
           </Link>
 
           <Link href="/cart" className="transition hover:text-blue-600">

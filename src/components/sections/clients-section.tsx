@@ -58,11 +58,11 @@ export default function ClientsSection() {
     <section className="overflow-hidden py-20 bg-white">
 
       <div className="mb-12 flex items-center justify-center gap-5">
-        <div className="h-px w-24 bg-blue-600" />
-        <h2 className="text-3xl font-bold text-blue-600">
+        <div className="h-px w-24 bg-gray-600" />
+        <h2 className="text-3xl font-bold text-black-600">
           Happy Clients
         </h2>
-        <div className="h-px w-24 bg-blue-600" />
+        <div className="h-px w-24 bg-gray-600" />
       </div>
 
       <div className="overflow-hidden">

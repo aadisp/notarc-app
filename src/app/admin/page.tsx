@@ -92,12 +92,14 @@ export default function AdminPage() {
   async function handleAddProduct() {
     try {
       let uploadedImageUrl = "";
+      let uploadedPublicId = "";
 
       if (productFile) {
-        uploadedImageUrl =
-          await uploadToCloudinary(
-            productFile
-          );
+          const { imageUrl, publicId } =
+              await uploadToCloudinary(productFile);
+
+          uploadedImageUrl = imageUrl;
+          uploadedPublicId = publicId;
       }
       await addDoc(
         collection(db, "products"),
@@ -109,6 +111,7 @@ export default function AdminPage() {
           description,
           imageUrl:
             uploadedImageUrl,
+          publicId: uploadedPublicId,
         }
       );
 
@@ -155,12 +158,14 @@ export default function AdminPage() {
   async function handleAddCourse() {
     try {
       let uploadedImageUrl = "";
+      let uploadedPublicId = "";
 
       if (courseFile) {
-        uploadedImageUrl =
-          await uploadToCloudinary(
-            courseFile
-          );
+          const { imageUrl, publicId } =
+              await uploadToCloudinary(courseFile);
+
+          uploadedImageUrl = imageUrl;
+          uploadedPublicId = publicId;
       }
       await addDoc(
         collection(db, "courses"),
@@ -175,6 +180,7 @@ export default function AdminPage() {
             courseDescription,
           imageUrl:
             uploadedImageUrl,
+          publicId: uploadedPublicId,
         }
       );
 
@@ -267,7 +273,7 @@ export default function AdminPage() {
 
       <div className="mb-12">
 
-        <h1 className="text-5xl font-bold">
+        <h1 className="mb-8 text-5xl font-bold">
           Dashboard
         </h1>
 

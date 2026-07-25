@@ -183,21 +183,7 @@ export default function ProductForm({
           Add Product
         </button>
 
-        <button
-          onClick={onImportProducts}
-          className="
-            rounded-xl
-            border
-            border-slate-200
-            px-6
-            py-3
-            font-semibold
-            transition
-            hover:bg-slate-100
-          "
-        >
-          Import Products
-        </button>
+        
 
       </div>
 
