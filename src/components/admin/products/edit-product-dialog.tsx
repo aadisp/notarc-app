@@ -69,9 +69,13 @@ async function handleSave() {
   try {
 
     let imageUrl = product.imageUrl;
+    let publicId = product.publicId;
 
     if (newImage) {
-      imageUrl = await uploadToCloudinary(newImage);
+      const upload = await uploadToCloudinary(newImage);
+
+      imageUrl = upload.imageUrl;
+      publicId = upload.publicId;
     }
 
     await updateDoc(
@@ -83,6 +87,7 @@ async function handleSave() {
         price,
         description,
         imageUrl,
+        publicId,
       }
     );
 
@@ -114,7 +119,7 @@ async function handleSave() {
       onOpenChange={onOpenChange}
     >
 
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-4xl">
 
         <DialogHeader>
 
@@ -124,103 +129,90 @@ async function handleSave() {
 
         </DialogHeader>
 
-        <div className="space-y-5">
+        <div className="grid gap-6 lg:grid-cols-2">
 
-          <div className="space-y-3">
+          {/* LEFT SIDE */}
 
-          {newImage ? (
+          <div className="space-y-3 lg:max-w-sm">
 
-            <img
-              src={URL.createObjectURL(newImage)}
-              alt="New product preview"
-              className="
-                h-48
-                w-full
-                rounded-xl
-                object-cover
-              "
-            />
+            {!newImage && (
+  product.imageUrl ? (
+    <img
+      src={product.imageUrl}
+      alt={product.name}
+      className="h-48 w-full rounded-xl object-cover"
+    />
+  ) : (
+    <div
+      className="
+        flex
+        h-48
+        items-center
+        justify-center
+        rounded-xl
+        bg-slate-100
+        text-slate-400
+      "
+    >
+      No Image
+    </div>
+  )
+)}
 
-          ) : product.imageUrl ? (
+<UploadBox
+  file={newImage}
+  onChange={setNewImage}
+  accent="emerald"
+  title="Replace Course Image"
+/>
 
-            <img
-              src={product.imageUrl}
-              alt={product.name}
-              className="
-                h-48
-                w-full
-                rounded-xl
-                object-cover
-              "
-            />
+          </div>
 
-          ) : (
+          {/* RIGHT SIDE */}
 
-            <div
-              className="
-                flex
-                h-48
-                items-center
-                justify-center
-                rounded-xl
-                bg-slate-100
-                text-slate-400
-              "
-            >
-              No Image
+          <div className="space-y-5">
+
+            <div className="grid gap-5 md:grid-cols-2">
+
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Product Name"
+                className="w-full rounded-xl border p-3"
+              />
+
+              <input
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                placeholder="Category"
+                className="w-full rounded-xl border p-3"
+              />
+
+              <input
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                placeholder="Slug"
+                className="w-full rounded-xl border p-3"
+              />
+
+              <input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
+                placeholder="Price"
+                className="w-full rounded-xl border p-3"
+              />
+
             </div>
 
-          )}
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description"
+              className="min-h-36 w-full rounded-xl border p-3"
+            />
 
-          <UploadBox
-            file={newImage}
-            onChange={setNewImage}
-            accent="emerald"
-            title="Replace Product Image"
-          />
-
-        </div>
-
-          <input
-            value={name}
-            onChange={(e) =>
-              setName(e.target.value)
-            }
-            className="w-full rounded-xl border p-3"
-          />
-
-          <input
-            value={slug}
-            onChange={(e) =>
-              setSlug(e.target.value)
-            }
-            className="w-full rounded-xl border p-3"
-          />
-
-          <input
-            value={category}
-            onChange={(e) =>
-              setCategory(e.target.value)
-            }
-            className="w-full rounded-xl border p-3"
-          />
-
-          <input
-            type="number"
-            value={price}
-            onChange={(e) =>
-              setPrice(Number(e.target.value))
-            }
-            className="w-full rounded-xl border p-3"
-          />
-
-          <textarea
-            value={description}
-            onChange={(e) =>
-              setDescription(e.target.value)
-            }
-            className="min-h-36 w-full rounded-xl border p-3"
-          />
+          </div>
 
         </div>
 

@@ -67,10 +67,13 @@ async function handleSave() {
   try {
 
     let imageUrl = course.imageUrl;
+    let publicId = course.publicId;
 
     if (newImage) {
-      imageUrl =
-        await uploadToCloudinary(newImage);
+      const upload = await uploadToCloudinary(newImage);
+
+      imageUrl = upload.imageUrl;
+      publicId = upload.publicId;
     }
 
     await updateDoc(
@@ -82,6 +85,7 @@ async function handleSave() {
         duration,
         description,
         imageUrl,
+        publicId,
       }
     );
 
@@ -112,102 +116,97 @@ async function handleSave() {
       onOpenChange={onOpenChange}
     >
 
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-4xl">
 
         <DialogHeader>
-
           <DialogTitle>
             Edit Course
           </DialogTitle>
-
         </DialogHeader>
 
-        <div className="space-y-5">
+        <div className="grid gap-6 lg:grid-cols-2">
 
-          <div className="space-y-3">
+          {/* LEFT SIDE */}
 
-            {newImage ? (
+          <div className="space-y-3 lg:max-w-sm">
 
-              <img
-                src={URL.createObjectURL(newImage)}
-                alt="New course preview"
-                className="
-                  h-48
-                  w-full
-                  rounded-xl
-                  object-cover
-                "
-              />
+            {!newImage && (
+  course.imageUrl ? (
+    <img
+      src={course.imageUrl}
+      alt={course.name}
+      className="h-48 w-full rounded-xl object-cover"
+    />
+  ) : (
+    <div
+      className="
+        flex
+        h-48
+        items-center
+        justify-center
+        rounded-xl
+        bg-slate-100
+        text-slate-400
+      "
+    >
+      No Image
+    </div>
+  )
+)}
 
-            ) : course.imageUrl ? (
-
-              <img
-                src={course.imageUrl}
-                alt={course.name}
-                className="
-                  h-48
-                  w-full
-                  rounded-xl
-                  object-cover
-                "
-              />
-
-            ) : (
-
-              <div
-                className="
-                  flex
-                  h-48
-                  items-center
-                  justify-center
-                  rounded-xl
-                  bg-slate-100
-                  text-slate-400
-                "
-              >
-                No Image
-              </div>
-
-            )}
-
-            <UploadBox
-              file={newImage}
-              onChange={setNewImage}
-              accent="violet"
-              title="Replace Course Image"
-            />
+<UploadBox
+  file={newImage}
+  onChange={setNewImage}
+  accent="violet"
+  title="Replace Course Image"
+/>
 
           </div>
 
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-xl border p-3"
-          />
+          {/* RIGHT SIDE */}
 
-          <input
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            className="w-full rounded-xl border p-3"
-          />
+          <div className="space-y-5">
 
-          <input
-            value={level}
-            onChange={(e) => setLevel(e.target.value)}
-            className="w-full rounded-xl border p-3"
-          />
+            <div className="grid gap-5 md:grid-cols-2">
 
-          <input
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            className="w-full rounded-xl border p-3"
-          />
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Course Name"
+                className="w-full rounded-xl border p-3"
+              />
 
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="min-h-36 w-full rounded-xl border p-3"
-          />
+              <input
+                value={level}
+                onChange={(e) => setLevel(e.target.value)}
+                placeholder="Level"
+                className="w-full rounded-xl border p-3"
+              />
+
+              <input
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                placeholder="Slug"
+                className="w-full rounded-xl border p-3"
+              />
+
+              <input
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+                placeholder="Duration"
+                className="w-full rounded-xl border p-3"
+              />
+
+            </div>
+
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description"
+              className="min-h-36 w-full rounded-xl border p-3"
+            />
+
+          </div>
 
         </div>
 
@@ -215,16 +214,12 @@ async function handleSave() {
 
           <Button
             variant="outline"
-            onClick={() =>
-              onOpenChange(false)
-            }
+            onClick={() => onOpenChange(false)}
           >
             Cancel
           </Button>
 
-          <Button
-            onClick={handleSave}
-            >
+          <Button onClick={handleSave}>
             Save Changes
           </Button>
 

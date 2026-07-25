@@ -6,4 +6,5 @@ export interface Course {
   duration: string;
   description: string;
   imageUrl: string;
+  publicId?: string;
 }
