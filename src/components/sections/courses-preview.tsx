@@ -1,50 +1,64 @@
+"use client";
+
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
-import CourseCard from "@/components/cards/course-card";
+import CourseCard from "@/components/courses/course-card";
+import { useCourses } from "@/hooks/use-courses";
 
 export default function CoursesPreview() {
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-40">
-      <div className="mb-12">
-        <h2 className="text-4xl font-bold">
-          Drone Bootcamps & Courses
-        </h2>
+    const {
+        courses,
+        loading,
+        error,
+    } = useCourses();
 
-        <p className="mt-4 text-muted-foreground">
-          Learn drone building, electronics, programming, and more.
-        </p>
-      </div>
+    const previewCourses = courses.slice(0, 3);
 
-      <div className="grid gap-8 md:grid-cols-3">
-        <div className="rounded-xl border p-8">
-          <CourseCard
-            title="Drone Building Bootcamp"
-            duration="2 Weeks"
-            level="Beginner"
-          />
-        </div>
+    return (
+        <section className="mx-auto max-w-7xl px-6 py-40">
+            <div className="mb-12">
+                <h2 className="text-4xl font-bold">
+                    Drone Bootcamps & Courses
+                </h2>
 
-        <div className="rounded-xl border p-8">
-          <CourseCard
-            title="FPV Drone Workshop"
-            duration="3 Days"
-            level="Intermediate"
-          />
-        </div>
+                <p className="mt-4 text-muted-foreground">
+                    Learn drone building, electronics, programming, robotics, and emerging technologies from industry experts.
+                </p>
+            </div>
 
-        <div className="rounded-xl border p-8">
-          <CourseCard
-            title="Drone Programming"
-            duration="4 Weeks"
-            level="Advanced"
-          />
-        </div>
-      </div>
+            {loading ? (
+                <div className="py-20 text-center">
+                    Loading courses...
+                </div>
+            ) : error ? (
+                <div className="py-20 text-center text-red-500">
+                    {error}
+                </div>
+            ) : (
+                <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+                    {previewCourses.map((course) => (
+                        <CourseCard
+                            key={course.id}
+                            firestoreId={course.id}
+                            slug={course.slug}
+                            name={course.name}
+                            level={course.level}
+                            duration={course.duration}
+                            description={course.description}
+                            imageUrl={course.imageUrl}
+                        />
+                    ))}
+                </div>
+            )}
 
-      <div className="mt-10">
-        <Button>
-          Browse Courses
-        </Button>
-      </div>
-    </section>
-  );
+            <div className="mt-10">
+                <Link href="/courses">
+                    <Button>
+                        Browse Courses
+                    </Button>
+                </Link>
+            </div>
+        </section>
+    );
 }

@@ -85,7 +85,7 @@ export default function ProductsPreview() {
 
           <ProductCard
             key={product.id}
-            id={products.indexOf(product) + 1}
+            id={product.id}
             firestoreId={product.id}
             name={product.name}
             price={`₹${product.price}`}
