@@ -2,7 +2,7 @@
 
 import { useContacts } from "@/hooks/use-contacts";
 import { useState } from "react";
-
+import { Input } from "@/components/ui/input";
 import MessageDialog from "./message-dialog";
 import AdminNav from "@/components/admin/admin-nav";
 
@@ -20,6 +20,8 @@ export default function MessagesPage() {
     const [open, setOpen] =
         useState(false);
 
+    const [search, setSearch] = useState("");
+
     if (loading) {
         return (
             <div className="mx-auto max-w-7xl px-6 py-12">
@@ -27,6 +29,18 @@ export default function MessagesPage() {
             </div>
         );
     }
+
+    const filteredContacts = contacts.filter((contact) => {
+
+        const query = search.toLowerCase();
+
+        return (
+            contact.name.toLowerCase().includes(query) ||
+            contact.email.toLowerCase().includes(query) ||
+            contact.subject.toLowerCase().includes(query)
+        );
+
+    });
 
     return (
 
@@ -43,6 +57,16 @@ export default function MessagesPage() {
                 <p className="mt-2 text-muted-foreground">
                     Manage enquiries submitted through the website.
                 </p>
+
+                <div className="mt-6">
+
+                    <Input
+                        placeholder="Search by name, email or subject..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+
+                </div>
 
             </div>
 
@@ -74,7 +98,7 @@ export default function MessagesPage() {
 
                     <tbody>
 
-                        {contacts.map((contact) => (
+                        {filteredContacts.map((contact) => (
 
                             <tr
                                 key={contact.id}

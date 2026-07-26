@@ -2,6 +2,7 @@
 
 import {
     doc,
+    deleteDoc,
     updateDoc,
 } from "firebase/firestore";
 import { useEffect } from "react";
@@ -58,6 +59,24 @@ export default function MessageDialog({
                 status,
             }
         );
+    }
+
+    async function deleteMessage() {
+
+        if (!contact) return;
+
+        const confirmed = window.confirm(
+            "Delete this message permanently?"
+        );
+
+        if (!confirmed) return;
+
+        await deleteDoc(
+            doc(db, "contacts", contact.id)
+        );
+
+        onOpenChange(false);
+
     }
 
     return (
@@ -146,6 +165,13 @@ export default function MessageDialog({
                             }
                         >
                             Mark as Resolved
+                        </Button>
+
+                        <Button
+                            variant="destructive"
+                            onClick={deleteMessage}
+                        >
+                            Delete
                         </Button>
 
                     </div>
