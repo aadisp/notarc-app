@@ -7,7 +7,7 @@ import VisionSection from "@/components/sections/vision-section";
 import ClientsSection from "@/components/sections/clients-section";
 import AboutSection from "@/components/sections/about-section";
 import CoreOfferings from "@/components/sections/core-offerings";
-
+import Testimonials from "@/components/sections/testimonials";
 
 export default function Home() {
   return (
@@ -18,7 +18,7 @@ export default function Home() {
       <CoursesPreview />
       <GallerySection />
       <ClientsSection />
-      <VisionSection />
+      <Testimonials />
     </SiteLayout>
   );
 }
