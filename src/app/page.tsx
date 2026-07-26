@@ -5,6 +5,8 @@ import CoursesPreview from "@/components/sections/courses-preview";
 import GallerySection from "@/components/sections/gallery-section";
 import VisionSection from "@/components/sections/vision-section";
 import ClientsSection from "@/components/sections/clients-section";
+import AboutSection from "@/components/sections/about-section";
+
 
 export default function Home() {
   return (

@@ -77,7 +77,7 @@ export default function ClientsSection() {
                 alt={client.name}
                 width={180}
                 height={80}
-                className="h-20 w-auto object-contain grayscale transition-all duration-300 hover:scale-105 hover:grayscale-0"
+                className="h-20 w-auto object-contain transition-all duration-300 hover:scale-105 hover:grayscale-0"
               />
             );
 

@@ -57,31 +57,12 @@ export default function HeroSection() {
             md:text-2xl
           "
         >
-          Building the next generation of drone engineers through
-          immersive workshops, industry-grade hardware, robotics,
-          and practical learning.
+          Unleashing Innovation:
+          Drones,
+          Robotics, and Beyond!
         </p>
 
         <div className="mt-12 flex flex-wrap justify-center gap-5">
-
-          <Button
-            asChild
-            size="lg"
-            className="
-              rounded-full
-              px-8
-              py-7
-              text-base
-              font-semibold
-              shadow-2xl
-              transition-all
-              hover:scale-105
-            "
-          >
-            <Link href="/products">
-              Explore Products
-            </Link>
-          </Button>
 
           <Button
             asChild
@@ -104,11 +85,31 @@ export default function HeroSection() {
             "
           >
             <Link href="/courses">
+              Explore Products
+            </Link>
+          </Button>
+          
+          <Button
+            asChild
+            size="lg"
+            className="
+              rounded-full
+              px-8
+              py-7
+              text-base
+              font-semibold
+              shadow-2xl
+              transition-all
+              hover:scale-105
+            "
+          >
+            <Link href="/products">
               Browse Courses
             </Link>
           </Button>
 
         </div>
+
 
       </div>
 

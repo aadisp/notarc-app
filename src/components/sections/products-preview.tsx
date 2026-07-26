@@ -66,6 +66,7 @@ export default function ProductsPreview() {
   return (
 
     <section className="mx-auto max-w-7xl px-6 py-40">
+      
 
       <div className="mb-12">
 
