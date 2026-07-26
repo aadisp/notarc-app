@@ -4,6 +4,7 @@ import { useContacts } from "@/hooks/use-contacts";
 import { useState } from "react";
 
 import MessageDialog from "./message-dialog";
+import AdminNav from "@/components/admin/admin-nav";
 
 import { ContactMessage } from "@/types/contact";
 export default function MessagesPage() {
@@ -33,9 +34,11 @@ export default function MessagesPage() {
 
             <div className="mb-10">
 
-                <h1 className="text-4xl font-bold">
+                <h1 className="mb-8 text-5xl font-bold">
                     Contact Messages
                 </h1>
+
+                <AdminNav />
 
                 <p className="mt-2 text-muted-foreground">
                     Manage enquiries submitted through the website.
