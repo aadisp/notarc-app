@@ -38,9 +38,7 @@ export default function ContactInfo() {
                         </h3>
 
                         <p className="mt-2 text-sm text-muted-foreground">
-                            Bengaluru,
-                            Karnataka,
-                            India
+                            57, Chimney Hills Bangalore Hesaraghatta Main Road, Post, Chikkabanavara, Bengaluru, Karnataka 560090
                         </p>
                     </div>
 
@@ -63,7 +61,7 @@ export default function ContactInfo() {
                         </h3>
 
                         <p className="mt-2 text-sm text-muted-foreground">
-                            +91 XXXXX XXXXX
+                            +91 79757 82830
                         </p>
 
                     </div>
@@ -87,7 +85,7 @@ export default function ContactInfo() {
                         </h3>
 
                         <p className="mt-2 text-sm text-muted-foreground">
-                            hello@notarc.in
+                            Info@notarc.in
                         </p>
 
                     </div>

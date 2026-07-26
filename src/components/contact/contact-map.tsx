@@ -18,7 +18,7 @@ export default function ContactMap() {
             <div className="overflow-hidden rounded-3xl border">
 
                 <iframe
-                    src="https://www.google.com/maps?q=Bengaluru,Karnataka&output=embed"
+                    src="https://www.google.com/maps?q=57, Chimney Hills Bangalore Hesaraghatta Main Road, Post, Chikkabanavara, Bengaluru, Karnataka 560090&output=embed"
                     width="100%"
                     height="450"
                     loading="lazy"
