@@ -6,12 +6,14 @@ import GallerySection from "@/components/sections/gallery-section";
 import VisionSection from "@/components/sections/vision-section";
 import ClientsSection from "@/components/sections/clients-section";
 import AboutSection from "@/components/sections/about-section";
+import CoreOfferings from "@/components/sections/core-offerings";
 
 
 export default function Home() {
   return (
     <SiteLayout>
       <HeroSection />
+      <CoreOfferings />
       <ProductsPreview />
       <CoursesPreview />
       <GallerySection />
