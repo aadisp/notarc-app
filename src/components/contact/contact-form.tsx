@@ -6,7 +6,7 @@ import {
     collection,
     serverTimestamp,
 } from "firebase/firestore";
-
+import emailjs from "@emailjs/browser";
 import { db } from "@/firebase/firebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,6 +42,19 @@ export default function ContactForm() {
                     status: "new",
 
                 }
+            );
+
+            await emailjs.send(
+                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+                {
+                    name,
+                    email,
+                    phone,
+                    subject,
+                    message,
+                },
+                process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
             );
 
             toast.success("Message sent successfully!", {
