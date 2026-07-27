@@ -5,6 +5,6 @@ export interface Product {
   category: string;
   price: number;
   description: string;
-  imageUrl: string;
-  publicId?: string;
+  imageUrls: string[];
+  publicIds?: string[];
 }

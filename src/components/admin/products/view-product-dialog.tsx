@@ -44,10 +44,10 @@ export default function ViewProductDialog({
 
         <div className="space-y-8">
 
-          {product.imageUrl ? (
+          {product.imageUrls?.length ? (
 
             <img
-              src={product.imageUrl}
+              src={product.imageUrls[0]}
               alt={product.name}
               className="
                 h-72

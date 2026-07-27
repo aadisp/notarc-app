@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import UploadBox from "@/components/admin/upload-box";
+import MultiUploadBox from "@/components/admin/multi-upload-box";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import ProductForm from "@/components/admin/product-form";
 import {
   Dialog,
   DialogContent,
@@ -52,8 +54,14 @@ export default function EditProductDialog({
     setDescription] =
     useState(product.description);
 
-  const [newImage, setNewImage] =
-    useState<File | null>(null);
+  const [newImages, setNewImages] =
+    useState<File[]>([]);
+
+  const [existingImages, setExistingImages] =
+    useState<string[]>(product.imageUrls);
+
+  const [existingPublicIds, setExistingPublicIds] =
+    useState<string[]>(product.publicIds ?? []);
 
   useEffect(() => {
     setName(product.name);
@@ -61,21 +69,33 @@ export default function EditProductDialog({
     setCategory(product.category);
     setPrice(product.price);
     setDescription(product.description);
-    setNewImage(null);
+    setNewImages([]);
+    setExistingImages(product.imageUrls);
+    setExistingPublicIds(product.publicIds ?? []);
   }, [product]);
 
+function removeExistingImage(index: number) {
+    setExistingImages((images) =>
+        images.filter((_, i) => i !== index)
+    );
+
+    setExistingPublicIds((ids) =>
+        ids.filter((_, i) => i !== index)
+    );
+}
+
 async function handleSave() {
-
   try {
+    let imageUrls = [...existingImages];
+    let publicIds = [...existingPublicIds];
 
-    let imageUrl = product.imageUrl;
-    let publicId = product.publicId;
+    // If the admin selected new images,
+    // replace the existing ones.
+    for (const file of newImages) {
+        const upload = await uploadToCloudinary(file);
 
-    if (newImage) {
-      const upload = await uploadToCloudinary(newImage);
-
-      imageUrl = upload.imageUrl;
-      publicId = upload.publicId;
+        imageUrls.push(upload.imageUrl);
+        publicIds.push(upload.publicId);
     }
 
     await updateDoc(
@@ -86,30 +106,22 @@ async function handleSave() {
         category,
         price,
         description,
-        imageUrl,
-        publicId,
+        imageUrls,
+        publicIds,
       }
     );
 
-    toast.success(
-      "Product updated successfully!"
-    );
+    toast.success("Product updated successfully!");
 
-    setNewImage(null);
-
+    setNewImages([]);
 
     onOpenChange(false);
 
   } catch (error) {
-
     console.error(error);
 
-    toast.error(
-      "Failed to update product."
-    );
-
+    toast.error("Failed to update product.");
   }
-
 }
 
   return (
@@ -119,7 +131,14 @@ async function handleSave() {
       onOpenChange={onOpenChange}
     >
 
-      <DialogContent className="sm:max-w-4xl">
+      <DialogContent
+          className="
+              w-[95vw]
+              max-w-[95vw]
+              h-[90vh]
+              overflow-y-auto
+          "
+      >
 
         <DialogHeader>
 
@@ -129,111 +148,30 @@ async function handleSave() {
 
         </DialogHeader>
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <ProductForm
+            name={name}
+            setName={setName}
 
-          {/* LEFT SIDE */}
+            slug={slug}
+            setSlug={setSlug}
 
-          <div className="space-y-3 lg:max-w-sm">
+            category={category}
+            setCategory={setCategory}
 
-            {!newImage && (
-  product.imageUrl ? (
-    <img
-      src={product.imageUrl}
-      alt={product.name}
-      className="h-48 w-full rounded-xl object-cover"
-    />
-  ) : (
-    <div
-      className="
-        flex
-        h-48
-        items-center
-        justify-center
-        rounded-xl
-        bg-slate-100
-        text-slate-400
-      "
-    >
-      No Image
-    </div>
-  )
-)}
+            price={price.toString()}
+            setPrice={(value) => setPrice(Number(value))}
 
-<UploadBox
-  file={newImage}
-  onChange={setNewImage}
-  accent="emerald"
-  title="Replace Course Image"
-/>
+            description={description}
+            setDescription={setDescription}
 
-          </div>
+            productFiles={newImages}
+            setProductFiles={setNewImages}
 
-          {/* RIGHT SIDE */}
-
-          <div className="space-y-5">
-
-            <div className="grid gap-5 md:grid-cols-2">
-
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Product Name"
-                className="w-full rounded-xl border p-3"
-              />
-
-              <input
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder="Category"
-                className="w-full rounded-xl border p-3"
-              />
-
-              <input
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                placeholder="Slug"
-                className="w-full rounded-xl border p-3"
-              />
-
-              <input
-                type="number"
-                value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
-                placeholder="Price"
-                className="w-full rounded-xl border p-3"
-              />
-
-            </div>
-
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Description"
-              className="min-h-36 w-full rounded-xl border p-3"
-            />
-
-          </div>
-
-        </div>
-
-        <DialogFooter>
-
-          <Button
-            variant="outline"
-            onClick={() =>
-              onOpenChange(false)
-            }
-          >
-            Cancel
-          </Button>
-
-          <Button
-            onClick={handleSave}
-            >
-            Save Changes
-          </Button>
-
-        </DialogFooter>
+            onSubmit={handleSave}
+            submitText="Save Changes"
+            existingImages={existingImages}
+            removeExistingImage={removeExistingImage}
+        />
 
       </DialogContent>
 

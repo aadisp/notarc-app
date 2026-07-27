@@ -80,10 +80,9 @@ export default function ProductRow({
 
       <td className="px-6 py-4">
 
-        {product.imageUrl ? (
-
-          <img
-            src={product.imageUrl}
+        {product.imageUrls?.length ? (
+        <img
+            src={product.imageUrls[0]}
             alt={product.name}
             className="
               h-16

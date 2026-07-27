@@ -55,7 +55,7 @@ export default function ProductGrid({
                     category={product.category}
                     slug={product.slug}
                     description={product.description}
-                    imageUrl={product.imageUrl}
+                    imageUrls={product.imageUrls}
                 />
             ))}
         </div>

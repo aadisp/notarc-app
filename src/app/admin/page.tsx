@@ -59,9 +59,9 @@ export default function AdminPage() {
     setCourseDescription] =
     useState("");
 
-  const [productFile,
-    setProductFile] =
-    useState<File | null>(null);
+  const [productFiles,
+    setProductFiles] =
+    useState<File[]>([]);
 
   const [courseFile,
     setCourseFile] =
@@ -90,44 +90,55 @@ export default function AdminPage() {
     useState(false);
 
   async function handleAddProduct() {
-    try {
-      let uploadedImageUrl = "";
-      let uploadedPublicId = "";
+  try {
 
-      if (productFile) {
-          const { imageUrl, publicId } =
-              await uploadToCloudinary(productFile);
+    const imageUrls: string[] = [];
+    const publicIds: string[] = [];
 
-          uploadedImageUrl = imageUrl;
-          uploadedPublicId = publicId;
-      }
-      await addDoc(
-        collection(db, "products"),
-        {
-          name,
-          slug,
-          category,
-          price: Number(price),
-          description,
-          imageUrl:
-            uploadedImageUrl,
-          publicId: uploadedPublicId,
-        }
-      );
+    for (const file of productFiles) {
 
-      toast.success("Product added successfully!");
+      const upload = await uploadToCloudinary(file);
 
-      setName("");
-      setSlug("");
-      setCategory("");
-      setPrice("");
-      setDescription("");
-      setProductFile(null);
-    } catch (error) {
-      console.error(error);
+      imageUrls.push(upload.imageUrl);
+      publicIds.push(upload.publicId);
 
-      toast.error("Failed to add product.");
     }
+
+    await addDoc(collection(db, "products"), {
+
+      name,
+
+      slug,
+
+      category,
+
+      price: Number(price),
+
+      description,
+
+      imageUrls,
+
+      publicIds,
+
+    });
+
+    toast.success("Product added successfully!");
+
+    setName("");
+    setSlug("");
+    setCategory("");
+    setPrice("");
+    setDescription("");
+
+    setProductFiles([]);
+
+  } catch (error) {
+
+    console.error(error);
+
+    toast.error("Failed to add product.");
+
+  }
   }
 
   async function importDefaultProducts() {
@@ -142,7 +153,8 @@ export default function AdminPage() {
             price: product.price,
             description:
               product.description,
-            imageUrl: "",
+            imageUrls: [],
+            publicIds: [],
           }
         );
       }
@@ -346,10 +358,10 @@ export default function AdminPage() {
           setPrice={setPrice}
           description={description}
           setDescription={setDescription}
-          productFile={productFile}
-          setProductFile={setProductFile}
-          onAddProduct={handleAddProduct}
-          onImportProducts={importDefaultProducts}
+          productFiles={productFiles}
+          setProductFiles={setProductFiles}
+          onSubmit={handleAddProduct}
+          submitText="Add Product"
         />
 
       </AddProductDialog>

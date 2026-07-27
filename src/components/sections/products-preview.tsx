@@ -22,7 +22,7 @@ interface Product {
   category: string;
   price: number;
   description: string;
-  imageUrl?: string;
+  imageUrls: string[];
 }
 
 export default function ProductsPreview() {
@@ -93,7 +93,7 @@ export default function ProductsPreview() {
             category={product.category}
             slug={product.slug}
             description={product.description}
-            imageUrl={product.imageUrl}
+            imageUrls={product.imageUrls}
           />
 
         ))}

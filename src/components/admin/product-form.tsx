@@ -7,10 +7,12 @@ import {
   IndianRupee,
   FileText,
   ImagePlus,
+  Trash2,
 } from "lucide-react";
 import FormField from "./form-field";
 import AdminInput from "./admin-input";
 import UploadBox from "./upload-box";
+import MultiUploadBox from "./multi-upload-box";
 
 interface ProductFormProps {
   name: string;
@@ -28,11 +30,14 @@ interface ProductFormProps {
   description: string;
   setDescription: (v: string) => void;
 
-  productFile: File | null;
-  setProductFile: (file: File | null) => void;
+  productFiles: File[];
+  setProductFiles: (files: File[]) => void;
 
-  onAddProduct: () => void;
-  onImportProducts: () => void;
+  onSubmit: () => void;
+
+  submitText?: string;
+  existingImages?: string[];
+  removeExistingImage?: (index: number) => void;
 }
 
 export default function ProductForm({
@@ -46,10 +51,12 @@ export default function ProductForm({
   setPrice,
   description,
   setDescription,
-  productFile,
-  setProductFile,
-  onAddProduct,
-  onImportProducts,
+  productFiles,
+  setProductFiles,
+  onSubmit,
+  submitText = "Add Product",
+  existingImages = [],
+  removeExistingImage = () => {},
 }: ProductFormProps) {
 
   return (
@@ -117,16 +124,23 @@ export default function ProductForm({
 
       <div className="mt-6">
 
+      
+
         <FormField
-        label="Product Image"
+        label="Product Images"
         icon={ImagePlus}
         >
 
-        <UploadBox
-            file={productFile}
-            onChange={setProductFile}
-            title="Upload Product Image"
+        <MultiUploadBox
+            files={productFiles}
+            onChange={setProductFiles}
+
+            existingImages={existingImages}
+            removeExistingImage={removeExistingImage}
+
+            title="Upload Product Images"
             accent="emerald"
+            maxFiles={10}
         />
 
         </FormField>
@@ -168,7 +182,7 @@ export default function ProductForm({
       <div className="mt-8 flex gap-4">
 
         <button
-          onClick={onAddProduct}
+          onClick={onSubmit}
           className="
             rounded-xl
             bg-emerald-600
@@ -180,7 +194,7 @@ export default function ProductForm({
             hover:bg-emerald-700
           "
         >
-          Add Product
+          {submitText}
         </button>
 
         

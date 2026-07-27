@@ -14,7 +14,7 @@ interface ProductCardProps {
   category: string;
   slug: string;
   description: string;
-  imageUrl?: string;
+  imageUrls?: string[];
 }
 
 export default function ProductCard({
@@ -25,7 +25,7 @@ export default function ProductCard({
   category,
   slug,
   description,
-  imageUrl,
+  imageUrls,
 }: ProductCardProps) {
 
   const {
@@ -46,9 +46,9 @@ export default function ProductCard({
 
      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted to-muted/50">
 
-      {imageUrl ? (
+      {imageUrls?.length ? (
           <img
-              src={imageUrl}
+              src={imageUrls[0]}
               alt={name}
               className="h-full w-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
           />
@@ -153,7 +153,6 @@ export default function ProductCard({
                   category={category}
                   price={price}
                   description={description}
-                  imageUrl={imageUrl}
                 />
               </div>
             )}
