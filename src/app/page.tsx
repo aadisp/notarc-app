@@ -19,6 +19,7 @@ export default function Home() {
       <GallerySection />
       <ClientsSection />
       <Testimonials />
+      <VisionSection />
     </SiteLayout>
   );
 }
