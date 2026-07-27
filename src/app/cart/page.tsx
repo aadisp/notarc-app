@@ -1,6 +1,7 @@
 "use client";
 import SiteLayout from "@/components/layout/site-layout";
 import { useCartStore } from "@/store/cart-store";
+import Link from "next/link";
 
 export default function CartPage() {
 
@@ -45,9 +46,12 @@ export default function CartPage() {
               key={item.id}
               className="rounded-xl border p-4"
             >
-              <h3 className="font-semibold">
-                {item.name}
-              </h3>
+              <Link
+                  href={`/products/${item.slug}`}
+                  className="font-semibold text-lg hover:text-emerald-600 transition"
+              >
+                  {item.name}
+              </Link>
 
               <p>
                 ₹{item.price}

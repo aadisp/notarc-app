@@ -14,6 +14,7 @@ interface ProductInfoProps {
     category: string;
     description: string;
     price: number;
+    slug: string;
 }
 
 export default function ProductInfo({
@@ -22,6 +23,7 @@ export default function ProductInfo({
     category,
     description,
     price,
+    slug,
 }: ProductInfoProps) {
 
     const router = useRouter();
@@ -62,6 +64,7 @@ export default function ProductInfo({
         addItem({
             id,
             name,
+            slug,
             price,
         });
 

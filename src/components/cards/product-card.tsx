@@ -132,6 +132,7 @@ export default function ProductCard({
                       addItem({
                         id,
                         name,
+                        slug,
                         price: Number(
                           price.replace(/[^\d]/g, "")
                         ),

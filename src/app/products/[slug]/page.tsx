@@ -68,6 +68,7 @@ export default async function ProductDetailsPage({
           <ProductInfo
             id={product.id}
             name={product.name}
+            slug={product.slug}
             category={product.category}
             description={product.description}
             price={product.price}
