@@ -5,7 +5,7 @@ import {
   collection,
   getDocs,
 } from "firebase/firestore";
-
+import ProductGallery from "@/components/products/product-gallery";
 import { notFound } from "next/navigation";
 
 interface ProductPageProps {
@@ -58,35 +58,77 @@ export default async function ProductDetailsPage({
     <SiteLayout>
       <section className="mx-auto max-w-7xl px-6 py-24">
 
-        {product.imageUrl && (
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className="
-              mb-8
-              h-96
-              w-full
-              rounded-xl
-              object-cover
-            "
+        <div className="grid gap-12 lg:grid-cols-2 items-start">
+
+          <ProductGallery
+              images={product.imageUrls}
+              productName={product.name}
           />
-        )}
 
-        <h1 className="mb-6 text-5xl font-bold">
-          {product.name}
-        </h1>
+          <div>
+              <span
+                  className="
+                      inline-flex
+                      rounded-full
+                      bg-emerald-100
+                      px-3
+                      py-1
+                      text-sm
+                      font-medium
+                      text-emerald-700
+                  "
+              >
+                  {product.category}
+              </span>
 
-        <p className="mb-4 text-muted-foreground">
-          {product.category}
-        </p>
+              <h1
+                  className="
+                      mt-6
+                      text-5xl
+                      font-extrabold
+                      tracking-tight
+                  "
+              >
+                  {product.name}
+              </h1>
 
-        <p className="mb-10">
-          {product.description}
-        </p>
+              <p
+                  className="
+                      mt-6
+                      text-4xl
+                      font-bold
+                      text-emerald-600
+                  "
+              >
+                  ₹{product.price}
+              </p>
 
-        <h2 className="text-3xl font-bold">
-          ₹{product.price}
-        </h2>
+              <div
+                  className="
+                      mt-8
+                      rounded-2xl
+                      border
+                      bg-slate-50
+                      p-6
+                  "
+              >
+                  <h2 className="text-lg font-semibold">
+                      Description
+                  </h2>
+
+                  <p
+                      className="
+                          mt-3
+                          leading-7
+                          text-slate-600
+                      "
+                  >
+                      {product.description}
+                  </p>
+              </div>
+          </div>
+
+        </div>
 
       </section>
     </SiteLayout>
