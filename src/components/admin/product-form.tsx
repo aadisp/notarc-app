@@ -29,6 +29,8 @@ interface ProductFormProps {
 
   description: string;
   setDescription: (v: string) => void;
+  longDescription: string;
+  setLongDescription: (v: string) => void;
 
   productFiles: File[];
   setProductFiles: (files: File[]) => void;
@@ -51,6 +53,8 @@ export default function ProductForm({
   setPrice,
   description,
   setDescription,
+  longDescription,
+  setLongDescription,
   productFiles,
   setProductFiles,
   onSubmit,
@@ -177,6 +181,39 @@ export default function ProductForm({
             "
         />
 
+        </FormField>
+
+        <FormField
+            label="Long Description"
+            icon={FileText}
+        >
+            <textarea
+                placeholder="Write the full product description..."
+
+                value={longDescription}
+
+                onChange={(e) =>
+                    setLongDescription(e.target.value)
+                }
+
+                className="
+                    min-h-60
+                    w-full
+                    resize-y
+                    rounded-xl
+                    border
+                    border-slate-200
+                    bg-slate-50
+                    px-4
+                    py-3
+                    outline-none
+                    transition
+                    focus:border-emerald-500
+                    focus:bg-white
+                    focus:ring-4
+                    focus:ring-emerald-100
+                "
+            />
         </FormField>
 
       <div className="mt-8 flex gap-4">

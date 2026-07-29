@@ -13,6 +13,7 @@ interface ProductInfoProps {
     name: string;
     category: string;
     description: string;
+    longDescription: string;
     price: number;
     slug: string;
 }
@@ -22,6 +23,7 @@ export default function ProductInfo({
     name,
     category,
     description,
+    longDescription,
     price,
     slug,
 }: ProductInfoProps) {
@@ -112,9 +114,21 @@ export default function ProductInfo({
                     Description
                 </h2>
 
-                <p className="mt-3 leading-7 text-slate-600">
+                <p className="mt-3 text-slate-600">
                     {description}
                 </p>
+
+                <div className="mt-6 border-t pt-6">
+
+                    <h3 className="text-lg font-semibold">
+                        Product Details
+                    </h3>
+
+                    <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
+                        {longDescription}
+                    </p>
+
+                </div>
 
             </div>
 

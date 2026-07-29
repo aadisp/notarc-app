@@ -46,6 +46,11 @@ export default function AdminPage() {
   const [description, setDescription] =
     useState("");
 
+  const [
+    longDescription,
+    setLongDescription,
+  ] = useState("");
+
   const [courseName, setCourseName] =
   useState("");
 
@@ -120,6 +125,7 @@ export default function AdminPage() {
       price: Number(price),
 
       description,
+      longDescription,
 
       imageUrls,
 
@@ -127,7 +133,7 @@ export default function AdminPage() {
 
     });
 
-    setCourseLongDescription("");
+    setLongDescription("");
 
     toast.success("Product added successfully!");
 
@@ -367,6 +373,8 @@ export default function AdminPage() {
           setPrice={setPrice}
           description={description}
           setDescription={setDescription}
+          longDescription={longDescription}
+          setLongDescription={setLongDescription}
           productFiles={productFiles}
           setProductFiles={setProductFiles}
           onSubmit={handleAddProduct}

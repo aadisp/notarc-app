@@ -4,7 +4,11 @@ export interface Product {
   slug: string;
   category: string;
   price: number;
-  description: string;
+
+  description: string;      // Short description
+
+  longDescription: string;  // Full description
+
   imageUrls: string[];
   publicIds?: string[];
 }

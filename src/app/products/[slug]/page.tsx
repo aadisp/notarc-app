@@ -20,6 +20,7 @@ interface Product {
   category: string;
   price: number;
   description: string;
+  longDescription: string;
   imageUrl?: string;
 }
 
@@ -71,6 +72,7 @@ export default async function ProductDetailsPage({
             slug={product.slug}
             category={product.category}
             description={product.description}
+            longDescription={product.longDescription}
             price={product.price}
         />
 
