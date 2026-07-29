@@ -246,7 +246,7 @@ export default function CoursePage() {
             About This Course
           </h2>
 
-          <p className="mt-8 text-lg leading-8 text-muted-foreground">
+          <p className="mt-8 whitespace-pre-wrap text-lg leading-8 text-muted-foreground">
             {course.longDescription}
           </p>
 

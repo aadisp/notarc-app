@@ -121,8 +121,6 @@ export default function AdminPage() {
 
       description,
 
-      longDescription: courseLongDescription,
-
       imageUrls,
 
       publicIds,
@@ -199,6 +197,7 @@ export default function AdminPage() {
           duration: courseDuration,
           description:
             courseDescription,
+          longDescription: courseLongDescription,
           imageUrl:
             uploadedImageUrl,
           publicId: uploadedPublicId,
@@ -211,6 +210,7 @@ export default function AdminPage() {
       setCourseLevel("");
       setCourseDuration("");
       setCourseDescription("");
+      setCourseLongDescription("");
       setCourseFile(null);
     } catch (error) {
       console.error(error);
