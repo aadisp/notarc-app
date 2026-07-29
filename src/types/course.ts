@@ -4,7 +4,11 @@ export interface Course {
   slug: string;
   level: string;
   duration: string;
-  description: string;
+
+  description: string;       // Short description
+
+  longDescription: string;   // Full description
+
   imageUrl: string;
   publicId?: string;
 }

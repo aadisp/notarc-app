@@ -59,6 +59,11 @@ export default function AdminPage() {
     setCourseDescription] =
     useState("");
 
+  const [
+      courseLongDescription,
+      setCourseLongDescription,
+  ] = useState("");
+
   const [productFiles,
     setProductFiles] =
     useState<File[]>([]);
@@ -116,11 +121,15 @@ export default function AdminPage() {
 
       description,
 
+      longDescription: courseLongDescription,
+
       imageUrls,
 
       publicIds,
 
     });
+
+    setCourseLongDescription("");
 
     toast.success("Product added successfully!");
 
@@ -385,6 +394,8 @@ export default function AdminPage() {
             setCourseDuration={setCourseDuration}
             courseDescription={courseDescription}
             setCourseDescription={setCourseDescription}
+            setCourseLongDescription={setCourseLongDescription}
+            courseLongDescription={courseLongDescription}
             courseFile={courseFile}
             setCourseFile={setCourseFile}
             onAddCourse={handleAddCourse}

@@ -50,6 +50,11 @@ export default function EditCourseDialog({
   const [description, setDescription] =
     useState(course.description);
 
+  const [
+    longDescription,
+    setLongDescription,
+  ] = useState(course.longDescription);
+
   const [newImage, setNewImage] =
     useState<File | null>(null);
 
@@ -59,6 +64,7 @@ export default function EditCourseDialog({
     setLevel(course.level);
     setDuration(course.duration);
     setDescription(course.description);
+    setLongDescription(course.longDescription);
     setNewImage(null);
   }, [course]);
 
@@ -84,6 +90,7 @@ async function handleSave() {
         level,
         duration,
         description,
+        longDescription,
         imageUrl,
         publicId,
       }
@@ -204,6 +211,21 @@ async function handleSave() {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description"
               className="min-h-36 w-full rounded-xl border p-3"
+            />
+
+            <textarea
+                value={longDescription}
+                onChange={(e) =>
+                    setLongDescription(e.target.value)
+                }
+                placeholder="Long Description"
+                className="
+                    min-h-60
+                    w-full
+                    rounded-xl
+                    border
+                    p-3
+                "
             />
 
           </div>

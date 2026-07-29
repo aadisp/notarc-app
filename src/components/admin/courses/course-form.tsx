@@ -16,9 +16,12 @@ interface CourseFormProps {
 
   courseDescription: string;
   setCourseDescription: (value: string) => void;
+  courseLongDescription: string;
+  setCourseLongDescription: (value: string) => void;
 
   courseFile: File | null;
   setCourseFile: (file: File | null) => void;
+  
 
   onAddCourse: () => void;
 }
@@ -31,6 +34,8 @@ export default function CourseForm({
   courseDuration,
   setCourseDuration,
   courseDescription,
+  courseLongDescription,
+  setCourseLongDescription,
   setCourseDescription,
   courseFile,
   setCourseFile,
@@ -144,6 +149,36 @@ export default function CourseForm({
             focus:ring-4
             focus:ring-violet-100
             "
+            />
+
+            <textarea
+                placeholder="Long Description"
+
+                value={courseLongDescription}
+
+                onChange={(e) =>
+                    setCourseLongDescription(
+                        e.target.value
+                    )
+                }
+
+                className="
+                    min-h-60
+                    w-full
+                    resize-y
+                    rounded-xl
+                    border
+                    border-slate-200
+                    bg-slate-50
+                    px-4
+                    py-3
+                    transition
+                    outline-none
+                    focus:border-violet-500
+                    focus:bg-white
+                    focus:ring-4
+                    focus:ring-violet-100
+                "
             />
 
             <button

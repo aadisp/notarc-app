@@ -247,7 +247,7 @@ export default function CoursePage() {
           </h2>
 
           <p className="mt-8 text-lg leading-8 text-muted-foreground">
-            {course.description}
+            {course.longDescription}
           </p>
 
         </div>
