@@ -50,6 +50,8 @@ export default function Navbar() {
   const menuRef =
     useRef<HTMLDivElement>(null);
 
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
 
     if (!user) return;
@@ -92,6 +94,18 @@ export default function Navbar() {
       unsubscribe();
 
   }, [user]);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+
+    handleResize(); // Run once on mount
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
 
@@ -385,6 +399,53 @@ export default function Navbar() {
                   </p>
 
                 </div>
+
+                {/* Mobile Navigation */}
+                {isMobile && (
+                  <div className="border-b">
+
+                    <Link
+                      href="/"
+                      onClick={() => setMenuOpen(false)}
+                      className="block px-5 py-3 hover:bg-slate-50"
+                    >
+                      Home
+                    </Link>
+
+                    <Link
+                      href="/products"
+                      onClick={() => setMenuOpen(false)}
+                      className="block px-5 py-3 hover:bg-slate-50"
+                    >
+                      Explore Products
+                    </Link>
+
+                    <Link
+                      href="/courses"
+                      onClick={() => setMenuOpen(false)}
+                      className="block px-5 py-3 hover:bg-slate-50"
+                    >
+                      Book a Course
+                    </Link>
+
+                    <Link
+                      href="/contact-us"
+                      onClick={() => setMenuOpen(false)}
+                      className="block px-5 py-3 hover:bg-slate-50"
+                    >
+                      Reach Us
+                    </Link>
+
+                    <Link
+                      href="/cart"
+                      onClick={() => setMenuOpen(false)}
+                      className="block px-5 py-3 hover:bg-slate-50"
+                    >
+                      Cart
+                    </Link>
+
+                  </div>
+                )}
 
                 <Link
                   href="/profile"
