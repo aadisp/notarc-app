@@ -59,7 +59,7 @@ export default function ClientsSection() {
 
       <div className="mb-12 flex items-center justify-center gap-5">
         <div className="h-px w-24 bg-gray-600" />
-        <h2 className="text-3xl font-bold text-black-600">
+        <h2 className="text-2xl font-bold text-black-600">
           Happy Clients
         </h2>
         <div className="h-px w-24 bg-gray-600" />
