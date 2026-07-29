@@ -290,7 +290,7 @@ export default function Navbar() {
           </Link>
 
           <Link href="/contact-us" className="transition hover:text-blue-600">
-            Reach Us
+            Contact Us
           </Link>
 
           <Link href="/cart" className="transition hover:text-blue-600">
@@ -433,7 +433,7 @@ export default function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       className="block px-5 py-3 hover:bg-slate-50"
                     >
-                      Reach Us
+                      Contact Us
                     </Link>
 
                     <Link
