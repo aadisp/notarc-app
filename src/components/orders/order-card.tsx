@@ -67,17 +67,51 @@ export default function OrderCard({
 
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 flex flex-wrap gap-3">
 
-               <span
-                    className={`rounded-full border px-3 py-1 text-sm font-medium ${
-                        statusClasses[statusKey] ?? "border"
-                    }`}
-                >
-                    {order.status}
-                </span>
+    <span
+        className={`rounded-full border px-3 py-1 text-sm font-medium ${
+            statusClasses[statusKey] ?? "border"
+        }`}
+    >
+        {order.status}
+    </span>
 
-            </div>
+    <span
+        className={`rounded-full border px-3 py-1 text-sm font-medium ${
+            order.paymentStatus === "Paid"
+                ? "border-green-200 bg-green-100 text-green-800"
+                : order.paymentStatus === "Refunded"
+                ? "border-red-200 bg-red-100 text-red-800"
+                : "border-yellow-200 bg-yellow-100 text-yellow-800"
+        }`}
+    >
+        {order.paymentStatus}
+    </span>
+
+    <span
+        className={`rounded-full border px-3 py-1 text-sm font-medium ${
+            order.shippingStatus === "Delivered"
+                ? "border-green-200 bg-green-100 text-green-800"
+                : order.shippingStatus === "Out for Delivery"
+                ? "border-blue-200 bg-blue-100 text-blue-800"
+                : order.shippingStatus === "Shipped"
+                ? "border-indigo-200 bg-indigo-100 text-indigo-800"
+                : order.shippingStatus === "Packed"
+                ? "border-purple-200 bg-purple-100 text-purple-800"
+                : order.shippingStatus === "Processing"
+                ? "border-cyan-200 bg-cyan-100 text-cyan-800"
+                : order.shippingStatus === "Cancelled"
+                ? "border-red-200 bg-red-100 text-red-800"
+                : "border-yellow-200 bg-yellow-100 text-yellow-800"
+        }`}
+    >
+        {order.shippingStatus}
+    </span>
+
+</div>
+
+           
 
             <hr className="my-6" />
 

@@ -1,6 +1,13 @@
 import OrderItems from "./order-items";
 import OrderStatusSelect from "./order-status-select";
-import type { Order, OrderStatus } from "@/types/order";
+import type {
+    Order,
+    OrderStatus,
+    PaymentStatus,
+    ShippingStatus,
+} from "@/types/order";
+import ShippingStatusSelect from "./shipping-status-select";
+import PaymentStatusSelect from "./payment-status-select";
 
 const statusClasses = {
     pending:
@@ -21,15 +28,27 @@ const statusClasses = {
 interface OrderCardProps {
   order: Order;
 
+  onShippingStatusChange: (
+      orderId: string,
+      value: ShippingStatus
+  ) => void;
+
   onOrderStatusChange: (
     orderId: string,
     value: OrderStatus
   ) => void;
+
+  onPaymentStatusChange: (
+    orderId: string,
+    value: PaymentStatus
+) => void;
 }
 
 export default function OrderCard({
-  order,
-  onOrderStatusChange,
+    order,
+    onOrderStatusChange,
+    onPaymentStatusChange,
+    onShippingStatusChange,
 }: OrderCardProps) {
 
   return (
@@ -122,21 +141,39 @@ export default function OrderCard({
 
       </div>
 
-      <div className="mt-6 flex gap-8">
+      <div className="mt-6 flex flex-wrap gap-8">
 
-        <OrderStatusSelect
-          value={order.status}
-          onChange={(value) =>
+    <OrderStatusSelect
+        value={order.status}
+        onChange={(value) =>
             onOrderStatusChange(
-              order.id,
-              value
+                order.id,
+                value
             )
-          }
-        />
+        }
+    />
 
-        
+    <PaymentStatusSelect
+        value={order.paymentStatus}
+        onChange={(value) =>
+            onPaymentStatusChange(
+                order.id,
+                value as PaymentStatus
+            )
+        }
+    />
 
-      </div>
+    <ShippingStatusSelect
+        value={order.shippingStatus}
+        onChange={(value) =>
+            onShippingStatusChange(
+                order.id,
+                value as ShippingStatus
+            )
+        }
+    />
+
+</div>
 
       <OrderItems
         items={order.items}

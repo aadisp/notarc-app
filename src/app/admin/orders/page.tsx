@@ -20,7 +20,12 @@ import {
 } from "firebase/firestore";
 
 import { useEffect, useState } from "react";
-import type { Order, OrderStatus } from "@/types/order";
+import type {
+    Order,
+    OrderStatus,
+    PaymentStatus,
+    ShippingStatus,
+} from "@/types/order";
 
 export default function AdminOrdersPage() {
 
@@ -137,7 +142,55 @@ async function updateOrderStatus(
   );
 }
 
- 
+async function updatePaymentStatus(
+    orderId: string,
+    value: PaymentStatus
+) {
+
+    await updateDoc(
+        doc(db, "orders", orderId),
+        {
+            paymentStatus: value,
+        }
+    );
+
+    setOrders((orders) =>
+        orders.map((order) =>
+            order.id === orderId
+                ? {
+                      ...order,
+                      paymentStatus: value,
+                  }
+                : order
+        )
+    );
+
+}
+
+async function updateShippingStatus(
+    orderId: string,
+    value: ShippingStatus
+) {
+
+    await updateDoc(
+        doc(db, "orders", orderId),
+        {
+            shippingStatus: value,
+        }
+    );
+
+    setOrders((orders) =>
+        orders.map((order) =>
+            order.id === orderId
+                ? {
+                      ...order,
+                      shippingStatus: value,
+                  }
+                : order
+        )
+    );
+
+}
   
   const filteredOrders =
     orders.filter((order) => {
@@ -275,10 +328,12 @@ async function updateOrderStatus(
           filteredOrders.map((order) => (
 
             <OrderCard
-                key={order.id}
-                order={order}
-                onOrderStatusChange={updateOrderStatus}
-            />
+    key={order.id}
+    order={order}
+    onOrderStatusChange={updateOrderStatus}
+    onPaymentStatusChange={updatePaymentStatus}
+    onShippingStatusChange={updateShippingStatus}
+/>
 
           ))
 

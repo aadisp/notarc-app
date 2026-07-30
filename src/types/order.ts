@@ -6,6 +6,20 @@ export type OrderStatus =
     | "completed"
     | "cancelled";
 
+export type PaymentStatus =
+    | "Pending"
+    | "Paid"
+    | "Refunded";
+
+export type ShippingStatus =
+    | "Pending"
+    | "Processing"
+    | "Packed"
+    | "Shipped"
+    | "Out for Delivery"
+    | "Delivered"
+    | "Cancelled";
+
 export interface OrderItem {
     id: string;
     type: "product" | "course";
@@ -29,6 +43,10 @@ export interface Order {
     total: number;
 
     status: OrderStatus;
+
+    paymentStatus: PaymentStatus;
+
+    shippingStatus: ShippingStatus;
 
     paymentMethod: string;
 

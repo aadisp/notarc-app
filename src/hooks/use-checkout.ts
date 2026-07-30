@@ -65,13 +65,23 @@ export function useCheckout({
                     userId: user.uid,
                     username,
                     userEmail: user.email,
+
                     items,
+
                     subtotal,
                     shipping,
                     total,
+
                     status: "pending",
+
+                    paymentStatus: "Pending",
+
+                    shippingStatus: "Pending",
+
                     paymentMethod: "Not Specified",
+
                     tax: 0,
+
                     createdAt: serverTimestamp(),
                     updatedAt: serverTimestamp(),
                 }
