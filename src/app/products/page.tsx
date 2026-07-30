@@ -1,3 +1,9 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Notarc | Products",
+};
+
 "use client";
 
 import { useProducts } from "@/hooks/use-products";
@@ -5,11 +11,6 @@ import { useMemo, useState } from "react";
 import SiteLayout from "@/components/layout/site-layout";
 import ProductGrid from "@/components/products/product-grid";
 import ProductToolbar from "@/components/products/product-toolbar";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Notarc | Products",
-};
 
 export default function ProductsPage() {
   const {
