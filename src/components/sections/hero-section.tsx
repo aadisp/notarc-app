@@ -84,7 +84,7 @@ export default function HeroSection() {
               hover:text-black
             "
           >
-            <Link href="/courses">
+            <Link href="/products">
               Explore Products
             </Link>
           </Button>
@@ -103,7 +103,7 @@ export default function HeroSection() {
               hover:scale-105
             "
           >
-            <Link href="/products">
+            <Link href="/courses">
               Browse Courses
             </Link>
           </Button>
