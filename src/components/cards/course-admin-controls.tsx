@@ -13,6 +13,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { useUserRole } from "@/hooks/use-user-role";
 
 interface CourseAdminControlsProps {
     firestoreId: string;
@@ -32,6 +33,8 @@ export default function CourseAdminControls({
     imageUrl,
 }: CourseAdminControlsProps) {
 
+    const role = useUserRole();
+
     const [editing, setEditing] = useState(false);
 
     const [editName, setEditName] = useState(name);
@@ -48,8 +51,17 @@ export default function CourseAdminControls({
     const [editImageUrl, setEditImageUrl] =
         useState(imageUrl || "");
 
+    if (role !== "admin") {
+        return null;
+    }
+
     async function handleDelete() {
-        try {
+
+    if (role !== "admin") {
+        return;
+    }
+
+    try {
             await deleteDoc(
                 doc(db, "courses", firestoreId)
             );
@@ -60,8 +72,13 @@ export default function CourseAdminControls({
         }
     }
 
-    async function handleUpdate() {
-        try {
+   async function handleUpdate() {
+
+    if (role !== "admin") {
+        return;
+    }
+
+    try {
             await updateDoc(
                 doc(db, "courses", firestoreId),
                 {
