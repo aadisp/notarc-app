@@ -8,21 +8,14 @@ import {
 import ProductGallery from "@/components/products/product-gallery";
 import { notFound } from "next/navigation";
 import ProductInfo from "@/components/products/product-info";
+import type { Product } from "@/types/product";
+
 interface ProductPageProps {
   params: Promise<{
     slug: string;
   }>;
 }
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  category: string;
-  price: number;
-  description: string;
-  longDescription: string;
-  imageUrl?: string;
-}
+
 
 export default async function ProductDetailsPage({
   params,
