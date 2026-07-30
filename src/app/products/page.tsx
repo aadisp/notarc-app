@@ -1,9 +1,3 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Notarc | Products",
-};
-
 "use client";
 
 import { useProducts } from "@/hooks/use-products";
