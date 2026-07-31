@@ -44,7 +44,9 @@ async function handleDelete(id: string) {
     await refreshGallery();
 }
 async function handleUpload() {
-    if (!selectedFile) return;
+    if (!selectedFile || uploading) return;
+
+    setUploading(true);
 
     try {
         const { imageUrl, publicId } = await uploadToCloudinary(selectedFile);
@@ -63,9 +65,13 @@ async function handleUpload() {
         console.error(error);
         alert("Failed to upload image.");
     }
+    finally {
+        setUploading(false);
+    }
 }
 const [dialogOpen, setDialogOpen] = useState(false);
 const [selectedFile, setSelectedFile] = useState<File | null>(null);
+const [uploading, setUploading] = useState(false);
 if (loading) {
     return (
         <main className="mx-auto max-w-7xl space-y-6 p-8">
@@ -122,9 +128,9 @@ if (error) {
                         <div className="flex justify-end">
                             <Button
                                 onClick={handleUpload}
-                                disabled={!selectedFile}
+                                disabled={!selectedFile || uploading}
                             >
-                                Upload Image
+                                {uploading ? "Uploading... Takes 120 seconds" : "Upload Image"}
                             </Button>
                         </div>
 
