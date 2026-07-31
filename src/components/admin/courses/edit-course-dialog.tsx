@@ -58,6 +58,8 @@ export default function EditCourseDialog({
   const [newImage, setNewImage] =
     useState<File | null>(null);
 
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
     setName(course.name);
     setSlug(course.slug);
@@ -69,6 +71,8 @@ export default function EditCourseDialog({
   }, [course]);
 
 async function handleSave() {
+
+  setSaving(true);
 
   try {
 
@@ -113,6 +117,11 @@ async function handleSave() {
     );
 
   }
+  finally {
+
+    setSaving(false);
+
+}
 
 }
 
@@ -241,8 +250,11 @@ async function handleSave() {
             Cancel
           </Button>
 
-          <Button onClick={handleSave}>
-            Save Changes
+          <Button
+              onClick={handleSave}
+              disabled={saving}
+          >
+              {saving ? "Saving..." : "Save Changes"}
           </Button>
 
         </DialogFooter>

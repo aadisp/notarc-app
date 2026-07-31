@@ -68,6 +68,8 @@ export default function EditProductDialog({
   const [existingPublicIds, setExistingPublicIds] =
     useState<string[]>(product.publicIds ?? []);
 
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
     setName(product.name);
     setSlug(product.slug);
@@ -91,6 +93,7 @@ function removeExistingImage(index: number) {
 }
 
 async function handleSave() {
+  setSaving(true);
   try {
     let imageUrls = [...existingImages];
     let publicIds = [...existingPublicIds];
@@ -128,6 +131,11 @@ async function handleSave() {
     console.error(error);
 
     toast.error("Failed to update product.");
+  }
+  finally {
+
+      setSaving(false);
+
   }
 }
 
@@ -177,7 +185,8 @@ async function handleSave() {
             setProductFiles={setNewImages}
 
             onSubmit={handleSave}
-            submitText="Save Changes"
+            submitText={saving ? "Saving..." : "Save Changes"}
+            loading={saving}
             existingImages={existingImages}
             removeExistingImage={removeExistingImage}
         />

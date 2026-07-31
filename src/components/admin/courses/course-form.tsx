@@ -24,6 +24,7 @@ interface CourseFormProps {
   
 
   onAddCourse: () => void;
+  loading?: boolean;
 }
 
 export default function CourseForm({
@@ -40,6 +41,7 @@ export default function CourseForm({
   courseFile,
   setCourseFile,
   onAddCourse,
+  loading = false,
 }: CourseFormProps) {
 
   return (
@@ -183,9 +185,10 @@ export default function CourseForm({
 
             <button
             onClick={onAddCourse}
+            disabled={loading}
             className="rounded border p-3"
             >
-            Add Course
+            {loading ? "Adding..." : "Add Course"}
             </button>
 
             </div>

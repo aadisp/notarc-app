@@ -40,6 +40,8 @@ interface ProductFormProps {
   submitText?: string;
   existingImages?: string[];
   removeExistingImage?: (index: number) => void;
+
+  loading?: boolean;
 }
 
 export default function ProductForm({
@@ -59,6 +61,7 @@ export default function ProductForm({
   setProductFiles,
   onSubmit,
   submitText = "Add Product",
+  loading = false,
   existingImages = [],
   removeExistingImage = () => {},
 }: ProductFormProps) {
@@ -220,6 +223,7 @@ export default function ProductForm({
 
         <button
           onClick={onSubmit}
+          disabled={loading}
           className="
             rounded-xl
             bg-emerald-600
@@ -231,7 +235,7 @@ export default function ProductForm({
             hover:bg-emerald-700
           "
         >
-          {submitText}
+          {loading ? "Adding..." : submitText}
         </button>
 
         

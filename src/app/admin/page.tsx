@@ -99,7 +99,14 @@ export default function AdminPage() {
   const [addCourseOpen, setAddCourseOpen] =
     useState(false);
 
+  const [addingProduct, setAddingProduct] =
+    useState(false);
+
+const [addingCourse, setAddingCourse] =
+    useState(false);
+
   async function handleAddProduct() {
+    setAddingProduct(true);
   try {
 
     const imageUrls: string[] = [];
@@ -151,7 +158,12 @@ export default function AdminPage() {
 
     toast.error("Failed to add product.");
 
-  }
+}
+finally {
+
+    setAddingProduct(false);
+
+}
   }
 
   async function importDefaultProducts() {
@@ -181,6 +193,7 @@ export default function AdminPage() {
 
 
   async function handleAddCourse() {
+    setAddingCourse(true);
     try {
       let uploadedImageUrl = "";
       let uploadedPublicId = "";
@@ -219,9 +232,17 @@ export default function AdminPage() {
       setCourseLongDescription("");
       setCourseFile(null);
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to add course.");
-    }
+
+    console.error(error);
+
+    toast.error("Failed to add course.");
+
+}
+finally {
+
+    setAddingCourse(false);
+
+}
   }
 
   useEffect(() => {
@@ -379,6 +400,7 @@ export default function AdminPage() {
           setProductFiles={setProductFiles}
           onSubmit={handleAddProduct}
           submitText="Add Product"
+          loading={addingProduct}
         />
 
       </AddProductDialog>
@@ -407,6 +429,7 @@ export default function AdminPage() {
             courseFile={courseFile}
             setCourseFile={setCourseFile}
             onAddCourse={handleAddCourse}
+            loading={addingCourse}
           />
         </AddCourseDialog>
 
