@@ -15,9 +15,18 @@ import AuthBackground from "@/components/auth/auth-background";
 import AuthCard from "@/components/auth/auth-card";
 import {
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { auth, db } from "@/firebase/firebase";
 import { useRouter } from "next/navigation";
 import {
@@ -51,6 +60,15 @@ export default function LoginPage() {
     useState<any>(null);
 
   const [loading, setLoading] = useState(false);
+
+  const [forgotPasswordOpen, setForgotPasswordOpen] =
+  useState(false);
+
+const [resetEmail, setResetEmail] =
+  useState("");
+
+const [sendingReset, setSendingReset] =
+  useState(false);
 
   useEffect(() => {
 
@@ -313,6 +331,45 @@ export default function LoginPage() {
     }
   }
 
+  async function handleForgotPassword() {
+
+  if (!resetEmail.trim()) {
+    toast.error("Please enter your email.");
+    return;
+  }
+
+  setSendingReset(true);
+
+  try {
+
+    await sendPasswordResetEmail(auth, resetEmail, {
+      url: `${window.location.origin}/reset-password`,
+      handleCodeInApp: true,
+    });
+
+    toast.success(
+      "Password reset email sent. Please check your inbox or spam."
+    );
+
+    setForgotPasswordOpen(false);
+    setResetEmail("");
+
+  } catch (error) {
+
+    console.error(error);
+
+    toast.error(
+      "Failed to send password reset email."
+    );
+
+  } finally {
+
+    setSendingReset(false);
+
+  }
+
+}
+
   return (
     <AuthBackground>
       <AuthCard
@@ -357,6 +414,19 @@ export default function LoginPage() {
 
             
 
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={() => {
+                setResetEmail(identifier.includes("@") ? identifier : "");
+                setForgotPasswordOpen(true);
+              }}
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              Forgot your password?
+            </button>
           </div>
 
           <Button
@@ -430,8 +500,61 @@ export default function LoginPage() {
             </Link>
           </p>
 
+        
         </form>
       </AuthCard>
+      <Dialog
+  open={forgotPasswordOpen}
+  onOpenChange={setForgotPasswordOpen}
+>
+  <DialogContent className="sm:max-w-md">
+
+    <DialogHeader>
+
+      <DialogTitle>
+        Forgot Password
+      </DialogTitle>
+
+      <DialogDescription>
+        Enter the email address associated with your account.
+        We'll send you a password reset link.
+      </DialogDescription>
+
+    </DialogHeader>
+
+    <AuthInput
+      icon={<Mail size={18} />}
+      type="email"
+      placeholder="Email Address"
+      value={resetEmail}
+      onChange={(e) => setResetEmail(e.target.value)}
+    />
+
+    <DialogFooter>
+
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => setForgotPasswordOpen(false)}
+        disabled={sendingReset}
+      >
+        Cancel
+      </Button>
+
+      <Button
+        type="button"
+        onClick={handleForgotPassword}
+        disabled={sendingReset}
+      >
+        {sendingReset
+          ? "Sending..."
+          : "Send Reset Link"}
+      </Button>
+
+    </DialogFooter>
+
+  </DialogContent>
+</Dialog>
     </AuthBackground>
   );
 
