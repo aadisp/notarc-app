@@ -50,6 +50,8 @@ export default function LoginPage() {
     setSelectedAccount] =
     useState<any>(null);
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
 
     const account =
@@ -73,6 +75,10 @@ export default function LoginPage() {
   }, []);
 
   async function handleLogin() {
+
+    if (loading) return;
+
+    setLoading(true);
 
     try {
 
@@ -230,9 +236,20 @@ export default function LoginPage() {
 
     }
 
+    finally {
+
+        setLoading(false);
+
+    }
+
   }
 
   async function handleGoogleLogin() {
+
+    if (loading) return;
+
+    setLoading(true);
+    
     try {
       const result = await signInWithPopup(auth, googleProvider);
 
@@ -289,6 +306,11 @@ export default function LoginPage() {
       console.error(error);
       toast.error("Google sign-in failed.");
     }
+    finally {
+
+        setLoading(false);
+
+    }
   }
 
   return (
@@ -338,10 +360,11 @@ export default function LoginPage() {
           </div>
 
           <Button
-            type="submit"
-            className="h-12 w-full rounded-xl text-base font-semibold"
+              type="submit"
+              disabled={loading}
+              className="h-12 w-full rounded-xl text-base font-semibold"
           >
-            Login
+              {loading ? "Logging in..." : "Login"}
           </Button>
 
           <div className="relative my-6">
@@ -357,10 +380,11 @@ export default function LoginPage() {
             </div>
 
             <Button
-              type="button"
-              variant="outline"
-              className="h-12 w-full rounded-xl"
-              onClick={handleGoogleLogin}
+                type="button"
+                variant="outline"
+                className="h-12 w-full rounded-xl"
+                onClick={handleGoogleLogin}
+                disabled={loading}
             >
               <svg
                 className="mr-2 h-5 w-5"
@@ -384,7 +408,14 @@ export default function LoginPage() {
                 />
               </svg>
 
-              Continue with Google
+              {loading ? (
+                  "Signing in..."
+              ) : (
+                  <>
+                      {/* existing Google SVG */}
+                      Continue with Google
+                  </>
+              )}
             </Button>
 
     
