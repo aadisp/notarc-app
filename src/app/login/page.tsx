@@ -343,7 +343,7 @@ const [sendingReset, setSendingReset] =
   try {
 
     await sendPasswordResetEmail(auth, resetEmail, {
-      url: `${window.location.origin}/reset-password`,
+      url: `${window.location.origin}/login`,
       handleCodeInApp: true,
     });
 
