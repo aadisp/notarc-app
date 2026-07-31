@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 
 import { useCartStore } from "@/store/cart-store";
@@ -30,7 +31,9 @@ export default function ProductInfo({
 
     const router = useRouter();
 
-    const [quantity, setQuantity] = useState(1);
+const { user } = useAuth();
+
+const [quantity, setQuantity] = useState(1);
 
     const {
         items,
@@ -53,6 +56,11 @@ export default function ProductInfo({
     }
 
     function handleAddToCart() {
+
+        if (!user) {
+    router.push("/login");
+    return;
+}
 
         if (cartItem) {
 
@@ -78,9 +86,20 @@ export default function ProductInfo({
     }
 
     function handleBuyNow() {
-        handleAddToCart();
-        router.push("/checkout");
+
+    if (!user) {
+        router.push("/login");
+        return;
     }
+
+    // Only add the product if it isn't already in the cart.
+    if (!cartItem) {
+        handleAddToCart();
+    }
+
+    router.push("/checkout");
+
+}
 
     return (
         <div>

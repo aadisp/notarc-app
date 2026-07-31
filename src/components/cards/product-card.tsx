@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cart-store";
 import { useUserRole } from "@/hooks/use-user-role";
 import ProductAdminControls from "./product-admin-controls";
@@ -40,6 +42,9 @@ export default function ProductCard({
   );
 
   const role = useUserRole();
+  const { user } = useAuth();
+
+const router = useRouter();
 
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
@@ -128,7 +133,16 @@ export default function ProductCard({
                 ) : (
                   <Button
                     className="h-11 flex-1 font-semibold"
-                    onClick={() =>
+                    onClick={() => {
+
+                      if (!user) {
+
+                        router.push("/login");
+
+                        return;
+
+                      }
+
                       addItem({
                         id,
                         name,
@@ -136,8 +150,9 @@ export default function ProductCard({
                         price: Number(
                           price.replace(/[^\d]/g, "")
                         ),
-                      })
-                    }
+                      });
+
+                    }}
                   >
                     Add to Cart
                   </Button>
