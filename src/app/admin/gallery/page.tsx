@@ -130,7 +130,7 @@ if (error) {
                                 onClick={handleUpload}
                                 disabled={!selectedFile || uploading}
                             >
-                                {uploading ? "Uploading... Takes 120 seconds" : "Upload Image"}
+                                {uploading ? "Uploading... Might take upto 120 seconds" : "Upload Image"}
                             </Button>
                         </div>
 
