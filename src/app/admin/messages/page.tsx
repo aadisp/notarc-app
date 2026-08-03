@@ -1,6 +1,11 @@
 import SiteLayout from "@/components/layout/site-layout";
 
 import MessagesPage from "@/components/admin/messages/messages-page";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin Messages | NOTARC",
+};
 
 export default function AdminMessagesPage() {
     return (

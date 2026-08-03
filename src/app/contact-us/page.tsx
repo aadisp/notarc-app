@@ -4,7 +4,11 @@ import ContactInfo from "@/components/contact/contact-info";
 import ContactForm from "@/components/contact/contact-form";
 import ContactMap from "@/components/contact/contact-map";
 import FAQ from "@/components/contact/faq";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Contact Us | NOTARC",
+};
 export default function ContactPage() {
     return (
         <SiteLayout>

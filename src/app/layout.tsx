@@ -14,8 +14,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: {default:"Notarc - Drones and Robotics",template:"%s"},
-  description: "Innovating the Future with Drones, Robotics, and RC Solutions",
+  title: {
+    default: "NOTARC",
+    template: "%s | NOTARC",
+  },
+
+  description:
+    "NOTARC is a leading drone and robotics company offering innovative products, professional training, workshops, prototyping, and engineering solutions. Innovating the Future with Drones, Robotics, and RC Solutions",
+
+  applicationName: "NOTARC",
 };
 
 export default function RootLayout({
