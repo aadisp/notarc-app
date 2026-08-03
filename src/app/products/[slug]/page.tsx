@@ -9,11 +9,41 @@ import ProductGallery from "@/components/products/product-gallery";
 import { notFound } from "next/navigation";
 import ProductInfo from "@/components/products/product-info";
 import type { Product } from "@/types/product";
+import type { Metadata } from "next";
 
 interface ProductPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export async function generateMetadata({
+  params,
+}: ProductPageProps): Promise<Metadata> {
+
+  const { slug } = await params;
+
+  const snapshot = await getDocs(
+    collection(db, "products")
+  );
+
+  const products = snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      } as Product)
+  );
+
+  const product = products.find(
+    (item) => item.slug === slug
+  );
+
+  return {
+    title: product
+      ? `${product.name}`
+      : "Product",
+  };
 }
 
 
