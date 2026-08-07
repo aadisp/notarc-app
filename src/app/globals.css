@@ -148,40 +148,30 @@
 }
 
 @keyframes hourglass-spin {
-  /* Sleeping */
   0% {
-    transform: rotate(0deg) scale(0.5);
+    transform: rotate(180deg) scale(1);
     filter: drop-shadow(0 0 0 rgba(255,255,255,0));
   }
 
-  /* Awakens */
-  6% {
-    transform: rotate(0deg) scale(1.12);
-    filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
+  25% {
+    transform: rotate(100deg) scale(0.9);
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.25));
   }
 
-  /* Spinning rapidly */
-  18% {
-    transform: rotate(360deg) scale(1.12);
-    filter: drop-shadow(0 0 18px rgba(255,255,255,1));
+  50% {
+    transform: rotate(90deg) scale(0.87);
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.25));
   }
 
-  /* Slowing down */
-  28% {
-    transform: rotate(450deg) scale(1);
-    filter: drop-shadow(0 0 12px rgba(255,255,255,0.75));
+  75% {
+    transform: rotate(75deg) scale(0.8);
+    filter: drop-shadow(0 0 18px rgba(255,255,255,0.5));
   }
 
-  /* Settles */
-  36% {
-    transform: rotate(540deg) scale(0.7);
-    filter: drop-shadow(0 0 0 rgba(255,255,255,0));
-  }
-
-  /* Sleeping */
-  100% {
-    transform: rotate(540deg) scale(0.7);
-    filter: drop-shadow(0 0 0 rgba(255,255,255,0));
+  
+    100% {
+    transform: rotate(720deg) scale(1);
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.25));
   }
 }
 
