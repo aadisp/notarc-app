@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Under Maintenance | NOTARC",
@@ -10,13 +11,16 @@ export default function MaintenancePage() {
 
       <div className="w-full max-w-2xl rounded-3xl border border-white/10 bg-white/5 p-12 text-center backdrop-blur-xl shadow-2xl">
 
-        <div className="mb-8 text-7xl">
-          🛠️
+        <div className="mb-10 flex justify-center">
+            <Image
+                src="/logo2.png"
+                alt="NOTARC Logo"
+                width={420}
+                height={420}
+                priority
+                className="h-auto w-full max-w-[420px]"
+            />
         </div>
-
-        <h1 className="text-5xl font-extrabold tracking-tight text-white">
-          NOTARC
-        </h1>
 
         <p className="mt-8 text-2xl font-semibold text-white">
           We're Currently Under Maintenance
