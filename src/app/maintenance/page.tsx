@@ -18,7 +18,7 @@ export default function MaintenancePage() {
                 width={420}
                 height={420}
                 priority
-                className="h-auto w-full max-w-[210px]"
+                className="h-auto w-full max-w-[105px]"
             />
         </div>
 
