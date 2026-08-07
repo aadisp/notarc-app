@@ -151,36 +151,42 @@
   /* Sleeping */
   0% {
     transform: rotate(0deg) scale(1);
+    filter: drop-shadow(0 0 0 rgba(255,255,255,0));
   }
 
-  /* Comes alive */
+  /* Awakens */
   6% {
     transform: rotate(0deg) scale(1.12);
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.25));
   }
 
-  /* Rapid spin */
+  /* Spinning rapidly */
   18% {
     transform: rotate(360deg) scale(1.12);
+    filter: drop-shadow(0 0 18px rgba(255,255,255,0.45));
   }
 
-  /* Slows down */
+  /* Slowing down */
   28% {
     transform: rotate(540deg) scale(1.08);
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.3));
   }
 
   /* Settles */
   36% {
     transform: rotate(540deg) scale(1);
+    filter: drop-shadow(0 0 0 rgba(255,255,255,0));
   }
 
-  /* Rest */
+  /* Sleeping */
   100% {
     transform: rotate(540deg) scale(1);
+    filter: drop-shadow(0 0 0 rgba(255,255,255,0));
   }
 }
 
 .animate-hourglass {
   animation: hourglass-spin 5.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
   transform-origin: center;
-  will-change: transform;
+  will-change: transform, filter;
 }
