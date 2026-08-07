@@ -15,8 +15,8 @@ export default function MaintenancePage() {
             <Image
                 src="/logo.png"
                 alt="NOTARC Logo"
-                width={420}
-                height={420}
+                width={210}
+                height={210}
                 priority
                 className="h-auto w-full max-w-[420px]"
             />
