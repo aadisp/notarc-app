@@ -157,19 +157,19 @@
   /* Awakens */
   6% {
     transform: rotate(0deg) scale(1.12);
-    filter: drop-shadow(0 0 8px rgba(255,255,255,0.25));
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
   }
 
   /* Spinning rapidly */
   18% {
     transform: rotate(360deg) scale(1.12);
-    filter: drop-shadow(0 0 18px rgba(255,255,255,0.45));
+    filter: drop-shadow(0 0 18px rgba(255,255,255,1));
   }
 
   /* Slowing down */
   28% {
     transform: rotate(540deg) scale(1.08);
-    filter: drop-shadow(0 0 12px rgba(255,255,255,0.3));
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.75));
   }
 
   /* Settles */
