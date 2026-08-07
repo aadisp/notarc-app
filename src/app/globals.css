@@ -150,7 +150,7 @@
 @keyframes hourglass-spin {
   /* Sleeping */
   0% {
-    transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(0.5);
     filter: drop-shadow(0 0 0 rgba(255,255,255,0));
   }
 
@@ -168,19 +168,19 @@
 
   /* Slowing down */
   28% {
-    transform: rotate(450deg) scale(1.08);
+    transform: rotate(450deg) scale(1);
     filter: drop-shadow(0 0 12px rgba(255,255,255,0.75));
   }
 
   /* Settles */
   36% {
-    transform: rotate(540deg) scale(1);
+    transform: rotate(540deg) scale(0.7);
     filter: drop-shadow(0 0 0 rgba(255,255,255,0));
   }
 
   /* Sleeping */
   100% {
-    transform: rotate(540deg) scale(1);
+    transform: rotate(540deg) scale(0.7);
     filter: drop-shadow(0 0 0 rgba(255,255,255,0));
   }
 }
