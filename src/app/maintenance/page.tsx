@@ -18,10 +18,10 @@ export default function MaintenancePage() {
         />
         </div>
 
-        
+
 
         <h1 className="text-5xl font-extrabold tracking-tight text-white">
-          NOTARC
+          NOTAR
         </h1>
 
         <p className="mt-8 text-2xl font-semibold text-white">
