@@ -148,27 +148,39 @@
 }
 
 @keyframes hourglass-spin {
-  /* Rest */
+  /* Sleeping */
   0% {
-    transform: rotate(0deg);
+    transform: rotate(0deg) scale(1);
   }
 
-  /* Fast spin */
-  15% {
-    transform: rotate(360deg);
+  /* Comes alive */
+  6% {
+    transform: rotate(0deg) scale(1.12);
   }
 
-  /* Ease into final position */
-  25% {
-    transform: rotate(540deg);
+  /* Rapid spin */
+  18% {
+    transform: rotate(360deg) scale(1.12);
   }
 
-  /* Stay resting */
+  /* Slows down */
+  28% {
+    transform: rotate(540deg) scale(1.08);
+  }
+
+  /* Settles */
+  36% {
+    transform: rotate(540deg) scale(1);
+  }
+
+  /* Rest */
   100% {
-    transform: rotate(540deg);
+    transform: rotate(540deg) scale(1);
   }
 }
 
 .animate-hourglass {
-  animation: hourglass-spin 5s cubic-bezier(0.2, 1, 0.3, 1) infinite;
+  animation: hourglass-spin 5.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  transform-origin: center;
+  will-change: transform;
 }
