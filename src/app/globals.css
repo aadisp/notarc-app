@@ -168,7 +168,7 @@
 
   /* Slowing down */
   28% {
-    transform: rotate(540deg) scale(1.08);
+    transform: rotate(450deg) scale(1.08);
     filter: drop-shadow(0 0 12px rgba(255,255,255,0.75));
   }
 
