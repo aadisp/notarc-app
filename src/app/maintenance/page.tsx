@@ -22,9 +22,10 @@ export default function MaintenancePage() {
             />
         </div>
 
-        <p className="mt-8 text-2xl font-semibold text-white">
-          We're Currently Under Maintenance
-        </p>
+        <h1 className="text-5xl font-extrabold tracking-tight text-white">
+          Under Maintenance
+        </h1>
+
 
         <p className="mt-6 text-lg leading-8 text-gray-300">
           We're making major improvements to the NOTARC platform,
