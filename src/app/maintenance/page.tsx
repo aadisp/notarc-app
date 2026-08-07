@@ -15,10 +15,10 @@ export default function MaintenancePage() {
             <Image
                 src="/logo.png"
                 alt="NOTARC Logo"
-                width={210}
-                height={210}
+                width={420}
+                height={420}
                 priority
-                className="h-auto w-full max-w-[420px]"
+                className="h-auto w-full max-w-[210px]"
             />
         </div>
 
