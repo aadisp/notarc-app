@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Hourglass } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Under Maintenance | NOTARC",
@@ -10,8 +11,11 @@ export default function MaintenancePage() {
 
       <div className="w-full max-w-2xl rounded-3xl border border-white/10 bg-white/5 p-12 text-center backdrop-blur-xl shadow-2xl">
 
-        <div className="mb-8 text-7xl">
-          ⏳
+        <div className="mb-8 flex justify-center">
+        <Hourglass
+            className="h-20 w-20 text-white"
+            strokeWidth={1.5}
+        />
         </div>
 
         <h1 className="text-5xl font-extrabold tracking-tight text-white">
