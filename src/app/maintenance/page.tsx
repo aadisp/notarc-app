@@ -13,7 +13,7 @@ export default function MaintenancePage() {
 
         <div className="mb-8 flex justify-center">
         <Hourglass
-            className="h-20 w-20 text-white"
+            className="h-20 w-20 animate-hourglass text-white"
             strokeWidth={1.5}
         />
         </div>

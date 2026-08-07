@@ -146,3 +146,29 @@
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+@keyframes hourglass-spin {
+  /* Rest */
+  0% {
+    transform: rotate(0deg);
+  }
+
+  /* Fast spin */
+  15% {
+    transform: rotate(360deg);
+  }
+
+  /* Ease into final position */
+  25% {
+    transform: rotate(540deg);
+  }
+
+  /* Stay resting */
+  100% {
+    transform: rotate(540deg);
+  }
+}
+
+.animate-hourglass {
+  animation: hourglass-spin 5s cubic-bezier(0.2, 1, 0.3, 1) infinite;
+}
