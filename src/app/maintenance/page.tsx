@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Hourglass } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Under Maintenance | NOTARC",
+  title: "Under Maintenance",
 };
 
 export default function MaintenancePage() {
