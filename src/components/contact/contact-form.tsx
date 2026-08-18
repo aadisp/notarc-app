@@ -23,6 +23,37 @@ export default function ContactForm() {
         e: React.FormEvent
     ) {
         e.preventDefault();
+
+        const trimmedName = name.trim();
+        const trimmedEmail = email.trim();
+        const trimmedPhone = phone.trim();
+        const trimmedSubject = subject.trim();
+        const trimmedMessage = message.trim();
+
+        if (
+            !trimmedName ||
+            !trimmedEmail ||
+            !trimmedPhone ||
+            !trimmedSubject ||
+            !trimmedMessage
+        ) {
+            toast.error("Please fill in all fields.", {
+                description:
+                    "Name, email, phone number, subject, and message are required.",
+            });
+
+            return;
+        }
+
+        if (!/^\d{10}$/.test(trimmedPhone)) {
+            toast.error("Invalid phone number.", {
+                description:
+                    "Please enter a valid 10-digit phone number.",
+            });
+
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
@@ -30,17 +61,15 @@ export default function ContactForm() {
             await addDoc(
                 collection(db, "contacts"),
                 {
-
-                    name,
-                    email,
-                    phone,
-                    subject,
-                    message,
+                    name: trimmedName,
+                    email: trimmedEmail,
+                    phone: trimmedPhone,
+                    subject: trimmedSubject,
+                    message: trimmedMessage,
 
                     createdAt: serverTimestamp(),
 
                     status: "new",
-
                 }
             );
 
@@ -48,17 +77,18 @@ export default function ContactForm() {
                 process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
                 process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
                 {
-                    name,
-                    email,
-                    phone,
-                    subject,
-                    message,
+                    name: trimmedName,
+                    email: trimmedEmail,
+                    phone: trimmedPhone,
+                    subject: trimmedSubject,
+                    message: trimmedMessage,
                 },
                 process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
             );
 
             toast.success("Message sent successfully!", {
-                description: "We'll get back to you as soon as possible.",
+                description:
+                    "We'll get back to you as soon as possible.",
             });
 
             setName("");
@@ -67,19 +97,16 @@ export default function ContactForm() {
             setSubject("");
             setMessage("");
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(error);
 
             toast.error("Failed to send message.", {
-                description: "Please try again in a few moments.",
+                description:
+                    "Please try again in a few moments.",
             });
 
-        }
-
-        finally {
+        } finally {
             setIsSubmitting(false);
         }
     }
@@ -146,11 +173,16 @@ export default function ContactForm() {
                         </label>
 
                         <Input
-                            placeholder="+91 XXXXX XXXXX"
+                            type="tel"
+                            inputMode="numeric"
+                            maxLength={10}
+                            placeholder="9876543210"
                             value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+                            onChange={(e) => {
+                                const value = e.target.value.replace(/\D/g, "");
+                                setPhone(value);
+                            }}
                         />
-
                     </div>
 
                     <div>

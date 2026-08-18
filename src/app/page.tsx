@@ -17,13 +17,12 @@ export default function Home() {
   return (
     <SiteLayout>
       <HeroSection />
+      <VisionSection />
       <CoreOfferings />
       <ProductsPreview />
-      <CoursesPreview />
       <GallerySection />
       <ClientsSection />
       <Testimonials />
-      <VisionSection />
     </SiteLayout>
   );
 }

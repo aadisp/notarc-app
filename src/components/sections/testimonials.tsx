@@ -28,7 +28,7 @@ export default function Testimonials() {
 
     return (
 
-        <section className="mx-auto max-w-7xl px-6 py-24">
+        <section className="mx-auto max-w-7xl px-6 py-20 lg:py-24">
 
             <div className="text-center">
 
@@ -53,7 +53,7 @@ export default function Testimonials() {
 
             </div>
 
-            <div className="mt-16">
+            <div className="mt-12">
 
                 <div
                     className="elfsight-app-5a18d460-a175-4846-9b51-70f9f96328ed"

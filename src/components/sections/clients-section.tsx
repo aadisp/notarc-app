@@ -55,9 +55,9 @@ const clients = [
 
 export default function ClientsSection() {
   return (
-    <section className="overflow-hidden py-20 bg-white">
+    <section className="overflow-hidden bg-white py-16 lg:py-20">
 
-      <div className="mb-12 flex items-center justify-center gap-5">
+      <div className="mb-10 flex items-center justify-center gap-5">
         <div className="h-px w-24 bg-gray-600" />
         <h2 className="text-2xl font-bold text-black-600">
           Happy Clients
@@ -67,7 +67,7 @@ export default function ClientsSection() {
 
       <div className="overflow-hidden">
 
-        <div className="animate-marquee flex w-max items-center gap-16">
+        <div className="animate-marquee flex w-max items-center gap-12 lg:gap-16">
 
           {[...clients, ...clients].map((client, index) => {
 

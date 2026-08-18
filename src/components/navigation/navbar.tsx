@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { signOut } from "firebase/auth";
 import { auth, db } from "@/firebase/firebase";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   useEffect,
@@ -198,13 +199,15 @@ export default function Navbar() {
         z-50
         w-full
         border-b
-        backdrop-blur-md
+        border-white/[0.08]
+        bg-black/90
+        backdrop-blur-xl
         transition-all
         duration-300
         ${
           scrolled
-            ? "bg-white/95 shadow-md"
-            : "bg-white/80"
+            ? "bg-black/90 shadow-[0_8px_30px_rgba(0,0,0,0.25)]"
+            : "bg-black/70"
         }
       `}
     >
@@ -230,40 +233,39 @@ export default function Navbar() {
         <Link
           href="/"
           onClick={(e) => {
-
-            if (
-              window.location.pathname ===
-              "/"
-            ) {
-
+            if (window.location.pathname === "/") {
               e.preventDefault();
 
               window.scrollTo({
                 top: 0,
                 behavior: "smooth",
               });
-
             }
-
           }}
+          className="shrink-0 md:-translate-x-28"
         >
-
-          <h1
+          <div
             className={`
-              font-black
-              tracking-tight
+              relative
+              overflow-hidden
               transition-all
               duration-300
               ${
                 scrolled
-                  ? "text-2xl"
-                  : "text-3xl"
+                  ? "h-11 w-36"
+                  : "h-12 w-40"
               }
             `}
           >
-            NOTARC
-          </h1>
-
+            <Image
+              src="/ntrclogo.png"
+              alt="NOTARC"
+              fill
+              priority
+              sizes="160px"
+              className="object-cover object-center"
+            />
+          </div>
         </Link>
 
         <nav
@@ -271,29 +273,114 @@ export default function Navbar() {
             hidden
             md:flex
             items-center
-            gap-10
-            text-base
+            gap-1
+            rounded-full
+            border
+            border-white/[0.08]
+            bg-white/[0.04]
+            p-1
+            text-sm
             font-medium
           "
         >
 
-          <Link href="/" className="transition hover:text-blue-600">
+          <Link
+            href="/"
+            className="
+              rounded-full
+              px-4
+              py-2
+              text-white/75
+              transition-all
+              duration-300
+              ease-out
+              hover:bg-white/10
+              hover:text-white
+              hover:-translate-y-0.5
+              hover:shadow-[0_0_16px_rgba(255,255,255,0.08)]
+              active:translate-y-0
+            "
+          >
             Home
           </Link>
 
-          <Link href="/products" className="transition hover:text-blue-600">
+          <Link
+            href="/products"
+            className="
+              rounded-full
+              px-4
+              py-2
+              text-white/75
+              transition-all
+              duration-300
+              ease-out
+              hover:bg-white/10
+              hover:text-white
+              hover:-translate-y-0.5
+              hover:shadow-[0_0_16px_rgba(255,255,255,0.08)]
+              active:translate-y-0
+            "
+          >
             Explore Products
           </Link>
 
-          <Link href="/courses" className="transition hover:text-blue-600">
+          <Link
+            href="/courses"
+            className="
+              rounded-full
+              px-4
+              py-2
+              text-white/75
+              transition-all
+              duration-300
+              ease-out
+              hover:bg-white/10
+              hover:text-white
+              hover:-translate-y-0.5
+              hover:shadow-[0_0_16px_rgba(255,255,255,0.08)]
+              active:translate-y-0
+            "
+          >
             Book a Course
           </Link>
 
-          <Link href="/contact-us" className="transition hover:text-blue-600">
+          <Link
+            href="/contact-us"
+            className="
+              rounded-full
+              px-4
+              py-2
+              text-white/75
+              transition-all
+              duration-300
+              ease-out
+              hover:bg-white/10
+              hover:text-white
+              hover:-translate-y-0.5
+              hover:shadow-[0_0_16px_rgba(255,255,255,0.08)]
+              active:translate-y-0
+            "
+          >
             Contact Us
           </Link>
 
-          <Link href="/cart" className="transition hover:text-blue-600">
+          <Link
+            href="/cart"
+            className="
+              rounded-full
+              px-4
+              py-2
+              text-white/75
+              transition-all
+              duration-300
+              ease-out
+              hover:bg-white/10
+              hover:text-white
+              hover:-translate-y-0.5
+              hover:shadow-[0_0_16px_rgba(255,255,255,0.08)]
+              active:translate-y-0
+            "
+          >
             Cart
           </Link>
 
@@ -318,29 +405,35 @@ export default function Navbar() {
                 gap-3
                 rounded-full
                 border
-                border-slate-200
-                bg-white
-                px-3
+                border-white/10
+                bg-white/[0.08]
+                px-2
                 py-2
-                shadow-sm
+                text-white
+                shadow-lg
+                shadow-black/10
+                backdrop-blur-sm
                 transition-all
+                duration-200
+                hover:border-white/20
+                hover:bg-white/[0.14]
                 hover:scale-[1.02]
-                hover:shadow-md
               "
             >
 
               <div
                 className="
                   flex
-                  h-10
-                  w-10
+                  h-9
+                  w-9
                   items-center
                   justify-center
                   rounded-full
-                  bg-slate-900
-                  text-base
+                  bg-white
+                  text-sm
                   font-bold
-                  text-white
+                  text-black
+                  shadow-sm
                 "
               >
                 {(username ||
@@ -350,13 +443,15 @@ export default function Navbar() {
                   .toUpperCase()}
               </div>
 
-              <span className="font-medium">
+              <span className="max-w-32 truncate text-sm font-medium text-white/90">
                 {username ||
                   user.email}
               </span>
 
               <span
                 className={`
+                  text-xs
+                  text-white/60
                   transition-transform
                   duration-200
                   ${
@@ -377,24 +472,28 @@ export default function Navbar() {
                 className="
                   absolute
                   right-0
-                  mt-3
+                  mt-2
                   w-72
                   overflow-hidden
                   rounded-2xl
                   border
-                  bg-white
-                  shadow-xl
+                  border-white/10
+                  bg-black/90
+                  text-white
+                  shadow-2xl
+                  shadow-black/40
+                  backdrop-blur-xl
                   z-50
                 "
               >
 
-                <div className="border-b px-5 py-4">
+                <div className="border-b border-white/10 px-5 py-4">
 
                   <p className="font-semibold text-lg">
                     {username}
                   </p>
 
-                  <p className="truncate text-sm text-slate-500">
+                  <p className="truncate text-sm text-white/50">
                     {user.email}
                   </p>
 
@@ -407,7 +506,7 @@ export default function Navbar() {
                     <Link
                       href="/"
                       onClick={() => setMenuOpen(false)}
-                      className="block px-5 py-3 hover:bg-slate-50"
+                      className="block px-5 py-3 hover:bg-white/10"
                     >
                       Home
                     </Link>
@@ -415,7 +514,7 @@ export default function Navbar() {
                     <Link
                       href="/products"
                       onClick={() => setMenuOpen(false)}
-                      className="block px-5 py-3 hover:bg-slate-50"
+                      className="block px-5 py-3 hover:bg-white/10"
                     >
                       Explore Products
                     </Link>
@@ -423,7 +522,7 @@ export default function Navbar() {
                     <Link
                       href="/courses"
                       onClick={() => setMenuOpen(false)}
-                      className="block px-5 py-3 hover:bg-slate-50"
+                      className="block px-5 py-3 hover:bg-white/10"
                     >
                       Book a Course
                     </Link>
@@ -431,7 +530,7 @@ export default function Navbar() {
                     <Link
                       href="/contact-us"
                       onClick={() => setMenuOpen(false)}
-                      className="block px-5 py-3 hover:bg-slate-50"
+                      className="block px-5 py-3 hover:bg-white/10"
                     >
                       Contact Us
                     </Link>
@@ -439,7 +538,7 @@ export default function Navbar() {
                     <Link
                       href="/cart"
                       onClick={() => setMenuOpen(false)}
-                      className="block px-5 py-3 hover:bg-slate-50"
+                      className="block px-5 py-3 hover:bg-white/10"
                     >
                       Cart
                     </Link>
@@ -449,21 +548,21 @@ export default function Navbar() {
 
                 <Link
                   href="/profile"
-                  className="block px-5 py-3 hover:bg-slate-50"
+                  className="block px-5 py-3 hover:bg-white/10"
                 >
                   Profile
                 </Link>
 
                 <Link
                   href="/my-courses"
-                  className="block px-5 py-3 hover:bg-slate-50"
+                  className="block px-5 py-3 hover:bg-white/10"
                 >
                   My Courses
                 </Link>
 
                 <Link
                   href="/my-orders"
-                  className="block px-5 py-3 hover:bg-slate-50"
+                  className="block px-5 py-3 hover:bg-white/10"
                 >
                   My Orders
                 </Link>
@@ -477,7 +576,7 @@ export default function Navbar() {
                       px-4
                       py-3
                       transition
-                      hover:bg-slate-50
+                      hover:bg-white/10
                     "
                   >
                     Dashboard
@@ -485,7 +584,7 @@ export default function Navbar() {
 
                 )}
 
-                <hr />
+                <hr className="border-white/10" />
 
                 <div className="px-5 py-3">
 
@@ -496,7 +595,7 @@ export default function Navbar() {
                       font-semibold
                       uppercase
                       tracking-wider
-                      text-slate-400
+                      text-white/40
                     "
                   >
                     Accounts
@@ -514,10 +613,10 @@ export default function Navbar() {
                           justify-between
                           rounded-xl
                           transition
-                          hover:bg-slate-100
+                          hover:bg-white/10
                           ${
                             account.uid === user.uid
-                              ? "bg-slate-100"
+                              ? "bg-white/10"
                               : ""
                           }
                         `}
@@ -603,7 +702,7 @@ export default function Navbar() {
                             <p
                               className="
                                 font-medium
-                                text-slate-900
+                                text-white
                               "
                             >
                               {account.username}
@@ -612,7 +711,7 @@ export default function Navbar() {
                             <p
                               className="
                                 text-xs
-                                text-slate-500
+                                text-white/50
                               "
                             >
                               {account.email}
@@ -684,11 +783,14 @@ export default function Navbar() {
                       block
                       rounded-xl
                       border
+                      border-white/10
                       px-3
                       py-2
                       text-center
+                      text-white/70
                       transition
-                      hover:bg-slate-50
+                      hover:bg-white/10
+                      hover:text-white
                     "
                   >
                     + Add another account
@@ -696,7 +798,7 @@ export default function Navbar() {
 
                 </div>
 
-                <hr />
+                <hr className="border-white/10" />
 
                 <button
                   onClick={
@@ -711,7 +813,7 @@ export default function Navbar() {
                     font-medium
                     text-red-600
                     transition
-                    hover:bg-red-50
+                    hover:bg-red-500/10
                   "
                 >
                   Logout
@@ -725,13 +827,45 @@ export default function Navbar() {
 
         ) : (
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
 
-            <Link href="/login">
+            <Link
+              href="/login"
+              className="
+                rounded-full
+                px-4
+                py-2
+                text-sm
+                font-medium
+                text-white/80
+                transition-all
+                duration-200
+                hover:bg-white/10
+                hover:text-white
+              "
+            >
               Login
             </Link>
 
-            <Link href="/signup">
+            <Link
+              href="/signup"
+              className="
+                rounded-full
+                bg-white
+                px-5
+                py-2.5
+                text-sm
+                font-semibold
+                text-black
+                shadow-sm
+                transition-all
+                duration-200
+                hover:bg-blue-500
+                hover:text-white
+                hover:shadow-lg
+                hover:shadow-blue-500/20
+              "
+            >
               Signup
             </Link>
 
@@ -746,3 +880,755 @@ export default function Navbar() {
   );
 
 }
+
+
+// Old Navigation Bar
+// "use client";
+
+// import { useUserRole } from "@/hooks/use-user-role";
+// import { useAuth } from "@/hooks/use-auth";
+// import { signOut } from "firebase/auth";
+// import { auth, db } from "@/firebase/firebase";
+// import Link from "next/link";
+// import { useRouter } from "next/navigation";
+// import {
+// useEffect,
+// useRef,
+// useState,
+// } from "react";
+// import {
+// doc,
+// onSnapshot,
+// } from "firebase/firestore";
+
+// interface SavedAccount {
+// uid: string;
+// username: string;
+// email: string;
+// }
+
+// export default function Navbar() {
+
+// const { user } = useAuth();
+
+// const role =
+// useUserRole();
+
+// const router = useRouter();
+
+// const [username,
+// setUsername] =
+// useState("");
+
+// const [menuOpen,
+// setMenuOpen] =
+// useState(false);
+
+// const [scrolled,
+// setScrolled] =
+// useState(false);
+
+// const [savedAccounts,
+// setSavedAccounts] =
+// useState<SavedAccount[]>([]);
+
+// const menuRef =
+// useRef<HTMLDivElement>(null);
+
+// const [isMobile, setIsMobile] = useState(false);
+
+// useEffect(() => {
+
+// if (!user) return;
+
+// const unsubscribe =
+//   onSnapshot(
+//     doc(
+//       db,
+//       "users",
+//       user.uid
+//     ),
+//     (userDoc) => {
+
+//       if (
+//         userDoc.exists()
+//       ) {
+
+//         setUsername(
+//           userDoc.data()
+//             .username || ""
+//         );
+
+//       }
+
+//       const accounts =
+//         JSON.parse(
+//           localStorage.getItem(
+//             "notarcAccounts"
+//           ) || "[]"
+//         );
+
+//       setSavedAccounts(
+//         accounts
+//       );
+
+//     }
+//   );
+
+// return () =>
+//   unsubscribe();
+
+// }, [user]);
+
+// useEffect(() => {
+// function handleResize() {
+// setIsMobile(window.innerWidth < 768);
+// }
+
+// handleResize(); // Run once on mount
+
+// window.addEventListener("resize", handleResize);
+
+// return () => window.removeEventListener("resize", handleResize);
+
+// }, []);
+
+// useEffect(() => {
+
+// function handleScroll() {
+
+//   setScrolled(
+//     window.scrollY > 50
+//   );
+
+// }
+
+// window.addEventListener(
+//   "scroll",
+//   handleScroll
+// );
+
+// return () =>
+//   window.removeEventListener(
+//     "scroll",
+//     handleScroll
+//   );
+
+// }, []);
+
+// useEffect(() => {
+
+// function handleClickOutside(
+//   event: MouseEvent
+// ) {
+
+//   if (
+//     menuRef.current &&
+//     !menuRef.current.contains(
+//       event.target as Node
+//     )
+//   ) {
+//     setMenuOpen(false);
+//   }
+
+// }
+
+// document.addEventListener(
+//   "mousedown",
+//   handleClickOutside
+// );
+
+// return () =>
+//   document.removeEventListener(
+//     "mousedown",
+//     handleClickOutside
+//   );
+
+// }, []);
+
+// function removeSavedAccount(
+// uid: string
+// ) {
+
+// const updatedAccounts =
+//   savedAccounts.filter(
+//     (account) =>
+//       account.uid !== uid
+//   );
+
+// localStorage.setItem(
+//   "notarcAccounts",
+//   JSON.stringify(
+//     updatedAccounts
+//   )
+// );
+
+// setSavedAccounts(
+//   updatedAccounts
+// );
+
+// }
+
+// async function handleLogout() {
+
+// await signOut(auth);
+
+// }
+
+// return (
+
+// <header
+//   className={`
+//     sticky
+//     top-0
+//     z-50
+//     w-full
+//     border-b
+//     backdrop-blur-md
+//     transition-all
+//     duration-300
+//     ${
+//       scrolled
+//         ? "bg-white/95 shadow-md"
+//         : "bg-white/80"
+//     }
+//   `}
+// >
+
+//   <div
+//     className={`
+//       mx-auto
+//       flex
+//       max-w-7xl
+//       items-center
+//       justify-between
+//       px-6
+//       transition-all
+//       duration-300
+//       ${
+//         scrolled
+//           ? "h-16"
+//           : "h-20"
+//       }
+//     `}
+//   >
+
+//     <Link
+//       href="/"
+//       onClick={(e) => {
+
+//         if (
+//           window.location.pathname ===
+//           "/"
+//         ) {
+
+//           e.preventDefault();
+
+//           window.scrollTo({
+//             top: 0,
+//             behavior: "smooth",
+//           });
+
+//         }
+
+//       }}
+//     >
+
+//       <h1
+//         className={`
+//           font-black
+//           tracking-tight
+//           transition-all
+//           duration-300
+//           ${
+//             scrolled
+//               ? "text-2xl"
+//               : "text-3xl"
+//           }
+//         `}
+//       >
+//         NOTARC
+//       </h1>
+
+//     </Link>
+
+//     <nav
+//       className="
+//         hidden
+//         md:flex
+//         items-center
+//         gap-10
+//         text-base
+//         font-medium
+//       "
+//     >
+
+//       <Link href="/" className="transition hover:text-blue-600">
+//         Home
+//       </Link>
+
+//       <Link href="/products" className="transition hover:text-blue-600">
+//         Explore Products
+//       </Link>
+
+//       <Link href="/courses" className="transition hover:text-blue-600">
+//         Book a Course
+//       </Link>
+
+//       <Link href="/contact-us" className="transition hover:text-blue-600">
+//         Contact Us
+//       </Link>
+
+//       <Link href="/cart" className="transition hover:text-blue-600">
+//         Cart
+//       </Link>
+
+//     </nav>
+
+//     {user ? (
+
+//       <div
+//         ref={menuRef}
+//         className="relative"
+//       >
+
+//         <button
+//           onClick={() =>
+//             setMenuOpen(
+//               !menuOpen
+//             )
+//           }
+//           className="
+//             flex
+//             items-center
+//             gap-3
+//             rounded-full
+//             border
+//             border-slate-200
+//             bg-white
+//             px-3
+//             py-2
+//             shadow-sm
+//             transition-all
+//             hover:scale-[1.02]
+//             hover:shadow-md
+//           "
+//         >
+
+//           <div
+//             className="
+//               flex
+//               h-10
+//               w-10
+//               items-center
+//               justify-center
+//               rounded-full
+//               bg-slate-900
+//               text-base
+//               font-bold
+//               text-white
+//             "
+//           >
+//             {(username ||
+//               user.email ||
+//               "U")
+//               .charAt(0)
+//               .toUpperCase()}
+//           </div>
+
+//           <span className="font-medium">
+//             {username ||
+//               user.email}
+//           </span>
+
+//           <span
+//             className={`
+//               transition-transform
+//               duration-200
+//               ${
+//                 menuOpen
+//                   ? "rotate-180"
+//                   : ""
+//               }
+//             `}
+//           >
+//             ▼
+//           </span>
+
+//         </button>
+
+//         {menuOpen && (
+
+//           <div
+//             className="
+//               absolute
+//               right-0
+//               mt-3
+//               w-72
+//               overflow-hidden
+//               rounded-2xl
+//               border
+//               bg-white
+//               shadow-xl
+//               z-50
+//             "
+//           >
+
+//             <div className="border-b px-5 py-4">
+
+//               <p className="font-semibold text-lg">
+//                 {username}
+//               </p>
+
+//               <p className="truncate text-sm text-slate-500">
+//                 {user.email}
+//               </p>
+
+//             </div>
+
+//             {/* Mobile Navigation */}
+//             {isMobile && (
+//               <div className="border-b">
+
+//                 <Link
+//                   href="/"
+//                   onClick={() => setMenuOpen(false)}
+//                   className="block px-5 py-3 hover:bg-slate-50"
+//                 >
+//                   Home
+//                 </Link>
+
+//                 <Link
+//                   href="/products"
+//                   onClick={() => setMenuOpen(false)}
+//                   className="block px-5 py-3 hover:bg-slate-50"
+//                 >
+//                   Explore Products
+//                 </Link>
+
+//                 <Link
+//                   href="/courses"
+//                   onClick={() => setMenuOpen(false)}
+//                   className="block px-5 py-3 hover:bg-slate-50"
+//                 >
+//                   Book a Course
+//                 </Link>
+
+//                 <Link
+//                   href="/contact-us"
+//                   onClick={() => setMenuOpen(false)}
+//                   className="block px-5 py-3 hover:bg-slate-50"
+//                 >
+//                   Contact Us
+//                 </Link>
+
+//                 <Link
+//                   href="/cart"
+//                   onClick={() => setMenuOpen(false)}
+//                   className="block px-5 py-3 hover:bg-slate-50"
+//                 >
+//                   Cart
+//                 </Link>
+
+//               </div>
+//             )}
+
+//             <Link
+//               href="/profile"
+//               className="block px-5 py-3 hover:bg-slate-50"
+//             >
+//               Profile
+//             </Link>
+
+//             <Link
+//               href="/my-courses"
+//               className="block px-5 py-3 hover:bg-slate-50"
+//             >
+//               My Courses
+//             </Link>
+
+//             <Link
+//               href="/my-orders"
+//               className="block px-5 py-3 hover:bg-slate-50"
+//             >
+//               My Orders
+//             </Link>
+
+//             {role === "admin" && (
+
+//               <Link
+//                 href="/admin"
+//                 className="
+//                   block
+//                   px-4
+//                   py-3
+//                   transition
+//                   hover:bg-slate-50
+//                 "
+//               >
+//                 Dashboard
+//               </Link>
+
+//             )}
+
+//             <hr />
+
+//             <div className="px-5 py-3">
+
+//               <p
+//                 className="
+//                   mb-3
+//                   text-xs
+//                   font-semibold
+//                   uppercase
+//                   tracking-wider
+//                   text-slate-400
+//                 "
+//               >
+//                 Accounts
+//               </p>
+            
+//               {savedAccounts.map(
+//                 (account) => (
+
+//                   <div
+//                     key={account.uid}
+//                     className={`
+//                       mb-2
+//                       flex
+//                       items-center
+//                       justify-between
+//                       rounded-xl
+//                       transition
+//                       hover:bg-slate-100
+//                       ${
+//                         account.uid === user.uid
+//                           ? "bg-slate-100"
+//                           : ""
+//                       }
+//                     `}
+//                   >
+
+//                     <button
+//                       onClick={() => {
+
+//                         if (
+//                           account.uid ===
+//                           user.uid
+//                         ) {
+//                           return;
+//                         }
+
+//                         localStorage.setItem(
+//                           "notarcSelectedAccount",
+//                           JSON.stringify(
+//                             account
+//                           )
+//                         );
+
+//                         setMenuOpen(false);
+
+//                         router.push(
+//                           "/login"
+//                         );
+
+//                       }}
+//                       className="
+//                         flex
+//                         flex-1
+//                         items-center
+//                         gap-3
+//                         p-2
+//                         text-left
+//                       "
+//                     >
+
+//                       <div className="relative">
+
+//                         <div
+//                           className="
+//                             flex
+//                             h-10
+//                             w-10
+//                             items-center
+//                             justify-center
+//                             rounded-full
+//                             bg-slate-900
+//                             text-white
+//                             font-bold
+//                           "
+//                         >
+//                           {account.username
+//                             .charAt(0)
+//                             .toUpperCase()}
+//                         </div>
+
+//                         {account.uid ===
+//                           user.uid && (
+
+//                           <div
+//                             className="
+//                               absolute
+//                               -bottom-0.5
+//                               -right-0.5
+//                               h-3
+//                               w-3
+//                               rounded-full
+//                               border-2
+//                               border-white
+//                               bg-green-500
+//                             "
+//                           />
+
+//                         )}
+
+//                       </div>
+
+//                       <div>
+
+//                         <p
+//                           className="
+//                             font-medium
+//                             text-slate-900
+//                           "
+//                         >
+//                           {account.username}
+//                         </p>
+
+//                         <p
+//                           className="
+//                             text-xs
+//                             text-slate-500
+//                           "
+//                         >
+//                           {account.email}
+//                         </p>
+
+//                       </div>
+
+//                     </button>
+
+//                     <button
+//                       onClick={() => {
+
+//                         if (
+//                           account.uid === user.uid
+//                         ) {
+//                           return;
+//                         }
+
+//                         removeSavedAccount(
+//                           account.uid
+//                         );
+
+//                       }}
+//                       className="
+//                         mr-2
+//                         flex
+//                         h-8
+//                         w-8
+//                         items-center
+//                         justify-center
+//                         rounded-full
+//                         text-slate-400
+//                         transition
+//                         hover:bg-red-100
+//                         hover:text-red-600
+//                         disabled:cursor-not-allowed
+//                         disabled:opacity-40
+//                       "
+//                       disabled={
+//                         account.uid === user.uid
+//                       }
+//                       title={
+//                         account.uid === user.uid
+//                           ? "Current account"
+//                           : "Remove account"
+//                       }
+//                     >
+//                       ✕
+//                     </button>
+
+//                   </div>
+
+//                 )
+//               )}
+
+//               <Link
+//                 href="/login"
+//                 onClick={() => {
+
+//                   localStorage.removeItem(
+//                     "notarcSelectedAccount"
+//                   );
+
+//                   setMenuOpen(false);
+
+//                 }}
+//                 className="
+//                   mt-3
+//                   block
+//                   rounded-xl
+//                   border
+//                   px-3
+//                   py-2
+//                   text-center
+//                   transition
+//                   hover:bg-slate-50
+//                 "
+//               >
+//                 + Add another account
+//               </Link>
+
+//             </div>
+
+//             <hr />
+
+//             <button
+//               onClick={
+//                 handleLogout
+//               }
+//               className="
+//                 block
+//                 w-full
+//                 px-5
+//                 py-4
+//                 text-left
+//                 font-medium
+//                 text-red-600
+//                 transition
+//                 hover:bg-red-50
+//               "
+//             >
+//               Logout
+//             </button>
+
+//           </div>
+
+//         )}
+
+//       </div>
+
+//     ) : (
+
+//       <div className="flex items-center gap-4">
+
+//         <Link href="/login">
+//           Login
+//         </Link>
+
+//         <Link href="/signup">
+//           Signup
+//         </Link>
+
+//       </div>
+
+//     )}
+
+//   </div>
+
+// </header>
+
+// );
+
+// }

@@ -65,10 +65,10 @@ export default function ProductsPreview() {
 
   return (
 
-    <section className="mx-auto max-w-7xl px-6 py-40">
+    <section className="mx-auto max-w-7xl px-6 py-20 lg:py-24">
       
 
-      <div className="mb-12">
+      <div className="mb-10">
 
         <h2 className="text-4xl font-bold">
           Explore Products
@@ -100,7 +100,7 @@ export default function ProductsPreview() {
 
       </div>
 
-      <div className="mt-10">
+      <div className="mt-8">
 
         <Link href="/products">
 

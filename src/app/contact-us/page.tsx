@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
     return (
         <SiteLayout>
-            <main className="mx-auto max-w-7xl px-6 py-24">
+            <main className="mx-auto max-w-[1400px] px-6 pt-12 pb-24">
 
                 <section className="mb-20 text-center">
 

@@ -45,11 +45,11 @@ export default function GallerySection() {
         >
             <div className="mx-auto max-w-7xl px-6">
 
-                <h2 className="mb-3 text-4xl font-bold">
+                <h2 className="text-4xl font-bold tracking-tight">
                     Gallery
                 </h2>
 
-                <p className="mb-10 text-muted-foreground">
+                <p className="mt-3 mb-8 text-muted-foreground">
                     Explore moments from our workshops,
                     projects and innovations.
                 </p>

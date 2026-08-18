@@ -85,7 +85,7 @@ export default function ContactInfo() {
                         </h3>
 
                         <p className="mt-2 text-sm text-muted-foreground">
-                            Info@notarc.in
+                            info@notarc.in
                         </p>
 
                     </div>

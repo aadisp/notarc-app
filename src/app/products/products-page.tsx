@@ -56,17 +56,15 @@ export default function ProductsPage() {
 }, [products, search, category, sort]);
   return (
     <SiteLayout>
-      <section className="mx-auto max-w-7xl px-6 py-24">
+      <section className="mx-auto max-w-[1400px] px-6 pt-10 pb-24">
         <div className="mb-16">
 
-          <span className="rounded-full border px-4 py-2 text-sm font-medium">
+          {/* <span className="rounded-full border px-4 py-2 text-sm font-medium">
               NOTARC STORE
-          </span>
+          </span> */}
 
-          <h1 className="mt-6 max-w-4xl text-5xl font-extrabold tracking-tight lg:text-7xl">
-              Professional Drone
-              <br />
-              & Robotics Equipment
+          <h1 className="text-5xl font-extrabold tracking-tight lg:whitespace-nowrap lg:text-6xl">
+              Professional Drone & Robotics Equipment
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
