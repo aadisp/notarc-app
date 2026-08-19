@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminAuth, adminDb } from "@/firebase/firebase-admin";
 
 const MAINTENANCE_MODE = true;
 
-export async function middleware(
+export function middleware(
   request: NextRequest
 ) {
   const { pathname } = request.nextUrl;
@@ -22,8 +21,10 @@ export async function middleware(
   const sessionCookie =
     request.cookies.get("notarc-session")?.value;
 
-  // No authenticated session:
-  // show maintenance page.
+  const roleCookie =
+    request.cookies.get("notarc-role")?.value;
+
+  // No authenticated session.
   if (!sessionCookie) {
     const url = request.nextUrl.clone();
 
@@ -32,55 +33,19 @@ export async function middleware(
     return NextResponse.redirect(url);
   }
 
-  try {
-    // Verify the Firebase session cookie.
-    const decodedClaims =
-      await adminAuth.verifySessionCookie(
-        sessionCookie,
-        true
-      );
-
-    // Check the user's Firestore document.
-    const userSnapshot =
-      await adminDb
-        .collection("users")
-        .doc(decodedClaims.uid)
-        .get();
-
-    const role =
-      userSnapshot.exists
-        ? userSnapshot.data()?.role
-        : null;
-
-    // Admins can access the entire website
-    // while maintenance mode is active.
-    if (role === "admin") {
-      return NextResponse.next();
-    }
-
-    // Authenticated non-admin users still
-    // see the maintenance page.
-    const url = request.nextUrl.clone();
-
-    url.pathname = "/maintenance";
-
-    return NextResponse.redirect(url);
-
-  } catch (error) {
-
-    console.error(
-      "Maintenance middleware authentication error:",
-      error
-    );
-
-    // Invalid/expired session:
-    // treat the visitor as unauthenticated.
-    const url = request.nextUrl.clone();
-
-    url.pathname = "/maintenance";
-
-    return NextResponse.redirect(url);
+  // Admins can access the entire website
+  // while maintenance mode is active.
+  if (roleCookie === "admin") {
+    return NextResponse.next();
   }
+
+  // Authenticated non-admin users still
+  // see the maintenance page.
+  const url = request.nextUrl.clone();
+
+  url.pathname = "/maintenance";
+
+  return NextResponse.redirect(url);
 }
 
 export const config = {

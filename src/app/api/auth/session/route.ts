@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminAuth } from "@/firebase/firebase-admin";
+import { adminAuth, adminDb } from "@/firebase/firebase-admin";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,12 +12,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Verify the Firebase ID token.
     const decodedToken =
       await adminAuth.verifyIdToken(idToken);
+
+    // Read the user's role from Firestore.
+    const userSnapshot =
+      await adminDb
+        .collection("users")
+        .doc(decodedToken.uid)
+        .get();
+
+    const role =
+      userSnapshot.exists
+        ? userSnapshot.data()?.role
+        : "user";
 
     const expiresIn =
       5 * 24 * 60 * 60 * 1000;
 
+    // Create the secure Firebase session cookie.
     const sessionCookie =
       await adminAuth.createSessionCookie(
         idToken,
@@ -29,6 +43,7 @@ export async function POST(request: NextRequest) {
     const response =
       NextResponse.json({
         success: true,
+        role,
       });
 
     response.cookies.set(
@@ -36,7 +51,24 @@ export async function POST(request: NextRequest) {
       sessionCookie,
       {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure:
+          process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge:
+          expiresIn / 1000,
+      }
+    );
+
+    response.cookies.set(
+      "notarc-role",
+      role === "admin"
+        ? "admin"
+        : "user",
+      {
+        httpOnly: true,
+        secure:
+          process.env.NODE_ENV === "production",
         sameSite: "lax",
         path: "/",
         maxAge:
