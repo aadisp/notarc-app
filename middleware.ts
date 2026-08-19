@@ -7,6 +7,15 @@ export function middleware(
 ) {
   const { pathname } = request.nextUrl;
 
+  // Authentication pages must remain accessible
+  // so users/admins can log in during maintenance.
+  if (
+    pathname === "/login" ||
+    pathname === "/signup"
+  ) {
+    return NextResponse.next();
+  }
+
   // Always allow the maintenance page itself.
   if (pathname === "/maintenance") {
     return NextResponse.next();
