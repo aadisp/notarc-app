@@ -59,6 +59,6 @@ export function middleware(
 
 export const config = {
   matcher: [
-    "/((?!_next|favicon.ico|.*\\..*).*)",
+    "/((?!api|_next|favicon.ico|.*\\..*).*)",
   ],
 };
