@@ -165,6 +165,26 @@ const [sendingReset, setSendingReset] =
           password
         );
 
+      const idToken =
+        await userCredential.user.getIdToken();
+
+      const sessionResponse =
+        await fetch("/api/auth/session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idToken,
+          }),
+        });
+
+      if (!sessionResponse.ok) {
+        throw new Error(
+          "Failed to create login session."
+        );
+      }
+
       localStorage.removeItem(
         "notarcSelectedAccount"
       );
@@ -269,9 +289,33 @@ const [sendingReset, setSendingReset] =
     setLoading(true);
     
     try {
-      const result = await signInWithPopup(auth, googleProvider);
+      const result =
+  await signInWithPopup(
+    auth,
+    googleProvider
+  );
 
-      const user = result.user;
+const user = result.user;
+
+const idToken =
+  await user.getIdToken();
+
+const sessionResponse =
+  await fetch("/api/auth/session", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      idToken,
+    }),
+  });
+
+if (!sessionResponse.ok) {
+  throw new Error(
+    "Failed to create login session."
+  );
+}
 
       const userRef = doc(db, "users", user.uid);
 
