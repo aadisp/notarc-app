@@ -51,6 +51,16 @@ const clients = [
     name: "Thomas School",
     logo: "/clients/thomassholl.png",
   },
+  {
+    name: "RNSIT",
+    logo: "/clients/RNSIT.png",
+    href: "https://www.rnsit.ac.in/",
+  },
+  {
+    name: "KSIT",
+    logo: "/clients/KSIT.png",
+    href: "https://www.ksit.ac.in/",
+  },
 ];
 
 export default function ClientsSection() {
@@ -60,7 +70,7 @@ export default function ClientsSection() {
       <div className="mb-10 flex items-center justify-center gap-5">
         <div className="h-px w-24 bg-gray-600" />
         <h2 className="text-2xl font-bold text-black-600">
-          Happy Clients
+          Trusted By
         </h2>
         <div className="h-px w-24 bg-gray-600" />
       </div>

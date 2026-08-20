@@ -54,7 +54,7 @@ const services = [
 
 export default function CoreOfferings() {
     return (
-        <section className="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+        <section className="mx-auto max-w-7xl px-6 pt-6 pb-20 lg:pt-1 lg:pb-24">
 
             <div className="mb-12 text-center">
 
@@ -84,8 +84,7 @@ export default function CoreOfferings() {
                                 overflow-hidden
                                 rounded-3xl
                                 border
-                                border-black/10
-                                bg-white
+                                border-white/10
                                 p-7
                                 shadow-sm
                                 transition-all
@@ -106,27 +105,25 @@ export default function CoreOfferings() {
                                     z-0
                                     bg-cover
                                     bg-center
-                                    opacity-0
-                                    scale-105
-                                    transition-all
+                                    scale-100
+                                    transition-transform
                                     duration-700
                                     ease-out
-                                    group-hover:scale-100
-                                    group-hover:opacity-100
+                                    group-hover:scale-105
                                 "
                                 style={{
                                     backgroundImage: `url(${service.image})`,
                                 }}
                             />
 
-                            {/* Dark overlay */}
+                            {/* Permanent dark overlay */}
 
                             <div
                                 className="
                                     absolute
                                     inset-0
                                     z-10
-                                    bg-black/0
+                                    bg-black/55
                                     transition-all
                                     duration-500
                                     group-hover:bg-black/65
@@ -140,11 +137,11 @@ export default function CoreOfferings() {
                                 <Icon
                                     className="
                                         mb-6
-                                        text-primary
+                                        text-white
+                                        drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]
                                         transition-all
                                         duration-500
-                                        group-hover:text-white
-                                        group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]
+                                        group-hover:scale-105
                                     "
                                     size={48}
                                 />
@@ -153,9 +150,8 @@ export default function CoreOfferings() {
                                     className="
                                         text-3xl
                                         font-bold
-                                        transition-colors
-                                        duration-500
-                                        group-hover:text-white
+                                        text-white
+                                        drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]
                                     "
                                 >
                                     {service.title}
@@ -166,10 +162,8 @@ export default function CoreOfferings() {
                                         mt-4
                                         text-base
                                         leading-7
-                                        text-muted-foreground
-                                        transition-colors
-                                        duration-500
-                                        group-hover:text-white/85
+                                        text-white/85
+                                        drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]
                                         lg:text-lg
                                         lg:leading-8
                                     "

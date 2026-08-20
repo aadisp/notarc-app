@@ -1,14 +1,16 @@
 import { ReactNode } from "react";
 import Navbar from "@/components/navigation/navbar";
 import Footer from "@/components/layout/footer";
-import AdminFab from "@/components/admin/admin-fab";
+import HomeFooter from "@/components/layout/home-footer";
 
 interface SiteLayoutProps {
   children: ReactNode;
+  homePage?: boolean;
 }
 
 export default function SiteLayout({
   children,
+  homePage = false,
 }: SiteLayoutProps) {
   return (
     <>
@@ -18,8 +20,7 @@ export default function SiteLayout({
         {children}
       </main>
 
-      <Footer />
-
+      {homePage ? <HomeFooter /> : <Footer />}
     </>
   );
 }

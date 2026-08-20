@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 export default function Home() {
   return (
-    <SiteLayout>
+    <SiteLayout homePage>
       <HeroSection />
       <VisionSection />
       <CoreOfferings />
