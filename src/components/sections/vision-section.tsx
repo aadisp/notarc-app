@@ -24,21 +24,29 @@
 
 export default function VisionSection() {
   return (
-    <section className="mx-auto max-w-5xl px-6 py-20 lg:py-24 text-center">
+    <section className="mx-auto max-w-5xl px-6 py-20 text-center text-white lg:py-24">
 
-      <h2 className="text-4xl font-bold tracking-tight lg:text-5xl">
-        Our Vision
-      </h2>
+      <div className="mb-12 text-center">
 
-      <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-muted-foreground">
+          <p className="font-semibold uppercase tracking-wider text-white">
+              About Us
+          </p>
+
+          <h2 className="mt-3 text-5xl font-bold">
+              Our Vision
+          </h2>
+
+      </div>
+
+      <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-white/65">
         To be India’s leading hub for drone innovation and practical tech
         education, empowering creators to imagine, build, and fly their future.
       </p>
 
       <div className="mx-auto mt-12 flex max-w-4xl items-center justify-center gap-5">
-        <div className="h-px w-16 shrink-0 bg-gray-300" />
+        <div className="h-px w-16 shrink-0 bg-white/15" />
 
-        <p className="text-base leading-7 text-muted-foreground lg:text-lg lg:leading-8">
+        <p className="text-base leading-7 text-white/60 lg:text-lg lg:leading-8">
           NOTARC is a cutting-edge drone and robotics startup based in
           Bengaluru, Karnataka, dedicated to building the future of technology
           through innovation, education, and customization. We specialize in
@@ -47,7 +55,7 @@ export default function VisionSection() {
           industries.
         </p>
 
-        <div className="h-px w-16 shrink-0 bg-gray-300" />
+        <div className="h-px w-16 shrink-0 bg-white/15" />
       </div>
 
     </section>

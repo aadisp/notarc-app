@@ -19,7 +19,7 @@ export default function GalleryCard({
     return (
         <div
             onClick={onClick}
-            className="group relative overflow-hidden rounded-xl border bg-muted cursor-pointer"
+            className="group relative overflow-hidden rounded-xl  bg-muted cursor-pointer"
         >
 
             <Image

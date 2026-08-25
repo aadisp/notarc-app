@@ -1,28 +1,39 @@
 import SiteLayout from "@/components/layout/site-layout";
 import HeroSection from "@/components/sections/hero-section";
 import ProductsPreview from "@/components/sections/products-preview";
-import CoursesPreview from "@/components/sections/courses-preview";
 import GallerySection from "@/components/sections/gallery-section";
 import VisionSection from "@/components/sections/vision-section";
 import ClientsSection from "@/components/sections/clients-section";
-import AboutSection from "@/components/sections/about-section";
 import CoreOfferings from "@/components/sections/core-offerings";
 import Testimonials from "@/components/sections/testimonials";
 import type { Metadata } from "next";
+import Starfield from "@/components/sections/starfield";
 
 export const metadata: Metadata = {
   title: "NOTARC",
 };
+
 export default function Home() {
   return (
     <SiteLayout homePage>
+
       <HeroSection />
-      <VisionSection />
-      <CoreOfferings />
-      <ProductsPreview />
-      <GallerySection />
-      <ClientsSection />
-      <Testimonials />
+
+        <div className="relative bg-[#0b0d10]">
+
+          <Starfield />
+
+          <div className="relative z-10">
+            <VisionSection />
+            <CoreOfferings />
+            <ProductsPreview />
+            <GallerySection />
+            <ClientsSection />
+            <Testimonials />
+          </div>
+
+        </div>
+
     </SiteLayout>
   );
 }

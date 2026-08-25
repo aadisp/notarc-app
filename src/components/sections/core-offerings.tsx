@@ -54,11 +54,11 @@ const services = [
 
 export default function CoreOfferings() {
     return (
-        <section className="mx-auto max-w-7xl px-6 pt-6 pb-20 lg:pt-1 lg:pb-24">
+        <section className="mx-auto max-w-7xl px-6 pt-6 pb-20 text-white lg:pt-1 lg:pb-24">
 
             <div className="mb-12 text-center">
 
-                <p className="font-semibold uppercase tracking-wider text-primary">
+                <p className="font-semibold uppercase tracking-wider text-white">
                     Our Services
                 </p>
 

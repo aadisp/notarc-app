@@ -65,14 +65,14 @@ const clients = [
 
 export default function ClientsSection() {
   return (
-    <section className="overflow-hidden bg-white py-16 lg:py-20">
+    <section className="overflow-hidden bg-grey py-16 text-white lg:py-20">
 
       <div className="mb-10 flex items-center justify-center gap-5">
-        <div className="h-px w-24 bg-gray-600" />
-        <h2 className="text-2xl font-bold text-black-600">
+        <div className="h-px w-24 bg-white/15" />
+        <h2 className="text-2xl font-bold text-white">
           Trusted By
         </h2>
-        <div className="h-px w-24 bg-gray-600" />
+        <div className="h-px w-24 bg-white/15" />
       </div>
 
       <div className="overflow-hidden">
@@ -87,7 +87,7 @@ export default function ClientsSection() {
                 alt={client.name}
                 width={180}
                 height={80}
-                className="h-20 w-auto object-contain transition-all duration-300 hover:scale-105 hover:grayscale-0"
+                className="h-20 w-auto object-contain transition-all duration-300 drop-shadow-[0_0_8px_rgba(255,255,255,0.28)] hover:scale-105 hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.45)] hover:grayscale-0"
               />
             );
 

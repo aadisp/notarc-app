@@ -28,11 +28,11 @@ export default function Testimonials() {
 
     return (
 
-        <section className="mx-auto max-w-7xl px-6 py-20 lg:py-24">
+        <section className="mx-auto max-w-7xl px-6 py-20 text-white lg:py-24">
 
             <div className="text-center">
 
-                <p className="font-semibold uppercase tracking-widest text-primary">
+                <p className="font-semibold uppercase tracking-wider text-white">
                     Testimonials
                 </p>
 
@@ -40,7 +40,7 @@ export default function Testimonials() {
                     What Our Clients Say
                 </h2>
 
-                <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
+                <p className="mt-6 text-white/60 max-w-2xl mx-auto">
                     Read genuine experiences from our students, customers and
                     partners on Google.
                 </p>

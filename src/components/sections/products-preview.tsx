@@ -30,6 +30,9 @@ export default function ProductsPreview() {
   const [products, setProducts] =
     useState<Product[]>([]);
 
+  const [loading, setLoading] =
+    useState(true);
+
   useEffect(() => {
 
     async function loadProducts() {
@@ -57,6 +60,8 @@ export default function ProductsPreview() {
         productList
       );
 
+      setLoading(false);
+
     }
 
     loadProducts();
@@ -70,35 +75,53 @@ export default function ProductsPreview() {
 
       <div className="mb-10">
 
-        <h2 className="text-4xl font-bold">
+        <h2 className="text-4xl font-bold text-white">
           Explore Products
         </h2>
 
-        <p className="mt-4 text-muted-foreground">
+        <p className="mt-4 text-white/60">
           Discover drones, components, kits, and accessories.
         </p>
 
       </div>
 
-      <div className="grid gap-8 md:grid-cols-3">
+      {!loading && products.length === 0 ? (
 
-        {products.map((product) => (
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-black/[0.5] px-6 py-16 text-center">
 
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            firestoreId={product.id}
-            name={product.name}
-            price={`₹${product.price}`}
-            category={product.category}
-            slug={product.slug}
-            description={product.description}
-            imageUrls={product.imageUrls}
-          />
+          <p className="text-lg font-medium text-white">
+            No products available right now
+          </p>
 
-        ))}
+          <p className="mt-2 max-w-sm text-sm text-white/50">
+            We&apos;re restocking our lineup. Check back soon for new drones, components, and kits.
+          </p>
 
-      </div>
+        </div>
+
+      ) : (
+
+        <div className="grid gap-8 md:grid-cols-3">
+
+          {products.map((product) => (
+
+            <ProductCard
+              key={product.id}
+              id={product.id}
+              firestoreId={product.id}
+              name={product.name}
+              price={`₹${product.price}`}
+              category={product.category}
+              slug={product.slug}
+              description={product.description}
+              imageUrls={product.imageUrls}
+            />
+
+          ))}
+
+        </div>
+
+      )}
 
       <div className="mt-8">
 
