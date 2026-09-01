@@ -245,7 +245,7 @@ export default function ChatWidget() {
           >
 
             <a
-              href="https://instagram.com/notarc"
+              href="https://instagram.com/notarc.in"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Notarc on Instagram"
