@@ -4,7 +4,7 @@ import HeroBackground from "./hero-background";
 
 export default function HeroSection() {
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
+    <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden sm:min-h-[88vh] md:min-h-screen">
 
       <HeroBackground />
 
@@ -12,23 +12,28 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/55" />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center px-6 text-center">
+      <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center px-4 text-center sm:px-6">
 
         <span
           className="
-            mb-6
+            mb-4
             rounded-full
             border
             border-white/20
             bg-white/10
-            px-5
-            py-2
-            text-sm
+            px-3.5
+            py-1.5
+            text-[10px]
             font-medium
-            tracking-widest
+            tracking-[0.18em]
             uppercase
             text-white
             backdrop-blur-md
+            sm:mb-6
+            sm:px-5
+            sm:py-2
+            sm:text-sm
+            sm:tracking-widest
           "
         >
           Drones • Robotics • Innovation
@@ -36,24 +41,29 @@ export default function HeroSection() {
 
         <h1
           className="
-            text-6xl
+            text-5xl sm:text-6xl md:text-8xl
             font-black
             tracking-tight
             text-white
             drop-shadow-2xl
             md:text-8xl
           "
+          style={{ fontFamily: "var(--font-poppins)", fontWeight: 600 }}
         >
-          NOTARC
+          notarc
         </h1>
 
         <p
           className="
-            mt-6
-            max-w-3xl
-            text-lg
-            leading-8
+            mt-4
+            max-w-[90%]
+            text-sm
+            leading-6
             text-slate-200
+            sm:mt-6
+            sm:max-w-3xl
+            sm:text-lg
+            sm:leading-8
             md:text-2xl
           "
         >
@@ -62,7 +72,7 @@ export default function HeroSection() {
           Robotics, and Beyond!
         </p>
 
-        <div className="mt-12 flex flex-wrap justify-center gap-5">
+        <div className="mt-8 flex flex-wrap justify-center gap-3 sm:mt-12 sm:gap-5">
 
           <Button
             asChild
@@ -72,7 +82,7 @@ export default function HeroSection() {
               rounded-full
               border-white
               bg-white/10
-              px-8
+              px-5 sm:px-8
               py-7
               text-base
               font-semibold
@@ -94,7 +104,7 @@ export default function HeroSection() {
             size="lg"
             className="
               rounded-full
-              px-8
+              px-5 sm:px-8
               py-7
               text-base
               font-semibold

@@ -30,21 +30,21 @@ const services = [
         image: "/services/3d-printing.png",
     },
     {
-        title: "Web & Digital Solutions",
+        title: "FPV Solutions",
         description:
             "Modern websites, web applications, UI/UX design, and digital platforms tailored to your needs.",
         icon: Code2,
         image: "/services/web-solutions.png",
     },
     {
-        title: "Project Consulting",
+        title: "Engineering & Project Consulting",
         description:
             "Expert guidance for drone, robotics, engineering, and technology projects from concept to completion.",
         icon: Presentation,
         image: "/services/consulting.png",
     },
     {
-        title: "RC & Robotics Customization",
+        title: "Aerial Videography & Photography",
         description:
             "Custom RC vehicles, robotics systems, upgrades, repairs, and specialized educational builds.",
         icon: Wrench,
@@ -68,7 +68,7 @@ export default function CoreOfferings() {
 
             </div>
 
-            <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 xl:grid-cols-3">
 
                 {services.map((service) => {
 
@@ -85,7 +85,7 @@ export default function CoreOfferings() {
                                 rounded-3xl
                                 border
                                 border-white/10
-                                p-7
+                                p-4 sm:p-5 lg:p-8
                                 shadow-sm
                                 transition-all
                                 duration-500
@@ -136,19 +136,19 @@ export default function CoreOfferings() {
 
                                 <Icon
                                     className="
-                                        mb-6
+                                        mb-4 sm:mb-5
                                         text-white
                                         drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]
                                         transition-all
                                         duration-500
                                         group-hover:scale-105
                                     "
-                                    size={48}
+                                    size={32}
                                 />
 
                                 <h3
                                     className="
-                                        text-3xl
+                                        text-lg sm:text-xl lg:text-lg sm:text-xl lg:text-3xl
                                         font-bold
                                         text-white
                                         drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]
@@ -159,13 +159,15 @@ export default function CoreOfferings() {
 
                                 <p
                                     className="
-                                        mt-4
-                                        text-base
-                                        leading-7
+                                        mt-3
+                                        text-xs
+                                        leading-4
                                         text-white/85
                                         drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]
+                                        sm:text-sm
+                                        sm:leading-5
                                         lg:text-lg
-                                        lg:leading-8
+                                        lg:leading-6
                                     "
                                 >
                                     {service.description}

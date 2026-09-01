@@ -112,7 +112,7 @@ export default function ContactForm() {
     }
 
     return (
-        <div className="rounded-3xl border bg-white p-8 shadow-sm">
+        <div className="rounded-3xl border bg-card p-8 shadow-sm">
 
             <div className="mb-8">
 

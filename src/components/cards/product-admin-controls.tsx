@@ -91,6 +91,7 @@ export default function ProductAdminControls({
                     <Button
                         size="sm"
                         variant="outline"
+                        className="border-white/25 bg-white/5 text-white backdrop-blur-md hover:bg-white hover:text-black"
                     >
                         Edit
                     </Button>
@@ -181,6 +182,7 @@ export default function ProductAdminControls({
             <Button
                 size="sm"
                 variant="destructive"
+                className="border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20"
                 onClick={handleDelete}
             >
                 Delete

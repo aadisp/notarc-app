@@ -1,28 +1,46 @@
 "use client";
 import { useUserRole } from "@/hooks/use-user-role";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import EnrollmentStats from "@/components/admin/enrollments/enrollment-stats";
 import EnrollmentSearch from "@/components/admin/enrollments/enrollment-search";
 import SiteLayout from "@/components/layout/site-layout";
 import { db } from "@/firebase/firebase";
 import AdminNav from "@/components/admin/admin-nav";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import ConfirmDialog from "@/components/shared/confirm-dialog";
 
 import {
   collection,
+  deleteDoc,
+  doc,
   onSnapshot,
-  query,
   orderBy,
+  query,
+  serverTimestamp,
+  updateDoc,
+  where,
 } from "firebase/firestore";
 
 import type { Enrollment } from "@/types/enrollment";
+import type { DisenrollmentRequest } from "@/types/disenrollment-request";
 
 export default function AdminEnrollmentsPage() {
 
   const [enrollments, setEnrollments] =
       useState<Enrollment[]>([]);
 
+  const [disenrollmentRequests, setDisenrollmentRequests] =
+      useState<DisenrollmentRequest[]>([]);
+
   const [search, setSearch] =
       useState("");
+
+  const [confirmingAction, setConfirmingAction] =
+      useState<{
+        type: "approve" | "deny";
+        request: DisenrollmentRequest;
+      } | null>(null);
 
   const totalEnrollments = enrollments.length;
 
@@ -33,6 +51,14 @@ export default function AdminEnrollmentsPage() {
   const uniqueCourses = new Set(
       enrollments.map((e) => e.courseId)
   ).size;
+
+  const pendingRequestsByEnrollmentId = useMemo(() => {
+      return new Map(
+          disenrollmentRequests.map(
+              (request) => [request.enrollmentId, request]
+          )
+      );
+  }, [disenrollmentRequests]);
 
   const filteredEnrollments = enrollments.filter((enrollment) => {
       const text = search.toLowerCase();
@@ -63,6 +89,72 @@ export default function AdminEnrollmentsPage() {
 
       return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+      const q = query(
+          collection(db, "disenrollmentRequests"),
+          where("status", "==", "pending")
+      );
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+          const requestList = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+          })) as DisenrollmentRequest[];
+
+          setDisenrollmentRequests(requestList);
+      });
+
+      return () => unsubscribe();
+  }, []);
+
+  async function handleApproveDisenrollment(
+      request: DisenrollmentRequest
+  ) {
+
+      try {
+
+          await deleteDoc(
+              doc(db, "enrollments", request.enrollmentId)
+          );
+
+          await updateDoc(
+              doc(db, "disenrollmentRequests", request.id),
+              {
+                  status: "approved",
+                  reviewedAt: serverTimestamp(),
+              }
+          );
+
+          toast.success("Disenrollment approved.");
+
+      } catch (error) {
+          console.error(error);
+          toast.error("Something went wrong. Please try again.");
+      }
+  }
+
+  async function handleDenyDisenrollment(
+      request: DisenrollmentRequest
+  ) {
+
+      try {
+
+          await updateDoc(
+              doc(db, "disenrollmentRequests", request.id),
+              {
+                  status: "denied",
+                  reviewedAt: serverTimestamp(),
+              }
+          );
+
+          toast.success("Disenrollment request denied.");
+
+      } catch (error) {
+          console.error(error);
+          toast.error("Something went wrong. Please try again.");
+      }
+  }
 
   if (role !== "admin") {
     return (
@@ -124,7 +216,12 @@ export default function AdminEnrollmentsPage() {
 
           ) : (
 
-            filteredEnrollments.map((enrollment) => (
+            filteredEnrollments.map((enrollment) => {
+
+              const disenrollmentRequest =
+                  pendingRequestsByEnrollmentId.get(enrollment.id);
+
+              return (
               <div
                 key={enrollment.id}
                 className="
@@ -188,14 +285,131 @@ export default function AdminEnrollmentsPage() {
 
                 </div>
 
+                {disenrollmentRequest && (
+
+                  <div
+                    className="
+                      mt-6
+                      flex
+                      flex-col
+                      gap-4
+                      rounded-xl
+                      border
+                      border-amber-200
+                      bg-amber-50
+                      p-4
+                      sm:flex-row
+                      sm:items-center
+                      sm:justify-between
+                    "
+                  >
+
+                    <div>
+
+                      <span
+                        className="
+                          rounded-full
+                          bg-amber-100
+                          px-3
+                          py-1
+                          text-xs
+                          font-semibold
+                          text-amber-800
+                        "
+                      >
+                        Disenrollment Requested
+                      </span>
+
+                      <p className="mt-2 text-sm text-amber-900">
+                        Requested{" "}
+                        {disenrollmentRequest.requestedAt
+                          ?.toDate()
+                          .toLocaleDateString("en-IN", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                      </p>
+
+                    </div>
+
+                    <div className="flex gap-2">
+
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          setConfirmingAction({
+                            type: "deny",
+                            request: disenrollmentRequest,
+                          })
+                        }
+                      >
+                        Deny
+                      </Button>
+
+                      <Button
+                        variant="destructive"
+                        onClick={() =>
+                          setConfirmingAction({
+                            type: "approve",
+                            request: disenrollmentRequest,
+                          })
+                        }
+                      >
+                        Approve Disenrollment
+                      </Button>
+
+                    </div>
+
+                  </div>
+
+                )}
+
               </div>
-            ))
+              );
+            })
 
           )}
 
         </div>
 
       </section>
+
+      <ConfirmDialog
+        open={confirmingAction !== null}
+        onOpenChange={(open) => {
+          if (!open) setConfirmingAction(null);
+        }}
+        onConfirm={() => {
+          if (!confirmingAction) return;
+          if (confirmingAction.type === "approve") {
+            handleApproveDisenrollment(confirmingAction.request);
+          } else {
+            handleDenyDisenrollment(confirmingAction.request);
+          }
+        }}
+        title={
+          confirmingAction?.type === "approve"
+            ? "Approve Disenrollment"
+            : "Deny Disenrollment Request"
+        }
+        description={
+          confirmingAction?.type === "approve"
+            ? `Approve disenrollment for ${confirmingAction?.request.userEmail} from "${confirmingAction?.request.courseName}"?`
+            : `Deny disenrollment request from ${confirmingAction?.request.userEmail} for "${confirmingAction?.request.courseName}"? Their enrollment will stay active.`
+        }
+        warning={
+          confirmingAction?.type === "approve"
+            ? "This will remove their enrollment. This action cannot be undone."
+            : undefined
+        }
+        confirmLabel={
+          confirmingAction?.type === "approve" ? "Approve" : "Deny"
+        }
+        confirmVariant={
+          confirmingAction?.type === "approve" ? "destructive" : "default"
+        }
+      />
     </SiteLayout>
   );
 }

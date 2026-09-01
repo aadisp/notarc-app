@@ -23,7 +23,9 @@ export default function HeroBackground() {
           src={heroImages[index]}
           alt=""
           fill
-          className="object-cover"
+          className="object-cover
+            object-[50%_40%]
+            sm:object-center"
           priority
         />
       </AnimatePresence>

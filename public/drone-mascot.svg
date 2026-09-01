@@ -1,0 +1,82 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Arms -->
+  <g stroke="#111111" stroke-width="4" stroke-linecap="round">
+    <line x1="60" y1="55" x2="28" y2="28" />
+    <line x1="60" y1="55" x2="92" y2="28" />
+    <line x1="60" y1="65" x2="28" y2="92" />
+    <line x1="60" y1="65" x2="92" y2="92" />
+  </g>
+
+  <!-- Propellers (each spins continuously) -->
+  <g>
+    <circle cx="28" cy="28" r="13" fill="none" stroke="#111111" stroke-width="3" opacity="0.35" />
+    <g transform-origin="28 28">
+      <line x1="18" y1="28" x2="38" y2="28" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0 28 28"
+        to="360 28 28"
+        dur="0.6s"
+        repeatCount="indefinite"
+      />
+    </g>
+  </g>
+
+  <g>
+    <circle cx="92" cy="28" r="13" fill="none" stroke="#111111" stroke-width="3" opacity="0.35" />
+    <g transform-origin="92 28">
+      <line x1="82" y1="28" x2="102" y2="28" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0 92 28"
+        to="-360 92 28"
+        dur="0.65s"
+        repeatCount="indefinite"
+      />
+    </g>
+  </g>
+
+  <g>
+    <circle cx="28" cy="92" r="13" fill="none" stroke="#111111" stroke-width="3" opacity="0.35" />
+    <g transform-origin="28 92">
+      <line x1="18" y1="92" x2="38" y2="92" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0 28 92"
+        to="-360 28 92"
+        dur="0.62s"
+        repeatCount="indefinite"
+      />
+    </g>
+  </g>
+
+  <g>
+    <circle cx="92" cy="92" r="13" fill="none" stroke="#111111" stroke-width="3" opacity="0.35" />
+    <g transform-origin="92 92">
+      <line x1="82" y1="92" x2="102" y2="92" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0 92 92"
+        to="360 92 92"
+        dur="0.58s"
+        repeatCount="indefinite"
+      />
+    </g>
+  </g>
+
+  <!-- Body -->
+  <rect x="42" y="48" width="36" height="24" rx="10" fill="#111111" />
+
+  <!-- Face: two friendly eyes -->
+  <circle cx="52" cy="58" r="3.2" fill="#ffffff" />
+  <circle cx="68" cy="58" r="3.2" fill="#ffffff" />
+
+  <!-- Front camera/light nub -->
+  <circle cx="60" cy="72" r="3.5" fill="#111111" />
+
+</svg>

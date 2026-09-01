@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { useCartStore } from "@/store/cart-store";
 
@@ -68,6 +69,10 @@ const [quantity, setQuantity] = useState(1);
                 increaseQuantity(id);
             }
 
+            toast.success("Added to cart", {
+                description: `${name} (${cartItem.quantity + quantity} in cart)`,
+            });
+
             return;
         }
 
@@ -81,7 +86,11 @@ const [quantity, setQuantity] = useState(1);
         for (let i = 1; i < quantity; i++) {
             increaseQuantity(id);
         }
-        
+
+        toast.success("Added to cart", {
+            description: name,
+        });
+
         setQuantity(1);
     }
 
@@ -108,12 +117,12 @@ const [quantity, setQuantity] = useState(1);
                 className="
                     inline-flex
                     rounded-full
-                    bg-emerald-100
+                    bg-emerald-500/10
                     px-3
                     py-1
                     text-sm
                     font-medium
-                    text-emerald-700
+                    text-emerald-300
                 "
             >
                 {category}
@@ -123,17 +132,17 @@ const [quantity, setQuantity] = useState(1);
                 {name}
             </h1>
 
-            <p className="mt-6 text-4xl font-bold text-emerald-600">
+            <p className="mt-6 text-4xl font-bold text-emerald-400">
                 ₹{price}
             </p>
 
-            <div className="mt-8 rounded-2xl border bg-slate-50 p-6">
+            <div className="mt-8 rounded-2xl border bg-white/5 p-6">
 
                 <h2 className="text-lg font-semibold">
                     Description
                 </h2>
 
-                <p className="mt-3 text-slate-600">
+                <p className="mt-3 text-white/60">
                     {description}
                 </p>
 
@@ -143,7 +152,7 @@ const [quantity, setQuantity] = useState(1);
                         Product Details
                     </h3>
 
-                    <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
+                    <p className="mt-3 whitespace-pre-wrap leading-7 text-white/60">
                         {longDescription}
                     </p>
 

@@ -35,8 +35,8 @@ export default function ProductGallery({
 
                             ${
                                 selectedImage === index
-                                    ? "border-emerald-600"
-                                    : "border-slate-200 hover:border-slate-400"
+                                    ? "border-emerald-500"
+                                    : "border-white/10 hover:border-white/30"
                             }
                         `}
                     >
@@ -47,7 +47,7 @@ export default function ProductGallery({
                                 h-20
                                 w-20
                                 object-contain
-                                bg-white
+                                bg-white/5
                                 p-2
                             "
                         />
@@ -63,7 +63,7 @@ export default function ProductGallery({
                     overflow-hidden
                     rounded-2xl
                     border
-                    bg-white
+                    bg-white/5
                     p-8
                 "
             >

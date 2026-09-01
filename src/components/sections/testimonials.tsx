@@ -28,19 +28,19 @@ export default function Testimonials() {
 
     return (
 
-        <section className="mx-auto max-w-7xl px-6 py-20 text-white lg:py-24">
+        <section className="mx-auto max-w-7xl px-4 py-12 text-white sm:px-6 sm:py-16 lg:py-24">
 
             <div className="text-center">
 
-                <p className="font-semibold uppercase tracking-wider text-white">
+                <p className="text-xs font-semibold uppercase tracking-wider text-white sm:text-sm">
                     Testimonials
                 </p>
 
-                <h2 className="mt-3 text-5xl font-bold">
+                <h2 className="mt-2 text-3xl font-bold sm:text-4xl lg:text-5xl">
                     What Our Clients Say
                 </h2>
 
-                <p className="mt-6 text-white/60 max-w-2xl mx-auto">
+                <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-white/60 italic sm:mt-6 sm:text-base sm:leading-7">
                     Read genuine experiences from our students, customers and
                     partners on Google.
                 </p>
@@ -53,7 +53,7 @@ export default function Testimonials() {
 
             </div>
 
-            <div className="mt-12">
+            <div className="mt-6 sm:mt-10">
 
                 <div
                     className="elfsight-app-5a18d460-a175-4846-9b51-70f9f96328ed"

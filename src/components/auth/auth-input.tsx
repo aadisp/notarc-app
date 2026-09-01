@@ -39,7 +39,7 @@ export default function AuthInput({
           rounded-xl
           border
           border-border
-          bg-white/80
+          bg-white/5
           ${icon ? "pl-11" : "pl-4"}
           ${endIcon ? "pr-12" : "pr-4"}
           text-sm

@@ -68,8 +68,8 @@ export default function AuthCard({
         className="
           rounded-3xl
           border
-          border-white/40
-          bg-white/70
+          border-white/10
+          bg-white/[0.04]
           p-10
           shadow-2xl
           backdrop-blur-xl

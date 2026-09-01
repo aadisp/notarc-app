@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { toast } from "sonner";
 import { auth, db } from "@/firebase/firebase";
 
@@ -69,6 +69,17 @@ export default function ProfilePage() {
 
   }, []);
 
+  // Radix components (Select, Dialog, etc.) portal their popup content to
+  // document.body, outside the scoped <div> below. Toggling the `dark`
+  // class on <html> ensures those portaled elements also pick up the
+  // dark theme variables from globals.css.
+  useEffect(() => {
+    document.documentElement.classList.add("dark");
+    return () => {
+      document.documentElement.classList.remove("dark");
+    };
+  }, []);
+
   async function saveProfile() {
 
     const user =
@@ -101,100 +112,115 @@ export default function ProfilePage() {
   return (
     <SiteLayout>
 
-      <section className="mx-auto max-w-2xl px-6 py-24">
+      <div
+        className="bg-[#0b0d10] text-white"
+        style={{
+          "--background": "#0b0d10",
+          "--foreground": "#ffffff",
+        } as CSSProperties}
+      >
 
-        <h1 className="mb-8 text-5xl font-bold">
-          Profile
-        </h1>
+        <section className="mx-auto max-w-2xl px-6 py-24">
 
-        {loading ? (
+          <h1 className="mb-8 text-5xl font-bold">
+            Profile
+          </h1>
 
-          <p>
-            Loading...
-          </p>
+          {loading ? (
 
-        ) : (
+            <p className="text-white/60">
+              Loading...
+            </p>
 
-          <div className="space-y-6">
+          ) : (
 
-            <div>
-              <p className="mb-2 font-semibold">
-                Email
-              </p>
+            <div className="space-y-6">
 
-              <input
-                value={
-                  auth.currentUser
-                    ?.email || ""
+              <div>
+                <p className="mb-2 font-semibold">
+                  Email
+                </p>
+
+                <input
+                  value={
+                    auth.currentUser
+                      ?.email || ""
+                  }
+                  disabled
+                  className="
+                    w-full
+                    rounded
+                    border
+                    bg-white/5
+                    p-3
+                    text-white/60
+                  "
+                />
+              </div>
+
+              <div>
+                <p className="mb-2 font-semibold">
+                  Role
+                </p>
+
+                <input
+                  value={role}
+                  disabled
+                  className="
+                    w-full
+                    rounded
+                    border
+                    bg-white/5
+                    p-3
+                    text-white/60
+                  "
+                />
+              </div>
+
+              <div>
+                <p className="mb-2 font-semibold">
+                  Username
+                </p>
+
+                <input
+                  value={username}
+                  onChange={(e) =>
+                    setUsername(
+                      e.target.value
+                    )
+                  }
+                  className="
+                    w-full
+                    rounded
+                    border
+                    bg-transparent
+                    p-3
+                  "
+                />
+              </div>
+
+              <button
+                onClick={
+                  saveProfile
                 }
-                disabled
                 className="
-                  w-full
-                  rounded
-                  border
-                  bg-slate-100
-                  p-3
-                "
-              />
-            </div>
-
-            <div>
-              <p className="mb-2 font-semibold">
-                Role
-              </p>
-
-              <input
-                value={role}
-                disabled
-                className="
-                  w-full
-                  rounded
-                  border
-                  bg-slate-100
-                  p-3
-                "
-              />
-            </div>
-
-            <div>
-              <p className="mb-2 font-semibold">
-                Username
-              </p>
-
-              <input
-                value={username}
-                onChange={(e) =>
-                  setUsername(
-                    e.target.value
-                  )
-                }
-                className="
-                  w-full
                   rounded
                   border
                   p-3
+                  hover:bg-white/5
+                  transition
                 "
-              />
+              >
+                Save Username
+              </button>
+
             </div>
 
-            <button
-              onClick={
-                saveProfile
-              }
-              className="
-                rounded
-                border
-                p-3
-              "
-            >
-              Save Username
-            </button>
+          )}
 
-          </div>
+        </section>
 
-        )}
-
-      </section>
+      </div>
 
     </SiteLayout>
   );

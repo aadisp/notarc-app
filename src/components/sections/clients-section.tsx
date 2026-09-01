@@ -19,7 +19,7 @@ const clients = [
   },
   {
     name: "Inunity",
-    logo: "/clients/inunity-logo-black-png.png",
+    logo: "/clients/inunity-logo-white.png",
     href: "https://inunity.in/",
   },
   {
@@ -65,19 +65,19 @@ const clients = [
 
 export default function ClientsSection() {
   return (
-    <section className="overflow-hidden bg-grey py-16 text-white lg:py-20">
+    <section className="overflow-hidden bg-grey py-10 text-white sm:py-12 lg:py-20">
 
-      <div className="mb-10 flex items-center justify-center gap-5">
-        <div className="h-px w-24 bg-white/15" />
-        <h2 className="text-2xl font-bold text-white">
+      <div className="mb-7 flex items-center justify-center gap-3 sm:mb-10 sm:gap-5">
+        <div className="h-px w-10 bg-white/15 sm:w-16 lg:w-24" />
+        <h2 className="text-xl font-bold text-white sm:text-2xl">
           Trusted By
         </h2>
-        <div className="h-px w-24 bg-white/15" />
+        <div className="h-px w-10 bg-white/15 sm:w-16 lg:w-24" />
       </div>
 
       <div className="overflow-hidden">
 
-        <div className="animate-marquee flex w-max items-center gap-12 lg:gap-16">
+        <div className="animate-marquee flex w-max items-center gap-8 sm:gap-12 lg:gap-16">
 
           {[...clients, ...clients].map((client, index) => {
 
@@ -87,7 +87,19 @@ export default function ClientsSection() {
                 alt={client.name}
                 width={180}
                 height={80}
-                className="h-20 w-auto object-contain transition-all duration-300 drop-shadow-[0_0_8px_rgba(255,255,255,0.28)] hover:scale-105 hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.45)] hover:grayscale-0"
+                className="
+                  h-9
+                  w-auto
+                  object-contain
+                  transition-all
+                  duration-300
+                  drop-shadow-[0_0_6px_rgba(255,255,255,0.25)]
+                  hover:scale-105
+                  hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]
+                  hover:grayscale-0
+                  sm:h-12
+                  lg:h-20
+                "
               />
             );
 

@@ -11,7 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { notFound } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { useParams } from "next/navigation";
 import { auth } from "@/firebase/firebase";
 import { addDoc } from "firebase/firestore";
@@ -105,6 +105,17 @@ export default function CoursePage({
     loadCourse();
   }, [slug]);
 
+  // Radix components (Select, Dialog, etc.) portal their popup content to
+  // document.body, outside the scoped <div> below. Toggling the `dark`
+  // class on <html> ensures those portaled elements also pick up the
+  // dark theme variables from globals.css.
+  useEffect(() => {
+    document.documentElement.classList.add("dark");
+    return () => {
+      document.documentElement.classList.remove("dark");
+    };
+  }, []);
+
   const relatedCourses =
     allCourses
         .filter(
@@ -115,212 +126,228 @@ export default function CoursePage({
   if (!course) {
     return (
       <SiteLayout>
-        <section className="p-10">
-          <div className="py-24 text-center text-muted-foreground">
-              Loading course...
-          </div>
-        </section>
+        <div
+          className="bg-[#0b0d10] text-white"
+          style={{
+            "--background": "#0b0d10",
+            "--foreground": "#ffffff",
+          } as CSSProperties}
+        >
+          <section className="p-10">
+            <div className="py-24 text-center text-white/60">
+                Loading course...
+            </div>
+          </section>
+        </div>
       </SiteLayout>
     );
   }
 
   return (
     <SiteLayout>
-      <section className="mx-auto max-w-7xl px-6 py-16">
+      <div
+        className="bg-[#0b0d10] text-white"
+        style={{
+          "--background": "#0b0d10",
+          "--foreground": "#ffffff",
+        } as CSSProperties}
+      >
+        <section className="mx-auto max-w-7xl px-6 py-16">
 
-        <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
 
-          <div>
+            <div>
 
-            <div className="mb-6 flex flex-wrap gap-3">
+              <div className="mb-6 flex flex-wrap gap-3">
 
-              <span className="rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
-                Level: {course.level}
-              </span>
+                <span className="rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+                  Level: {course.level}
+                </span>
 
-              <span className="rounded-full border px-4 py-2 text-sm font-medium text-muted-foreground">
-                {course.duration}
-              </span>
+                <span className="rounded-full border px-4 py-2 text-sm font-medium text-white/60">
+                  {course.duration}
+                </span>
+
+              </div>
+
+              <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl">
+                {course.name}
+              </h1>
+
+              <p className="mt-8 max-w-2xl text-lg leading-8 text-white/60">
+                {course.description}
+              </p>
+
+              {isEnrolled ? (
+
+                <Button
+                  disabled
+                  className="mt-10 h-12 px-8"
+                >
+                  ✓ Already Enrolled
+                </Button>
+
+              ) : (
+
+                <Button
+                  className="mt-10 h-12 px-8"
+                  onClick={async () => {
+
+                    const user = auth.currentUser;
+
+                    if (!user) {
+                      toast.error("Please log in first.");
+                      return;
+                    }
+
+                    try {
+
+                      await addDoc(
+                        collection(db, "enrollments"),
+                        {
+                          userId: user.uid,
+                          userEmail: user.email,
+                          courseId: course.id,
+                          courseName: course.name,
+                          courseSlug: course.slug,
+                          enrolledAt: new Date(),
+                        }
+                      );
+
+                      setIsEnrolled(true);
+
+                      toast.success("Successfully enrolled!");
+
+                    } catch (error) {
+                      console.error(error);
+                    }
+
+                  }}
+                >
+                  Enroll Now
+                </Button>
+
+              )}
 
             </div>
 
-            <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl">
-              {course.name}
-            </h1>
+            <div>
 
-            <p className="mt-8 max-w-2xl text-lg leading-8 text-muted-foreground">
-              {course.description}
-            </p>
+              {course.imageUrl ? (
 
-            {isEnrolled ? (
+                <div className="overflow-hidden rounded-3xl border bg-gradient-to-br from-muted to-muted/40 shadow-xl">
 
-              <Button
-                disabled
-                className="mt-10 h-12 px-8"
-              >
-                ✓ Already Enrolled
-              </Button>
+                  <img
+                    src={course.imageUrl}
+                    alt={course.name}
+                    className="h-full w-full object-cover"
+                  />
 
-            ) : (
+                </div>
 
-              <Button
-                className="mt-10 h-12 px-8"
-                onClick={async () => {
+              ) : (
 
-                  const user = auth.currentUser;
+                <div className="flex aspect-[4/3] items-center justify-center rounded-3xl border bg-muted">
 
-                  if (!user) {
-                    toast.error("Please log in first.");
-                    return;
-                  }
+                  <div className="text-center text-white/60">
+                    <GraduationCap className="mx-auto mb-4 h-14 w-14" />
+                    <p>No Image Available</p>
+                </div>
 
-                  try {
+                </div>
 
-                    await addDoc(
-                      collection(db, "enrollments"),
-                      {
-                        userId: user.uid,
-                        userEmail: user.email,
-                        courseId: course.id,
-                        courseName: course.name,
-                        courseSlug: course.slug,
-                        enrolledAt: new Date(),
-                      }
-                    );
+              )}
 
-                    setIsEnrolled(true);
-
-                    toast.success("Successfully enrolled!");
-
-                  } catch (error) {
-                    console.error(error);
-                  }
-
-                }}
-              >
-                Enroll Now
-              </Button>
-
-            )}
+            </div>
 
           </div>
 
-          <div>
+        <div className="mt-24 border-t pt-16">
 
-            {course.imageUrl ? (
+          <div className="max-w-3xl">
 
-              <div className="overflow-hidden rounded-3xl border bg-gradient-to-br from-muted to-muted/40 shadow-xl">
+            <span className="rounded-full border px-4 py-2 text-sm font-medium">
+              ABOUT
+            </span>
 
-                <img
-                  src={course.imageUrl}
-                  alt={course.name}
-                  className="h-full w-full object-cover"
-                />
+            <h2 className="mt-6 text-4xl font-bold tracking-tight">
+              About This Course
+            </h2>
 
-              </div>
-
-            ) : (
-
-              <div className="flex aspect-[4/3] items-center justify-center rounded-3xl border bg-muted">
-
-                <div className="text-center text-muted-foreground">
-                  <GraduationCap className="mx-auto mb-4 h-14 w-14" />
-                  <p>No Image Available</p>
-              </div>
-
-              </div>
-
-            )}
+            <p className="mt-8 whitespace-pre-wrap text-lg leading-8 text-white/60">
+              {course.longDescription}
+            </p>
 
           </div>
 
         </div>
-
-      <div className="mt-24 border-t pt-16">
-
-        <div className="max-w-3xl">
-
-          <span className="rounded-full border px-4 py-2 text-sm font-medium">
-            ABOUT
-          </span>
-
-          <h2 className="mt-6 text-4xl font-bold tracking-tight">
-            About This Course
-          </h2>
-
-          <p className="mt-8 whitespace-pre-wrap text-lg leading-8 text-muted-foreground">
-            {course.longDescription}
-          </p>
-
-        </div>
-
-      </div>
-
-      <div className="mt-24 border-t pt-16">
-
-        <span className="rounded-full border px-4 py-2 text-sm font-medium">
-          DETAILS
-        </span>
-
-        <h2 className="mt-6 text-4xl font-bold tracking-tight">
-          Course Information
-        </h2>
-
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
-
-          <div className="rounded-2xl border bg-card p-6">
-            <p className="text-sm text-muted-foreground">
-              Course Level
-            </p>
-
-            <h3 className="mt-2 text-xl font-semibold">
-              {course.level}
-            </h3>
-          </div>
-
-          <div className="rounded-2xl border bg-card p-6">
-            <p className="text-sm text-muted-foreground">
-              Duration
-            </p>
-
-            <h3 className="mt-2 text-xl font-semibold">
-              {course.duration}
-            </h3>
-          </div>
-
-        </div>
-
-      </div>
-
-      {relatedCourses.length > 0 && (
 
         <div className="mt-24 border-t pt-16">
 
           <span className="rounded-full border px-4 py-2 text-sm font-medium">
-            MORE COURSES
+            DETAILS
           </span>
 
           <h2 className="mt-6 text-4xl font-bold tracking-tight">
-            Continue Learning
+            Course Information
           </h2>
 
-          <p className="mt-4 max-w-2xl text-muted-foreground">
-            Explore more courses from NOTARC.
-          </p>
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
 
-          <div className="mt-12">
+            <div className="rounded-2xl border bg-card p-6">
+              <p className="text-sm text-muted-foreground">
+                Course Level
+              </p>
 
-            <CourseGrid
-              courses={relatedCourses}
-            />
+              <h3 className="mt-2 text-xl font-semibold">
+                {course.level}
+              </h3>
+            </div>
+
+            <div className="rounded-2xl border bg-card p-6">
+              <p className="text-sm text-muted-foreground">
+                Duration
+              </p>
+
+              <h3 className="mt-2 text-xl font-semibold">
+                {course.duration}
+              </h3>
+            </div>
 
           </div>
 
         </div>
 
-      )}
-              
-      </section>
+        {relatedCourses.length > 0 && (
+
+          <div className="mt-24 border-t pt-16">
+
+            <span className="rounded-full border px-4 py-2 text-sm font-medium">
+              MORE COURSES
+            </span>
+
+            <h2 className="mt-6 text-4xl font-bold tracking-tight">
+              Continue Learning
+            </h2>
+
+            <p className="mt-4 max-w-2xl text-white/60">
+              Explore more courses from NOTARC.
+            </p>
+
+            <div className="mt-12">
+
+              <CourseGrid
+                courses={relatedCourses}
+              />
+
+            </div>
+
+          </div>
+
+        )}
+
+        </section>
+      </div>
     </SiteLayout>
   );
 }

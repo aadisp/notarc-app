@@ -17,23 +17,23 @@ export default function ProductGrid({
 
     if (products.length === 0) {
         return (
-            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed bg-muted/20 px-6 text-center">
+            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-white/[0.02] px-6 text-center">
 
-                <div className="rounded-full bg-primary/10 p-5">
-                    <SearchX className="h-10 w-10 text-primary" />
+                <div className="rounded-full bg-white/10 p-5">
+                    <SearchX className="h-10 w-10 text-white/80" />
                 </div>
 
-                <h2 className="mt-6 text-2xl font-bold">
+                <h2 className="mt-6 text-2xl font-bold text-white">
                     No products found
                 </h2>
 
-                <p className="mt-2 max-w-md text-muted-foreground">
+                <p className="mt-2 max-w-md text-white/50">
                     We couldn't find any products matching your current search or category.
                 </p>
 
                 <Button
                     variant="outline"
-                    className="mt-6"
+                    className="mt-6 rounded-full border-white bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white hover:text-black"
                     onClick={onClearFilters}
                 >
                     Clear Filters

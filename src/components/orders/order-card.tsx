@@ -1,4 +1,5 @@
 import type { Order } from "@/types/order";
+import { PackageSearch } from "lucide-react";
 
 interface OrderCardProps {
     order: Order;
@@ -10,19 +11,19 @@ export default function OrderCard({
 
     const statusClasses = {
         pending:
-            "bg-yellow-100 text-yellow-800 border-yellow-200",
+            "bg-yellow-500/10 text-yellow-300 border-yellow-500/30",
 
         paid:
-            "bg-green-100 text-green-800 border-green-200",
+            "bg-green-500/10 text-green-300 border-green-500/30",
 
         processing:
-            "bg-blue-100 text-blue-800 border-blue-200",
+            "bg-blue-500/10 text-blue-300 border-blue-500/30",
 
         completed:
-            "bg-emerald-100 text-emerald-800 border-emerald-200",
+            "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
 
         cancelled:
-            "bg-red-100 text-red-800 border-red-200",
+            "bg-red-500/10 text-red-300 border-red-500/30",
     };
 
 
@@ -80,10 +81,10 @@ export default function OrderCard({
     <span
         className={`rounded-full border px-3 py-1 text-sm font-medium ${
             order.paymentStatus === "Paid"
-                ? "border-green-200 bg-green-100 text-green-800"
+                ? "border-green-500/30 bg-green-500/10 text-green-300"
                 : order.paymentStatus === "Refunded"
-                ? "border-red-200 bg-red-100 text-red-800"
-                : "border-yellow-200 bg-yellow-100 text-yellow-800"
+                ? "border-red-500/30 bg-red-500/10 text-red-300"
+                : "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
         }`}
     >
         {order.paymentStatus}
@@ -92,18 +93,18 @@ export default function OrderCard({
     <span
         className={`rounded-full border px-3 py-1 text-sm font-medium ${
             order.shippingStatus === "Delivered"
-                ? "border-green-200 bg-green-100 text-green-800"
+                ? "border-green-500/30 bg-green-500/10 text-green-300"
                 : order.shippingStatus === "Out for Delivery"
-                ? "border-blue-200 bg-blue-100 text-blue-800"
+                ? "border-blue-500/30 bg-blue-500/10 text-blue-300"
                 : order.shippingStatus === "Shipped"
-                ? "border-indigo-200 bg-indigo-100 text-indigo-800"
+                ? "border-indigo-500/30 bg-indigo-500/10 text-indigo-300"
                 : order.shippingStatus === "Packed"
-                ? "border-purple-200 bg-purple-100 text-purple-800"
+                ? "border-purple-500/30 bg-purple-500/10 text-purple-300"
                 : order.shippingStatus === "Processing"
-                ? "border-cyan-200 bg-cyan-100 text-cyan-800"
+                ? "border-cyan-500/30 bg-cyan-500/10 text-cyan-300"
                 : order.shippingStatus === "Cancelled"
-                ? "border-red-200 bg-red-100 text-red-800"
-                : "border-yellow-200 bg-yellow-100 text-yellow-800"
+                ? "border-red-500/30 bg-red-500/10 text-red-300"
+                : "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
         }`}
     >
         {order.shippingStatus}
@@ -113,7 +114,7 @@ export default function OrderCard({
 
            
 
-            <hr className="my-6" />
+            <hr className="my-6 border-border" />
 
             <h3 className="mb-4 font-semibold">
                 Items
@@ -125,10 +126,45 @@ export default function OrderCard({
 
                     <div
                         key={item.id}
-                        className="flex justify-between"
+                        className="
+                            flex
+                            items-center
+                            gap-4
+                            rounded-xl
+                            border
+                            border-white/10
+                            bg-white/[0.03]
+                            p-4
+                        "
                     >
 
-                        <div>
+                        <div
+                            className="
+                                flex
+                                h-16
+                                w-16
+                                shrink-0
+                                items-center
+                                justify-center
+                                overflow-hidden
+                                rounded-lg
+                                bg-gradient-to-br
+                                from-white/[0.06]
+                                to-white/[0.02]
+                            "
+                        >
+                            {item.imageUrl ? (
+                                <img
+                                    src={item.imageUrl}
+                                    alt={item.name}
+                                    className="h-full w-full object-contain p-1.5"
+                                />
+                            ) : (
+                                <PackageSearch className="h-6 w-6 text-white/30" />
+                            )}
+                        </div>
+
+                        <div className="flex-1">
 
                             <p className="font-medium">
                                 {item.name}

@@ -41,15 +41,15 @@ export default function GallerySection() {
     return (
         <section
             id="gallery"
-            className="mx-auto max-w-7xl px-6 pt-6 pb-20 text-white lg:pt-1 lg:pb-24"
+            className="mx-auto max-w-7xl px-4 pt-6 pb-12 text-white sm:px-6 sm:pb-16 lg:pt-1 lg:pb-24"
         >
-            <div className="mx-auto max-w-7xl px-6">
+            <div className="mx-auto max-w-7xl">
 
-                <h2 className="text-4xl font-bold tracking-tight ">
+                <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
                     Gallery
                 </h2>
 
-                <p className="mt-3 mb-8 text-white/60 ">
+                <p className="mt-2 mb-6 text-sm text-white/60 italic sm:mt-3 sm:mb-8 sm:text-base">
                     Explore moments from our workshops,
                     projects and innovations.
                 </p>

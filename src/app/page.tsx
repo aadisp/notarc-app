@@ -8,6 +8,7 @@ import CoreOfferings from "@/components/sections/core-offerings";
 import Testimonials from "@/components/sections/testimonials";
 import type { Metadata } from "next";
 import Starfield from "@/components/sections/starfield";
+import ChatWidget from "@/components/shared/chat-widget";
 
 export const metadata: Metadata = {
   title: "NOTARC",
@@ -33,6 +34,8 @@ export default function Home() {
           </div>
 
         </div>
+
+      <ChatWidget />
 
     </SiteLayout>
   );

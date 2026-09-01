@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import OrderSummary from "@/components/checkout/order-summary";
 import CheckoutItems from "@/components/checkout/checkout-items";
 import { useCheckout } from "@/hooks/use-checkout";
+import { useProducts } from "@/hooks/use-products";
 
 
 export default function CheckoutPage() {
@@ -19,6 +20,8 @@ export default function CheckoutPage() {
   const clearCart = useCartStore(
     (state) => state.clearCart
   );
+
+  const { products } = useProducts();
 
   const subtotal =
     items.reduce(
@@ -39,6 +42,7 @@ export default function CheckoutPage() {
       subtotal,
       shipping,
       total,
+      products,
   });
 
 

@@ -35,11 +35,11 @@ export default function HomeFooter() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_45%)]" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
 
         {/* Main footer content */}
 
-        <div className="grid gap-12 border-b border-white/10 py-16 md:grid-cols-2 lg:grid-cols-4 lg:gap-10 lg:py-20">
+        <div className="grid gap-8 border-b border-white/10 py-10 sm:gap-10 sm:py-14 md:grid-cols-2 lg:grid-cols-4 lg:gap-10 lg:py-20">
 
           {/* Brand */}
 
@@ -54,11 +54,11 @@ export default function HomeFooter() {
                 alt="NOTARC"
                 width={180}
                 height={70}
-                className="h-auto w-[150px] object-contain"
+                className="h-auto w-[120px] object-contain sm:w-[150px]"
               />
             </Link>
 
-            <p className="mt-6 max-w-sm text-sm leading-7 text-white/60">
+            <p className="mt-4 max-w-sm text-xs leading-6 text-white/60 sm:mt-6 sm:text-sm sm:leading-7">
               Innovating the future with drones, robotics,
               RC solutions, engineering, and practical
               technology education.
@@ -67,12 +67,12 @@ export default function HomeFooter() {
             <div className="mt-7 flex items-center gap-3">
 
               <a
-                href="#"
+                href="https://instagram.com/notarc.in"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
                 className="
-                  flex h-10 w-10 items-center justify-center
+                  flex h-9 w-9 items-center justify-center sm:h-10 sm:w-10
                   rounded-full border border-white/10
                   bg-white/[0.04]
                   text-white/60
@@ -83,16 +83,16 @@ export default function HomeFooter() {
                   hover:text-white
                 "
               >
-                <FaInstagram size={18} />
+                <FaInstagram size={16} />
               </a>
 
               <a
-                href="#"
+                href="https://www.linkedin.com/in/notarc-a-community-of-creators-b2b713342/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
                 className="
-                  flex h-10 w-10 items-center justify-center
+                  flex h-9 w-9 items-center justify-center sm:h-10 sm:w-10
                   rounded-full border border-white/10
                   bg-white/[0.04]
                   text-white/60
@@ -103,16 +103,16 @@ export default function HomeFooter() {
                   hover:text-white
                 "
               >
-                <FaLinkedinIn size={18} />
+                <FaLinkedinIn size={16} />
               </a>
 
               <a
-                href="#"
+                href="https://www.youtube.com/channel/UCdOd5n8eajggiTHRkUlKoxA"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
                 className="
-                  flex h-10 w-10 items-center justify-center
+                  flex h-9 w-9 items-center justify-center sm:h-10 sm:w-10
                   rounded-full border border-white/10
                   bg-white/[0.04]
                   text-white/60
@@ -123,7 +123,7 @@ export default function HomeFooter() {
                   hover:text-white
                 "
               >
-                <FaYoutube size={18} />
+                <FaYoutube size={16} />
               </a>
 
             </div>
@@ -134,11 +134,11 @@ export default function HomeFooter() {
 
           <div>
 
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-white sm:text-sm">
               Explore
             </h3>
 
-            <div className="mt-6 space-y-3">
+            <div className="mt-4 space-y-2.5 sm:mt-6 sm:space-y-3">
 
               <Link
                 href="/"
@@ -187,12 +187,12 @@ export default function HomeFooter() {
               Our Services
             </h3>
 
-            <div className="mt-6 space-y-3">
+            <div className="mt-4 space-y-2.5 sm:mt-6 sm:space-y-3">
 
               {services.map((service) => (
                 <p
                   key={service}
-                  className="text-sm leading-6 text-white/55"
+                  className="text-xs leading-5 text-white/55 sm:text-sm sm:leading-6"
                 >
                   {service}
                 </p>
@@ -210,7 +210,7 @@ export default function HomeFooter() {
               Get In Touch
             </h3>
 
-            <div className="mt-6 space-y-5">
+            <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-5">
 
               <a
                 href="mailto:info@notarc.in"
@@ -221,7 +221,7 @@ export default function HomeFooter() {
                   className="mt-0.5 shrink-0 text-white/50 transition group-hover:text-white"
                 />
 
-                <span className="text-sm leading-6 text-white/55 transition group-hover:text-white">
+                <span className="text-xs leading-5 sm:text-sm sm:leading-6 text-white/55 transition group-hover:text-white">
                   info@notarc.in
                 </span>
               </a>
@@ -283,7 +283,7 @@ export default function HomeFooter() {
 
         {/* Bottom bar */}
 
-        <div className="flex flex-col gap-4 py-7 text-sm text-white/40 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-3 py-5 text-xs text-white/40 sm:gap-4 sm:py-7 sm:text-sm md:flex-row md:items-center md:justify-between">
 
           <p>
             © {new Date().getFullYear()} NOTARC. All rights reserved.

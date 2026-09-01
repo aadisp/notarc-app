@@ -10,12 +10,14 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import type { CartItem } from "@/store/cart-store";
+import type { Product } from "@/types/product";
 
 interface UseCheckoutProps {
     items: CartItem[];
     subtotal: number;
     shipping: number;
     total: number;
+    products: Product[];
 }
 
 export function useCheckout({
@@ -23,6 +25,7 @@ export function useCheckout({
     subtotal,
     shipping,
     total,
+    products,
 }: UseCheckoutProps) {
 
     const router = useRouter();
@@ -56,6 +59,22 @@ export function useCheckout({
                     ? userDoc.data().username
                     : "";
 
+            const orderItems = items.map((item) => {
+
+                const product = products.find(
+                    (p) => p.id === item.id
+                );
+
+                return {
+                    id: item.id,
+                    type: "product" as const,
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price,
+                    imageUrl: product?.imageUrls?.[0] ?? null,
+                };
+            });
+
             await addDoc(
                 collection(
                     db,
@@ -66,7 +85,7 @@ export function useCheckout({
                     username,
                     userEmail: user.email,
 
-                    items,
+                    items: orderItems,
 
                     subtotal,
                     shipping,

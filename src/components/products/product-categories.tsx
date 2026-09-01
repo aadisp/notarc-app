@@ -27,7 +27,7 @@ export default function ProductCategories({
                     className={`rounded-full border px-4 py-2 transition ${
                         selected === category
                             ? "bg-primary text-primary-foreground"
-                            : "hover:bg-muted"
+                            : "hover:bg-white hover:text-black"
                     }`}
                 >
                     {category}

@@ -24,6 +24,7 @@ export default function ContactMap() {
                     loading="lazy"
                     allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"
+                    className="grayscale-[20%] contrast-[1.05] invert-[90%] hue-rotate-180"
                 />
 
             </div>

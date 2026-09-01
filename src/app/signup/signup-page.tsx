@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { AuthError } from "firebase/auth";
@@ -63,6 +63,17 @@ export default function SignupPage() {
 
     
   const [loading, setLoading] = useState(false);
+
+  // Radix components (Select, Dialog, etc.) portal their popup content to
+  // document.body, outside the auth card. Toggling the `dark` class on
+  // <html> ensures those portaled elements also pick up the dark theme
+  // variables from globals.css.
+  useEffect(() => {
+    document.documentElement.classList.add("dark");
+    return () => {
+      document.documentElement.classList.remove("dark");
+    };
+  }, []);
 
   async function handleSignup() {
 
@@ -339,11 +350,11 @@ export default function SignupPage() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
+              <span className="w-full border-t border-white/10" />
             </div>
 
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white/70 px-3 text-muted-foreground">
+              <span className="bg-[#0b0d10] px-3 text-muted-foreground">
                 Or continue with
               </span>
             </div>
