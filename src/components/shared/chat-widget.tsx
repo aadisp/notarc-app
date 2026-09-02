@@ -27,6 +27,7 @@ export default function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [imageFailed, setImageFailed] = useState(false);
+  const [closeImageFailed, setCloseImageFailed] = useState(false);
 
   // Entrance path: the widget starts off-screen past the bottom-left
   // corner, then travels along the screen edges — up to top-left, across
@@ -245,7 +246,7 @@ export default function ChatWidget() {
           >
 
             <a
-              href="https://instagram.com/notarc.in"
+              href="https://instagram.com/notarc"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Notarc on Instagram"
@@ -307,7 +308,7 @@ export default function ChatWidget() {
           </div>
         )}
 
-        {!isOpen && (
+        {!isOpen && hasLanded && (
           <div
             className="
               pointer-events-none
@@ -315,8 +316,7 @@ export default function ChatWidget() {
               right-full
               top-1/2
               mr-3
-              -translate-y-1/2
-              translate-x-2
+              animate-tooltip-in
               whitespace-nowrap
               rounded-xl
               border
@@ -327,13 +327,8 @@ export default function ChatWidget() {
               text-sm
               font-medium
               text-white
-              opacity-0
               shadow-xl
               backdrop-blur-md
-              transition-all
-              duration-300
-              group-hover:translate-x-0
-              group-hover:opacity-100
             "
           >
             How can I help you?
@@ -345,14 +340,23 @@ export default function ChatWidget() {
           className={`relative flex h-16 w-16 items-center justify-center rounded-full transition-transform duration-300 hover:scale-110 ${
             !isOpen ? "animate-chat-float" : ""
           } ${
-            isOpen || imageFailed
+            (isOpen && closeImageFailed) || (!isOpen && imageFailed)
               ? "bg-white text-black shadow-2xl"
               : ""
           }`}
           aria-label={isOpen ? "Close chat" : "Open chat"}
         >
           {isOpen ? (
-            <X className="h-6 w-6" />
+            !closeImageFailed ? (
+              <img
+                src="/drone-close-icon.png"
+                alt="Close chat"
+                onError={() => setCloseImageFailed(true)}
+                className="h-12 w-12 object-contain"
+              />
+            ) : (
+              <X className="h-6 w-6" />
+            )
           ) : !imageFailed ? (
             <img
               src="/chatbot-icon.png"

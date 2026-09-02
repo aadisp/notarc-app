@@ -13,13 +13,56 @@ export default function ProductsPage() {
     error,
   } = useProducts();
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
+  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
   const [sort, setSort] = useState("newest");
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
+
+  const { priceMin, priceMax } = useMemo(() => {
+    if (products.length === 0) {
+      return { priceMin: 0, priceMax: 0 };
+    }
+
+    const prices = products.map((product) => product.price);
+
+    return {
+      priceMin: Math.min(...prices),
+      priceMax: Math.max(...prices),
+    };
+  }, [products]);
+
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
+
+  // Keep the price range in sync with the actual data once products load,
+  // but only reset it when the underlying min/max bounds change (not on
+  // every render), so the user's own slider adjustments aren't clobbered.
+  useEffect(() => {
+    setPriceRange([priceMin, priceMax]);
+  }, [priceMin, priceMax]);
+
+  function toggleCategory(category: string) {
+    setSelectedCategories((current) => {
+      const next = new Set(current);
+      if (next.has(category)) {
+        next.delete(category);
+      } else {
+        next.add(category);
+      }
+      return next;
+    });
+  }
+
+  function clearAllFilters() {
+    setSearch("");
+    setSelectedCategories(new Set());
+    setSort("newest");
+    setPriceRange([priceMin, priceMax]);
+  }
 
   // Radix components (Select, Dialog, etc.) portal their popup content to
   // document.body, outside the scoped <div> below. Toggling the `dark`
   // class on <html> ensures those portaled elements (e.g. the sort
-  // dropdown) also pick up the dark theme variables from globals.css.
+  // dropdown, the filter panel) also pick up the dark theme variables
+  // from globals.css.
   useEffect(() => {
     document.documentElement.classList.add("dark");
     return () => {
@@ -33,10 +76,14 @@ export default function ProductsPage() {
             .includes(search.toLowerCase());
 
         const matchesCategory =
-            category === "All" ||
-            product.category === category;
+            selectedCategories.size === 0 ||
+            selectedCategories.has(product.category);
 
-        return matchesSearch && matchesCategory;
+        const matchesPrice =
+            product.price >= priceRange[0] &&
+            product.price <= priceRange[1];
+
+        return matchesSearch && matchesCategory && matchesPrice;
     });
 
     switch (sort) {
@@ -64,7 +111,7 @@ export default function ProductsPage() {
         default:
             return filtered;
     }
-}, [products, search, category, sort]);
+}, [products, search, selectedCategories, sort, priceRange]);
   return (
     <SiteLayout>
       <div
@@ -96,10 +143,18 @@ export default function ProductsPage() {
         <ProductToolbar
           search={search}
           onSearchChange={setSearch}
-          category={category}
-          onCategoryChange={setCategory}
+          selectedCategories={selectedCategories}
+          onToggleCategory={toggleCategory}
+          onClearCategories={() => setSelectedCategories(new Set())}
           sort={sort}
           onSortChange={setSort}
+          filterPanelOpen={filterPanelOpen}
+          onFilterPanelOpenChange={setFilterPanelOpen}
+          priceRange={priceRange}
+          onPriceRangeChange={setPriceRange}
+          priceMin={priceMin}
+          priceMax={priceMax}
+          onClearAllFilters={clearAllFilters}
       />
 
         {loading ? (
@@ -113,11 +168,7 @@ export default function ProductsPage() {
           ) : (
               <ProductGrid
                   products={filteredProducts}
-                  onClearFilters={() => {
-                      setSearch("");
-                      setCategory("All");
-                      setSort("newest");
-                  }}
+                  onClearFilters={clearAllFilters}
               />
           )}
         </section>

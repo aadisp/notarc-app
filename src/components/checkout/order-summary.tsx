@@ -17,27 +17,30 @@ export default function OrderSummary({
                 h-fit
                 rounded-xl
                 border
+                border-white/10
+                bg-white/[0.03]
                 p-6
+                backdrop-blur-sm
             "
         >
-            <h2 className="mb-6 text-2xl font-bold">
+            <h2 className="mb-6 text-2xl font-bold text-white">
                 Order Summary
             </h2>
 
-            <div className="space-y-3">
+            <div className="space-y-3 text-white/70">
                 <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>₹{subtotal}</span>
+                    <span className="text-white">₹{subtotal}</span>
                 </div>
 
                 <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span>FREE</span>
+                    <span className="text-white">FREE</span>
                 </div>
 
-                <hr />
+                <hr className="border-white/10" />
 
-                <div className="flex justify-between text-xl font-bold">
+                <div className="flex justify-between text-xl font-bold text-white">
                     <span>Total</span>
                     <span>₹{total}</span>
                 </div>
@@ -49,11 +52,12 @@ export default function OrderSummary({
                     mt-8
                     w-full
                     rounded-lg
-                    bg-black
+                    bg-white
                     py-3
-                    text-white
+                    font-semibold
+                    text-black
                     transition
-                    hover:bg-neutral-800
+                    hover:bg-white/90
                 "
             >
                 Place Order

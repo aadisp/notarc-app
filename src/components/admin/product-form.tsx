@@ -18,8 +18,9 @@ interface ProductFormProps {
   name: string;
   setName: (v: string) => void;
 
-  slug: string;
-  setSlug: (v: string) => void;
+  slug?: string;
+  setSlug?: (v: string) => void;
+  showSlugField?: boolean;
 
   category: string;
   setCategory: (v: string) => void;
@@ -49,6 +50,7 @@ export default function ProductForm({
   setName,
   slug,
   setSlug,
+  showSlugField = false,
   category,
   setCategory,
   price,
@@ -100,18 +102,20 @@ export default function ProductForm({
 
         </FormField>
 
-        <FormField
-        label="Slug"
-        icon={Link2}
-        >
+        {showSlugField && (
+          <FormField
+          label="Slug"
+          icon={Link2}
+          >
 
-        <AdminInput
-            placeholder=""
-            value={slug}
-            onChange={setSlug}
-        />
+          <AdminInput
+              placeholder=""
+              value={slug ?? ""}
+              onChange={setSlug ?? (() => {})}
+          />
 
-        </FormField>
+          </FormField>
+        )}
 
         <FormField
         label="Price"

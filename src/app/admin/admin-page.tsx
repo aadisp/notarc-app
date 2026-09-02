@@ -34,9 +34,6 @@ export default function AdminPage() {
   const [name, setName] =
     useState("");
 
-  const [slug, setSlug] =
-    useState("");
-
   const [category, setCategory] =
     useState("");
 
@@ -125,7 +122,9 @@ const [addingCourse, setAddingCourse] =
 
       name,
 
-      slug,
+      slug: name
+        .toLowerCase()
+        .replace(/\s+/g, "-"),
 
       category,
 
@@ -145,7 +144,6 @@ const [addingCourse, setAddingCourse] =
     toast.success("Product added successfully!");
 
     setName("");
-    setSlug("");
     setCategory("");
     setPrice("");
     setDescription("");
@@ -386,8 +384,6 @@ finally {
         <ProductForm
           name={name}
           setName={setName}
-          slug={slug}
-          setSlug={setSlug}
           category={category}
           setCategory={setCategory}
           price={price}
