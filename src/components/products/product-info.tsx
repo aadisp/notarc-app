@@ -10,6 +10,8 @@ import { useCartStore } from "@/store/cart-store";
 import QuantitySelector from "./quantity-selector";
 import ProductActions from "./product-actions";
 
+const LONG_DESCRIPTION_LIMIT = 320;
+
 interface ProductInfoProps {
     id: string;
     name: string;
@@ -35,6 +37,16 @@ export default function ProductInfo({
 const { user } = useAuth();
 
 const [quantity, setQuantity] = useState(1);
+
+    const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+
+    const isLongDescriptionTruncatable =
+        longDescription.length > LONG_DESCRIPTION_LIMIT;
+
+    const displayedLongDescription =
+        isLongDescriptionTruncatable && !isDescriptionExpanded
+            ? longDescription.slice(0, LONG_DESCRIPTION_LIMIT).trimEnd()
+            : longDescription;
 
     const {
         items,
@@ -153,8 +165,20 @@ const [quantity, setQuantity] = useState(1);
                     </h3>
 
                     <p className="mt-3 whitespace-pre-wrap leading-7 text-white/60">
-                        {longDescription}
+                        {displayedLongDescription}
+                        {isLongDescriptionTruncatable && !isDescriptionExpanded && "…"}
                     </p>
+
+                    {isLongDescriptionTruncatable && (
+                        <button
+                            onClick={() =>
+                                setIsDescriptionExpanded((expanded) => !expanded)
+                            }
+                            className="mt-2 text-sm font-medium text-emerald-400 hover:text-emerald-300"
+                        >
+                            {isDescriptionExpanded ? "Read less" : "Read more..."}
+                        </button>
+                    )}
 
                 </div>
 
