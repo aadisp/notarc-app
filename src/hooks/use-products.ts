@@ -8,14 +8,15 @@ import {
 
 import { db } from "@/firebase/firebase";
 import { Product } from "@/types/product";
-import { useUserRole } from "./use-user-role";
-import { isTestItem } from "@/lib/is-test-item";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export function useProducts() {
-    const [products, setProducts] = useState<Product[]>([]);
+    const [rawProducts, setRawProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
     const role = useUserRole();
+    const isAdmin = role === "admin";
 
     async function fetchProducts() {
         try {
@@ -30,7 +31,7 @@ export function useProducts() {
                 ...(doc.data() as Omit<Product, "id">),
             }));
 
-            setProducts(loadedProducts);
+            setRawProducts(loadedProducts);
             setError(null);
         } catch (err) {
             console.error(err);
@@ -44,15 +45,20 @@ export function useProducts() {
         fetchProducts();
     }, []);
 
-    // Test-named products are only visible to admins (who need to see them
-    // to manage/delete them); everyone else never sees them at all.
-    const visibleProducts = useMemo(() => {
-        if (role === "admin") return products;
-        return products.filter((product) => !isTestItem(product.name));
-    }, [products, role]);
+    // Products named "Test" are for admins to try things out with and
+    // shouldn't be visible to regular shoppers. While the role is still
+    // resolving (isAdmin is false by default), Test items stay hidden
+    // rather than briefly flashing before the check completes.
+    const products = useMemo(() => {
+        if (isAdmin) return rawProducts;
+
+        return rawProducts.filter(
+            (product) => product.name.trim().toLowerCase() !== "test"
+        );
+    }, [rawProducts, isAdmin]);
 
     return {
-        products: visibleProducts,
+        products,
         loading,
         error,
         refreshProducts: fetchProducts,

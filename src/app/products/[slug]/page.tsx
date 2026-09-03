@@ -8,7 +8,6 @@ import { notFound } from "next/navigation";
 import ProductDetailsView from "./product-details-view";
 import type { Product } from "@/types/product";
 import type { Metadata } from "next";
-import { isTestItem } from "@/lib/is-test-item";
 
 interface ProductPageProps {
   params: Promise<{
@@ -26,15 +25,13 @@ export async function generateMetadata({
     collection(db, "products")
   );
 
-  const products = snapshot.docs
-    .map(
-      (doc) =>
-        ({
-          id: doc.id,
-          ...doc.data(),
-        } as Product)
-    )
-    .filter((item) => !isTestItem(item.name));
+  const products = snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      } as Product)
+  );
 
   const product = products.find(
     (item) => item.slug === slug
@@ -62,18 +59,13 @@ export default async function ProductDetailsPage({
       )
     );
 
-  // Test-named products are hidden from this public storefront route
-  // entirely (including for admins browsing the live site) — admins
-  // manage/preview test data through the admin dashboard instead.
-  const products = snapshot.docs
-    .map(
-      (doc) =>
-        ({
-          id: doc.id,
-          ...doc.data(),
-        } as Product)
-    )
-    .filter((item) => !isTestItem(item.name));
+  const products = snapshot.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      } as Product)
+  );
 
   const product = products.find(
     (item) =>

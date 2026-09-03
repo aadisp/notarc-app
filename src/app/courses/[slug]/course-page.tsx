@@ -19,7 +19,8 @@ import { Button } from "@/components/ui/button";
 import { Clock3, GraduationCap } from "lucide-react";
 
 import { Course } from "@/types/course";
-import { isTestItem } from "@/lib/is-test-item";
+import { useUserRole } from "@/hooks/use-user-role";
+import Link from "next/link";
 
 interface CoursePageProps {
   slug: string;
@@ -39,6 +40,9 @@ export default function CoursePage({
   const [isEnrolled, setIsEnrolled] =
     useState(false);
 
+  const role = useUserRole();
+  const isAdmin = role === "admin";
+
   useEffect(() => {
     async function loadCourse() {
 
@@ -48,14 +52,10 @@ export default function CoursePage({
         );
 
       const courses =
-        snapshot.docs
-          .map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          .filter(
-            (item) => !isTestItem((item as Course).name)
-          ) as Course[];
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Course[];
 
       setAllCourses(courses);
       
@@ -126,6 +126,11 @@ export default function CoursePage({
         .filter(
             (item) => item.id !== course?.id
         )
+        .filter(
+            (item) =>
+                isAdmin ||
+                item.name.trim().toLowerCase() !== "test"
+        )
         .slice(0, 3);
 
   if (!course) {
@@ -142,6 +147,42 @@ export default function CoursePage({
             <div className="py-24 text-center text-white/60">
                 Loading course...
             </div>
+          </section>
+        </div>
+      </SiteLayout>
+    );
+  }
+
+  const isTestCourse =
+    course.name.trim().toLowerCase() === "test";
+
+  if (isTestCourse && !isAdmin) {
+    return (
+      <SiteLayout>
+        <div
+          className="bg-[#0b0d10] text-white"
+          style={{
+            "--background": "#0b0d10",
+            "--foreground": "#ffffff",
+          } as CSSProperties}
+        >
+          <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+
+            <h1 className="text-4xl font-bold">
+              Course Not Found
+            </h1>
+
+            <p className="mt-4 text-white/60">
+              This course isn't available right now.
+            </p>
+
+            <Link
+              href="/courses"
+              className="mt-8 inline-block text-emerald-400 hover:text-emerald-300"
+            >
+              ← Back to Courses
+            </Link>
+
           </section>
         </div>
       </SiteLayout>

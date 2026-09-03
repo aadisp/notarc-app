@@ -8,12 +8,11 @@ import {
 
 import { db } from "@/firebase/firebase";
 import { Course } from "@/types/course";
-import { useUserRole } from "./use-user-role";
-import { isTestItem } from "@/lib/is-test-item";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export function useCourses() {
 
-    const [courses, setCourses] =
+    const [rawCourses, setRawCourses] =
         useState<Course[]>([]);
 
     const [loading, setLoading] =
@@ -23,6 +22,7 @@ export function useCourses() {
         useState<string | null>(null);
 
     const role = useUserRole();
+    const isAdmin = role === "admin";
 
     async function loadCourses() {
         try {
@@ -40,7 +40,7 @@ export function useCourses() {
                     ...doc.data(),
                 })) as Course[];
 
-            setCourses(courseList);
+            setRawCourses(courseList);
 
         } catch (err) {
 
@@ -61,15 +61,20 @@ export function useCourses() {
         loadCourses();
     }, []);
 
-    // Test-named courses are only visible to admins (who need to see them
-    // to manage/delete them); everyone else never sees them at all.
-    const visibleCourses = useMemo(() => {
-        if (role === "admin") return courses;
-        return courses.filter((course) => !isTestItem(course.name));
-    }, [courses, role]);
+    // Courses named "Test" are for admins to try things out with and
+    // shouldn't be visible to regular students. While the role is still
+    // resolving (isAdmin is false by default), Test items stay hidden
+    // rather than briefly flashing before the check completes.
+    const courses = useMemo(() => {
+        if (isAdmin) return rawCourses;
+
+        return rawCourses.filter(
+            (course) => course.name.trim().toLowerCase() !== "test"
+        );
+    }, [rawCourses, isAdmin]);
 
     return {
-        courses: visibleCourses,
+        courses,
         loading,
         error,
         refreshCourses: loadCourses,
