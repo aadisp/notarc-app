@@ -1,54 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-  limit,
-  query,
-} from "firebase/firestore";
-
 import Link from "next/link";
 
-import { db } from "@/firebase/firebase";
+import { useProducts } from "@/hooks/use-products";
 
 import ProductCard from "@/components/cards/product-card";
 import { Button } from "@/components/ui/button";
 
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  category: string;
-  price: number;
-  description: string;
-  imageUrls: string[];
-}
-
 export default function ProductsPreview() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadProducts() {
-      const snapshot = await getDocs(
-        query(
-          collection(db, "products"),
-          limit(3)
-        )
-      );
-
-      const productList = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Product[];
-
-      setProducts(productList);
-      setLoading(false);
-    }
-
-    loadProducts();
-  }, []);
+  const { products: allProducts, loading } = useProducts();
+  const products = allProducts.slice(0, 3);
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:py-24">

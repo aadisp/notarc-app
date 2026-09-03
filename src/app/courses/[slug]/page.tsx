@@ -3,6 +3,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import type { Course } from "@/types/course";
 import CoursePage from "./course-page";
+import { isTestItem } from "@/lib/is-test-item";
 
 interface PageProps {
   params: Promise<{
@@ -20,13 +21,15 @@ export async function generateMetadata({
     collection(db, "courses")
   );
 
-  const courses = snapshot.docs.map(
-    (doc) =>
-      ({
-        id: doc.id,
-        ...doc.data(),
-      } as Course)
-  );
+  const courses = snapshot.docs
+    .map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as Course)
+    )
+    .filter((item) => !isTestItem(item.name));
 
   const course = courses.find(
     (item) => item.slug === slug

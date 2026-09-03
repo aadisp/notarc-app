@@ -3,14 +3,15 @@ import { adminDb } from "@/firebase/firebase-admin";
 import type { Product } from "@/types/product";
 import type { Course } from "@/types/course";
 import { SITE_KNOWLEDGE } from "@/lib/site-knowledge";
+import { isTestItem } from "@/lib/is-test-item";
 
 async function buildProductCatalogSummary(): Promise<string> {
   try {
     const snapshot = await adminDb.collection("products").get();
 
-    const products = snapshot.docs.map(
-      (doc) => doc.data() as Product
-    );
+    const products = snapshot.docs
+      .map((doc) => doc.data() as Product)
+      .filter((product) => !isTestItem(product.name));
 
     if (products.length === 0) {
       return "There are currently no products listed in the store.";
@@ -51,9 +52,9 @@ async function buildCourseCatalogSummary(): Promise<string> {
   try {
     const snapshot = await adminDb.collection("courses").get();
 
-    const courses = snapshot.docs.map(
-      (doc) => doc.data() as Course
-    );
+    const courses = snapshot.docs
+      .map((doc) => doc.data() as Course)
+      .filter((course) => !isTestItem(course.name));
 
     if (courses.length === 0) {
       return "There are currently no courses listed.";

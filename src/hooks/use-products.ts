@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     collection,
     getDocs,
@@ -8,11 +8,14 @@ import {
 
 import { db } from "@/firebase/firebase";
 import { Product } from "@/types/product";
+import { useUserRole } from "./use-user-role";
+import { isTestItem } from "@/lib/is-test-item";
 
 export function useProducts() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const role = useUserRole();
 
     async function fetchProducts() {
         try {
@@ -41,8 +44,15 @@ export function useProducts() {
         fetchProducts();
     }, []);
 
+    // Test-named products are only visible to admins (who need to see them
+    // to manage/delete them); everyone else never sees them at all.
+    const visibleProducts = useMemo(() => {
+        if (role === "admin") return products;
+        return products.filter((product) => !isTestItem(product.name));
+    }, [products, role]);
+
     return {
-        products,
+        products: visibleProducts,
         loading,
         error,
         refreshProducts: fetchProducts,

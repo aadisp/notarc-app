@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Clock3, GraduationCap } from "lucide-react";
 
 import { Course } from "@/types/course";
+import { isTestItem } from "@/lib/is-test-item";
 
 interface CoursePageProps {
   slug: string;
@@ -47,10 +48,14 @@ export default function CoursePage({
         );
 
       const courses =
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Course[];
+        snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          .filter(
+            (item) => !isTestItem((item as Course).name)
+          ) as Course[];
 
       setAllCourses(courses);
       

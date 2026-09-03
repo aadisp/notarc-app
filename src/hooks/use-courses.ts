@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     collection,
     getDocs,
@@ -8,6 +8,8 @@ import {
 
 import { db } from "@/firebase/firebase";
 import { Course } from "@/types/course";
+import { useUserRole } from "./use-user-role";
+import { isTestItem } from "@/lib/is-test-item";
 
 export function useCourses() {
 
@@ -19,6 +21,8 @@ export function useCourses() {
 
     const [error, setError] =
         useState<string | null>(null);
+
+    const role = useUserRole();
 
     async function loadCourses() {
         try {
@@ -57,8 +61,15 @@ export function useCourses() {
         loadCourses();
     }, []);
 
+    // Test-named courses are only visible to admins (who need to see them
+    // to manage/delete them); everyone else never sees them at all.
+    const visibleCourses = useMemo(() => {
+        if (role === "admin") return courses;
+        return courses.filter((course) => !isTestItem(course.name));
+    }, [courses, role]);
+
     return {
-        courses,
+        courses: visibleCourses,
         loading,
         error,
         refreshCourses: loadCourses,
