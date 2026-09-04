@@ -43,7 +43,42 @@ export default function RelatedProducts({
                 Related Products
             </h2>
 
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6">
+            {/* Mobile swipe carousel */}
+            <div className="sm:hidden">
+
+                <div
+                    className="
+                        flex
+                        snap-x
+                        snap-mandatory
+                        gap-4
+                        overflow-x-auto
+                        overscroll-x-contain
+                        pb-4
+                        [scrollbar-width:none]
+                        [&::-webkit-scrollbar]:hidden
+                    "
+                >
+
+                    {relatedProducts.map((product) => (
+
+                        <div
+                            key={product.id}
+                            className="w-[60%] shrink-0 snap-center"
+                        >
+
+                            <ProductCard product={product} />
+
+                        </div>
+
+                    ))}
+
+                </div>
+
+            </div>
+
+            {/* Tablet / desktop grid */}
+            <div className="hidden grid-cols-3 gap-4 sm:grid lg:grid-cols-4">
 
                 {relatedProducts.map((product) => (
                     <ProductCard

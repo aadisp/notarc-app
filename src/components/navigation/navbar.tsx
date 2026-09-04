@@ -475,7 +475,7 @@ export default function Navbar() {
                   absolute
                   right-0
                   mt-2
-                  w-72
+                  w-64 sm:w-72
                   overflow-hidden
                   rounded-2xl
                   border
@@ -489,9 +489,9 @@ export default function Navbar() {
                 "
               >
 
-                <div className="border-b border-white/10 px-5 py-4">
+                <div className="border-b border-white/10 px-4 py-3 sm:px-5 sm:py-4">
 
-                  <p className="font-semibold text-lg">
+                  <p className="font-semibold text-base sm:text-lg">
                     {username}
                   </p>
 
@@ -508,7 +508,7 @@ export default function Navbar() {
                     <Link
                       href="/"
                       onClick={() => setMenuOpen(false)}
-                      className="block px-5 py-3 hover:bg-white/10"
+                      className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
                     >
                       Home
                     </Link>
@@ -516,7 +516,7 @@ export default function Navbar() {
                     <Link
                       href="/products"
                       onClick={() => setMenuOpen(false)}
-                      className="block px-5 py-3 hover:bg-white/10"
+                      className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
                     >
                       Explore Products
                     </Link>
@@ -524,7 +524,7 @@ export default function Navbar() {
                     <Link
                       href="/courses"
                       onClick={() => setMenuOpen(false)}
-                      className="block px-5 py-3 hover:bg-white/10"
+                      className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
                     >
                       Book a Course
                     </Link>
@@ -532,7 +532,7 @@ export default function Navbar() {
                     <Link
                       href="/contact-us"
                       onClick={() => setMenuOpen(false)}
-                      className="block px-5 py-3 hover:bg-white/10"
+                      className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
                     >
                       Contact Us
                     </Link>
@@ -540,7 +540,7 @@ export default function Navbar() {
                     <Link
                       href="/cart"
                       onClick={() => setMenuOpen(false)}
-                      className="block px-5 py-3 hover:bg-white/10"
+                      className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
                     >
                       Cart
                     </Link>
@@ -550,21 +550,21 @@ export default function Navbar() {
 
                 <Link
                   href="/profile"
-                  className="block px-5 py-3 hover:bg-white/10"
+                  className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
                 >
                   Profile
                 </Link>
 
                 <Link
                   href="/my-courses"
-                  className="block px-5 py-3 hover:bg-white/10"
+                  className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
                 >
                   My Courses
                 </Link>
 
                 <Link
                   href="/my-orders"
-                  className="block px-5 py-3 hover:bg-white/10"
+                  className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
                 >
                   My Orders
                 </Link>
@@ -576,7 +576,8 @@ export default function Navbar() {
                     className="
                       block
                       px-4
-                      py-3
+                      py-2.5
+                      sm:py-3
                       transition
                       hover:bg-white/10
                     "
@@ -588,7 +589,7 @@ export default function Navbar() {
 
                 <hr className="border-white/10" />
 
-                <div className="px-5 py-3">
+                <div className="px-4 py-2.5 sm:px-5 sm:py-3">
 
                   <p
                     className="
@@ -809,8 +810,10 @@ export default function Navbar() {
                   className="
                     block
                     w-full
-                    px-5
-                    py-4
+                    px-4
+                    py-3
+                    sm:px-5
+                    sm:py-4
                     text-left
                     font-medium
                     text-red-600
