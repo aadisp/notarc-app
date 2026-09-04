@@ -1,73 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import {
-  collection,
-  getDocs,
-  query,
-} from "firebase/firestore";
-
 import Link from "next/link";
 
-import { db } from "@/firebase/firebase";
-import { useUserRole } from "@/hooks/use-user-role";
+import { useProducts } from "@/hooks/use-products";
 
 import ProductCard from "@/components/cards/product-card";
 import { Button } from "@/components/ui/button";
 
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  category: string;
-  price: number;
-  description: string;
-  imageUrls: string[];
-}
-
 export default function ProductsPreview() {
-  const [rawProducts, setRawProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const role = useUserRole();
-  const isAdmin = role === "admin";
-
-  useEffect(() => {
-    async function loadProducts() {
-      // Fetch a few extra beyond the 3 we display, since a Test product
-      // may get filtered out below and we still want a full row of 3
-      // for non-admins.
-      const snapshot = await getDocs(
-        query(
-          collection(db, "products")
-        )
-      );
-
-      const productList = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Product[];
-
-      setRawProducts(productList);
-      setLoading(false);
-    }
-
-    loadProducts();
-  }, []);
-
-  // Products named "Test" are for admins to try things out with and
-  // shouldn't be visible to regular shoppers. While the role is still
-  // resolving (isAdmin is false by default), Test items stay hidden
-  // rather than briefly flashing before the check completes.
-  const products = useMemo(() => {
-    const visible = isAdmin
-      ? rawProducts
-      : rawProducts.filter(
-          (product) => product.name.trim().toLowerCase() !== "test"
-        );
-
-    return visible.slice(0, 3);
-  }, [rawProducts, isAdmin]);
+  const { products: allProducts, loading } = useProducts();
+  const products = allProducts.slice(0, 6);
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:py-24">
@@ -122,7 +64,7 @@ export default function ProductsPreview() {
 
                 <div
                   key={product.id}
-                  className="w-[88%] shrink-0 snap-center"
+                  className="w-[60%] shrink-0 snap-center"
                 >
 
                   <ProductCard product={product} />
@@ -137,7 +79,7 @@ export default function ProductsPreview() {
 
 
           {/* Desktop / tablet grid */}
-          <div className="hidden gap-8 md:grid md:grid-cols-3">
+          <div className="hidden grid-cols-3 gap-4 md:grid lg:grid-cols-5 xl:grid-cols-6">
 
             {products.map((product) => (
 

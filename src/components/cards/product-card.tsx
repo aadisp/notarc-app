@@ -119,7 +119,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   key={index}
                   src={url}
                   alt={`${name} ${index + 1}`}
-                  className="h-full w-full flex-shrink-0 object-contain p-6"
+                  className="h-full w-full flex-shrink-0 object-contain p-3"
                 />
               ))}
             </div>
@@ -147,17 +147,17 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         </div>
 
-        <div className="flex flex-1 flex-col gap-3 p-6 pb-0">
+        <div className="flex flex-1 flex-col gap-1.5 p-3 pb-0">
 
-          <span className="inline-flex w-fit rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white">
+          <span className="inline-flex w-fit rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium text-white">
             {category}
           </span>
 
-          <h3 className="line-clamp-2 text-xl font-bold tracking-tight text-white transition group-hover:text-emerald-400">
+          <h3 className="line-clamp-1 text-sm font-bold tracking-tight text-white transition group-hover:text-emerald-400">
             {name}
           </h3>
 
-          <p className="line-clamp-2 text-sm leading-6 text-white/60">
+          <p className="line-clamp-1 text-xs leading-5 text-white/60">
             {description}
           </p>
 
@@ -165,30 +165,30 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       </Link>
 
-      <div className="mt-auto p-6 pt-4">
+      <div className="mt-auto p-3 pt-2">
 
-        <p className="mb-4 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+        <p className="mb-2 text-base font-extrabold tracking-tight text-white sm:text-lg">
           ₹{price.toLocaleString("en-IN")}
         </p>
 
         {cartItem ? (
-          <div className="flex h-11 items-center justify-between rounded-full border border-white/15 bg-white/5">
+          <div className="flex h-8 items-center justify-between rounded-full border border-white/15 bg-white/5">
 
             <Button
               variant="ghost"
-              className="h-full flex-1 rounded-full text-white hover:bg-white/10 hover:text-white"
+              className="h-full flex-1 rounded-full text-sm text-white hover:bg-white/10 hover:text-white"
               onClick={() => decreaseQuantity(id)}
             >
               −
             </Button>
 
-            <span className="w-10 text-center font-semibold">
+            <span className="w-8 text-center text-sm font-semibold">
               {cartItem.quantity}
             </span>
 
             <Button
               variant="ghost"
-              className="h-full flex-1 rounded-full text-white hover:bg-white/10 hover:text-white"
+              className="h-full flex-1 rounded-full text-sm text-white hover:bg-white/10 hover:text-white"
               onClick={() => increaseQuantity(id)}
             >
               +
@@ -197,7 +197,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         ) : (
           <Button
-            className="h-11 w-full rounded-full bg-white font-semibold text-black hover:bg-white/90"
+            className="h-8 w-full rounded-full bg-white text-xs font-semibold text-black hover:bg-white/90"
             onClick={handleAddToCart}
           >
             Add to Cart
