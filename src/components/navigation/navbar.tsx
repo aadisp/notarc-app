@@ -16,6 +16,7 @@ import {
   doc,
   onSnapshot,
 } from "firebase/firestore";
+import { Menu, X } from "lucide-react";
 
 interface SavedAccount {
   uid: string;
@@ -40,6 +41,10 @@ export default function Navbar() {
     setMenuOpen] =
     useState(false);
 
+  const [navMenuOpen,
+    setNavMenuOpen] =
+    useState(false);
+
   const [scrolled,
     setScrolled] =
     useState(false);
@@ -51,7 +56,8 @@ export default function Navbar() {
   const menuRef =
     useRef<HTMLDivElement>(null);
 
-  const [isMobile, setIsMobile] = useState(false);
+  const navMenuRef =
+    useRef<HTMLDivElement>(null);
 
   useEffect(() => {
 
@@ -97,18 +103,6 @@ export default function Navbar() {
   }, [user]);
 
   useEffect(() => {
-    function handleResize() {
-      setIsMobile(window.innerWidth < 768);
-    }
-
-    handleResize(); // Run once on mount
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
 
     function handleScroll() {
 
@@ -144,6 +138,15 @@ export default function Navbar() {
         )
       ) {
         setMenuOpen(false);
+      }
+
+      if (
+        navMenuRef.current &&
+        !navMenuRef.current.contains(
+          event.target as Node
+        )
+      ) {
+        setNavMenuOpen(false);
       }
 
     }
@@ -388,6 +391,112 @@ export default function Navbar() {
 
         </nav>
 
+        {/* Mobile hamburger nav — works regardless of login state */}
+        <div
+          ref={navMenuRef}
+          className="relative md:hidden"
+        >
+
+          <button
+            onClick={() =>
+              setNavMenuOpen(
+                !navMenuOpen
+              )
+            }
+            aria-label={
+              navMenuOpen
+                ? "Close navigation menu"
+                : "Open navigation menu"
+            }
+            className="
+              flex
+              h-10
+              w-10
+              items-center
+              justify-center
+              rounded-full
+              border
+              border-white/10
+              bg-white/[0.04]
+              text-white
+              transition
+              hover:bg-white/10
+            "
+          >
+            {navMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </button>
+
+          {navMenuOpen && (
+
+            <div
+              className="
+                absolute
+                right-0
+                mt-2
+                w-56
+                overflow-hidden
+                rounded-2xl
+                border
+                border-white/10
+                bg-black/90
+                text-white
+                shadow-2xl
+                shadow-black/40
+                backdrop-blur-xl
+                z-50
+              "
+            >
+
+              <Link
+                href="/"
+                onClick={() => setNavMenuOpen(false)}
+                className="block px-4 py-2.5 text-sm hover:bg-white/10"
+              >
+                Home
+              </Link>
+
+              <Link
+                href="/products"
+                onClick={() => setNavMenuOpen(false)}
+                className="block px-4 py-2.5 text-sm hover:bg-white/10"
+              >
+                Explore Products
+              </Link>
+
+              <Link
+                href="/courses"
+                onClick={() => setNavMenuOpen(false)}
+                className="block px-4 py-2.5 text-sm hover:bg-white/10"
+              >
+                Book a Course
+              </Link>
+
+              <Link
+                href="/contact-us"
+                onClick={() => setNavMenuOpen(false)}
+                className="block px-4 py-2.5 text-sm hover:bg-white/10"
+              >
+                Contact Us
+              </Link>
+
+              <Link
+                href="/cart"
+                onClick={() => setNavMenuOpen(false)}
+                className="block px-4 py-2.5 text-sm hover:bg-white/10"
+              >
+                Cart
+              </Link>
+
+            </div>
+
+          )}
+
+        </div>
+
         {user ? (
 
           <div
@@ -500,53 +609,6 @@ export default function Navbar() {
                   </p>
 
                 </div>
-
-                {/* Mobile Navigation */}
-                {isMobile && (
-                  <div className="border-b">
-
-                    <Link
-                      href="/"
-                      onClick={() => setMenuOpen(false)}
-                      className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
-                    >
-                      Home
-                    </Link>
-
-                    <Link
-                      href="/products"
-                      onClick={() => setMenuOpen(false)}
-                      className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
-                    >
-                      Explore Products
-                    </Link>
-
-                    <Link
-                      href="/courses"
-                      onClick={() => setMenuOpen(false)}
-                      className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
-                    >
-                      Book a Course
-                    </Link>
-
-                    <Link
-                      href="/contact-us"
-                      onClick={() => setMenuOpen(false)}
-                      className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
-                    >
-                      Contact Us
-                    </Link>
-
-                    <Link
-                      href="/cart"
-                      onClick={() => setMenuOpen(false)}
-                      className="block px-4 py-2.5 sm:px-5 sm:py-3 hover:bg-white/10"
-                    >
-                      Cart
-                    </Link>
-
-                  </div>
-                )}
 
                 <Link
                   href="/profile"
