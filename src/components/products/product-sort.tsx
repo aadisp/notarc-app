@@ -7,10 +7,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import type { ProductSortOption } from "@/hooks/use-product-filters";
 
 interface ProductSortProps {
-    value: string;
-    onChange: (value: string) => void;
+    value: ProductSortOption;
+    onChange: (value: ProductSortOption) => void;
 }
 
 export default function ProductSort({
@@ -20,7 +21,7 @@ export default function ProductSort({
     return (
         <Select
             value={value}
-            onValueChange={onChange}
+            onValueChange={(value) => onChange(value as ProductSortOption)}
         >
             <SelectTrigger className="w-full lg:w-64">
                 <SelectValue />

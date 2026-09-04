@@ -80,9 +80,9 @@ export default function ProductDetailsView({
                 "--foreground": "#ffffff",
             } as CSSProperties}
         >
-            <section className="mx-auto max-w-7xl px-6 py-24">
+            <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:py-24">
 
-                <div className="grid gap-12 lg:grid-cols-2 items-start">
+                <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
 
                     <ProductGallery
                         images={product.imageUrls}

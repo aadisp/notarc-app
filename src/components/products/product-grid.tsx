@@ -28,7 +28,7 @@ export default function ProductGrid({
                 </h2>
 
                 <p className="mt-2 max-w-md text-white/50">
-                    We couldn't find any products matching your current search or category.
+                    We couldn't find any products matching your current search or filters.
                 </p>
 
                 <Button
@@ -44,18 +44,11 @@ export default function ProductGrid({
     }
 
     return (
-        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-            {products.map((product, index) => (
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-6 sm:gap-8">
+            {products.map((product) => (
                 <ProductCard
                     key={product.id}
-                    id={product.id}
-                    firestoreId={product.id}
-                    name={product.name}
-                    price={`₹${product.price}`}
-                    category={product.category}
-                    slug={product.slug}
-                    description={product.description}
-                    imageUrls={product.imageUrls}
+                    product={product}
                 />
             ))}
         </div>

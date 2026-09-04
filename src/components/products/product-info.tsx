@@ -33,11 +33,9 @@ export default function ProductInfo({
 }: ProductInfoProps) {
 
     const router = useRouter();
+    const { user } = useAuth();
 
-const { user } = useAuth();
-
-const [quantity, setQuantity] = useState(1);
-
+    const [quantity, setQuantity] = useState(1);
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
     const isLongDescriptionTruncatable =
@@ -56,24 +54,24 @@ const [quantity, setQuantity] = useState(1);
     } = useCartStore();
 
     const cartItem = useMemo(
-        () => items.find(item => item.id === id),
+        () => items.find((item) => item.id === id),
         [items, id]
     );
 
     function decreaseLocalQuantity() {
-        setQuantity(q => Math.max(1, q - 1));
+        setQuantity((q) => Math.max(1, q - 1));
     }
 
     function increaseLocalQuantity() {
-        setQuantity(q => q + 1);
+        setQuantity((q) => q + 1);
     }
 
     function handleAddToCart() {
 
         if (!user) {
-    router.push("/login");
-    return;
-}
+            router.push("/login");
+            return;
+        }
 
         if (cartItem) {
 
@@ -88,12 +86,7 @@ const [quantity, setQuantity] = useState(1);
             return;
         }
 
-        addItem({
-            id,
-            name,
-            slug,
-            price,
-        });
+        addItem({ id, name, slug, price });
 
         for (let i = 1; i < quantity; i++) {
             increaseQuantity(id);
@@ -108,19 +101,18 @@ const [quantity, setQuantity] = useState(1);
 
     function handleBuyNow() {
 
-    if (!user) {
-        router.push("/login");
-        return;
+        if (!user) {
+            router.push("/login");
+            return;
+        }
+
+        // Only add the product if it isn't already in the cart.
+        if (!cartItem) {
+            handleAddToCart();
+        }
+
+        router.push("/checkout");
     }
-
-    // Only add the product if it isn't already in the cart.
-    if (!cartItem) {
-        handleAddToCart();
-    }
-
-    router.push("/checkout");
-
-}
 
     return (
         <div>
@@ -140,15 +132,15 @@ const [quantity, setQuantity] = useState(1);
                 {category}
             </span>
 
-            <h1 className="mt-6 text-5xl font-extrabold tracking-tight">
+            <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:mt-6 sm:text-4xl lg:text-5xl">
                 {name}
             </h1>
 
-            <p className="mt-6 text-4xl font-bold text-emerald-400">
-                ₹{price}
+            <p className="mt-4 text-3xl font-bold text-emerald-400 sm:mt-6 sm:text-4xl">
+                ₹{price.toLocaleString("en-IN")}
             </p>
 
-            <div className="mt-8 rounded-2xl border bg-white/5 p-6">
+            <div className="mt-6 rounded-2xl border bg-white/5 p-4 sm:mt-8 sm:p-6">
 
                 <h2 className="text-lg font-semibold">
                     Description
@@ -184,7 +176,7 @@ const [quantity, setQuantity] = useState(1);
 
             </div>
 
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
 
                 <QuantitySelector
                     quantity={cartItem ? cartItem.quantity : quantity}

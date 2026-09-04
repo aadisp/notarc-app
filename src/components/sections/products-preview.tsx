@@ -125,16 +125,7 @@ export default function ProductsPreview() {
                   className="w-[88%] shrink-0 snap-center"
                 >
 
-                  <ProductCard
-                    id={product.id}
-                    firestoreId={product.id}
-                    name={product.name}
-                    price={`₹${product.price}`}
-                    category={product.category}
-                    slug={product.slug}
-                    description={product.description}
-                    imageUrls={product.imageUrls}
-                  />
+                  <ProductCard product={product} />
 
                 </div>
 
@@ -150,17 +141,7 @@ export default function ProductsPreview() {
 
             {products.map((product) => (
 
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                firestoreId={product.id}
-                name={product.name}
-                price={`₹${product.price}`}
-                category={product.category}
-                slug={product.slug}
-                description={product.description}
-                imageUrls={product.imageUrls}
-              />
+              <ProductCard key={product.id} product={product} />
 
             ))}
 

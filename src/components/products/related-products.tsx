@@ -37,25 +37,18 @@ export default function RelatedProducts({
     }
 
     return (
-        <section className="mt-24">
+        <section className="mt-16 sm:mt-24">
 
             <h2 className="mb-8 text-3xl font-bold">
                 Related Products
             </h2>
 
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6">
 
                 {relatedProducts.map((product) => (
                     <ProductCard
                         key={product.id}
-                        id={product.id}
-                        firestoreId={product.id}
-                        name={product.name}
-                        slug={product.slug}
-                        category={product.category}
-                        description={product.description}
-                        price={`₹${product.price}`}
-                        imageUrls={product.imageUrls}
+                        product={product}
                     />
                 ))}
 

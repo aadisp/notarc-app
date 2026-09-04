@@ -12,7 +12,7 @@ export default function ProductActions({
     onBuyNow,
 }: ProductActionsProps) {
     return (
-        <div className="mt-8 flex flex-col gap-4">
+        <div className="mt-6 flex flex-col gap-4 sm:mt-8">
 
             <Button
                 className="h-12 text-base font-semibold"

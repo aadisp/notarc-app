@@ -6,42 +6,31 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { PRODUCT_CATEGORIES } from "./product-categories";
+import type { UseProductFiltersResult } from "@/hooks/use-product-filters";
 
 interface ProductFilterPanelProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-
-    selectedCategories: Set<string>;
-    onToggleCategory: (category: string) => void;
-
-    priceRange: [number, number];
-    onPriceRangeChange: (range: [number, number]) => void;
-    priceMin: number;
-    priceMax: number;
-
-    onClearAll: () => void;
-
-    trigger: React.ReactNode;
+    catalog: UseProductFiltersResult;
 }
 
 export default function ProductFilterPanel({
-    open,
-    onOpenChange,
-    selectedCategories,
-    onToggleCategory,
-    priceRange,
-    onPriceRangeChange,
-    priceMin,
-    priceMax,
-    onClearAll,
-    trigger,
+    catalog,
 }: ProductFilterPanelProps) {
-    return (
-        <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
 
-            <DialogPrimitive.Trigger asChild>
-                {trigger}
-            </DialogPrimitive.Trigger>
+    const {
+        isFilterPanelOpen,
+        setIsFilterPanelOpen,
+        selectedCategories,
+        toggleCategory,
+        priceRange,
+        setPriceRange,
+        priceBounds,
+        clearAllFilters,
+    } = catalog;
+
+    const [priceMin, priceMax] = priceBounds;
+
+    return (
+        <DialogPrimitive.Root open={isFilterPanelOpen} onOpenChange={setIsFilterPanelOpen}>
 
             <DialogPrimitive.Portal>
 
@@ -105,7 +94,7 @@ export default function ProductFilterPanel({
                             >
                                 <Checkbox
                                     checked={selectedCategories.has(category)}
-                                    onCheckedChange={() => onToggleCategory(category)}
+                                    onCheckedChange={() => toggleCategory(category)}
                                 />
                                 <span className="text-sm text-white/90">
                                     {category}
@@ -132,7 +121,7 @@ export default function ProductFilterPanel({
                             step={Math.max(1, Math.round((priceMax - priceMin) / 100))}
                             value={priceRange}
                             onValueChange={(value) =>
-                                onPriceRangeChange(value as [number, number])
+                                setPriceRange(value as [number, number])
                             }
                         />
 
@@ -145,7 +134,7 @@ export default function ProductFilterPanel({
                     <div className="mt-auto pt-8">
                         <Button
                             variant="outline"
-                            onClick={onClearAll}
+                            onClick={clearAllFilters}
                             className="w-full border-white/25 bg-white/5 text-white backdrop-blur-md hover:bg-white hover:text-black"
                         >
                             Clear All Filters
