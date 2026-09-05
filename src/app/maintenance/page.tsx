@@ -3,6 +3,10 @@ import { Hourglass } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Under Maintenance",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function MaintenancePage() {
