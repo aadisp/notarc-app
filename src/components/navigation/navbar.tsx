@@ -30,7 +30,7 @@ const NAV_LINKS = [
   { href: "/courses", label: "Book a Course" },
   { href: "/contact-us", label: "Contact Us" },
   { href: "/cart", label: "Cart" },
-  { href: "/testimonials", label: "Reviews" },
+  { href: "#testimonials", label: "Reviews" },
 ];
 
 export default function Navbar() {
