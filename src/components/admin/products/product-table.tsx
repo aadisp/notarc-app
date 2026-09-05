@@ -179,6 +179,10 @@ export default function ProductTable({
                 Price
               </th>
 
+              <th className="px-6 py-4 text-left">
+                Stock
+              </th>
+
               <th className="px-6 py-4 text-right">
                 Actions
               </th>
@@ -194,7 +198,7 @@ export default function ProductTable({
               <tr>
 
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="px-6 py-16"
                 >
 

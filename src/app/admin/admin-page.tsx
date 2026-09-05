@@ -48,6 +48,9 @@ export default function AdminPage() {
     setLongDescription,
   ] = useState("");
 
+  const [inStock, setInStock] =
+    useState(true);
+
   const [courseName, setCourseName] =
   useState("");
 
@@ -137,9 +140,13 @@ const [addingCourse, setAddingCourse] =
 
       publicIds,
 
+      inStock,
+
     });
 
     setLongDescription("");
+
+    setInStock(true);
 
     toast.success("Product added successfully!");
 
@@ -392,6 +399,8 @@ finally {
           setDescription={setDescription}
           longDescription={longDescription}
           setLongDescription={setLongDescription}
+          inStock={inStock}
+          setInStock={setInStock}
           productFiles={productFiles}
           setProductFiles={setProductFiles}
           onSubmit={handleAddProduct}

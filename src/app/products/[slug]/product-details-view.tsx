@@ -97,6 +97,7 @@ export default function ProductDetailsView({
                         description={product.description}
                         longDescription={product.longDescription}
                         price={product.price}
+                        inStock={product.inStock}
                     />
 
                 </div>

@@ -11,4 +11,8 @@ export interface Product {
 
   imageUrls: string[];
   publicIds?: string[];
+
+  // Absent/undefined is treated as in stock, so existing products
+  // created before this field existed keep working without a migration.
+  inStock?: boolean;
 }

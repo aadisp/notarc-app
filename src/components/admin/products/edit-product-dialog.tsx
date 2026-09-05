@@ -59,6 +59,9 @@ export default function EditProductDialog({
     setLongDescription,
   ] = useState(product.longDescription);
 
+  const [inStock, setInStock] =
+    useState(product.inStock ?? true);
+
   const [newImages, setNewImages] =
     useState<File[]>([]);
 
@@ -77,6 +80,7 @@ export default function EditProductDialog({
     setPrice(product.price);
     setDescription(product.description);
     setLongDescription(product.longDescription);
+    setInStock(product.inStock ?? true);
     setNewImages([]);
     setExistingImages(product.imageUrls);
     setExistingPublicIds(product.publicIds ?? []);
@@ -118,6 +122,7 @@ async function handleSave() {
         longDescription,
         imageUrls,
         publicIds,
+        inStock,
       }
     );
 
@@ -180,7 +185,10 @@ async function handleSave() {
             setDescription={setDescription}
             longDescription={longDescription}
             setLongDescription={setLongDescription}
-            
+
+            inStock={inStock}
+            setInStock={setInStock}
+
             productFiles={newImages}
             setProductFiles={setNewImages}
 

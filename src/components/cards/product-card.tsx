@@ -15,7 +15,7 @@ import ProductAdminControls from "./product-admin-controls";
 
 type ProductCardData = Pick<
   Product,
-  "id" | "name" | "slug" | "category" | "price" | "description" | "imageUrls"
+  "id" | "name" | "slug" | "category" | "price" | "description" | "imageUrls" | "inStock"
 >;
 
 interface ProductCardProps {
@@ -24,6 +24,8 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { id, name, slug, category, description, price, imageUrls } = product;
+
+  const isOutOfStock = product.inStock === false;
 
   const { items, addItem, increaseQuantity, decreaseQuantity } =
     useCartStore();
@@ -69,6 +71,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   }, []);
 
   function handleAddToCart() {
+    if (isOutOfStock) return;
+
     if (!user) {
       router.push("/login");
       return;
@@ -107,9 +111,17 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-white/[0.06] to-white/[0.02]">
 
+          {isOutOfStock && (
+            <span className="absolute left-2 top-2 z-[1] rounded-full bg-red-500/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
+              Out of Stock
+            </span>
+          )}
+
           {imageUrls?.length ? (
             <div
-              className="flex h-full w-full transition-transform duration-500 ease-in-out"
+              className={`flex h-full w-full transition-transform duration-500 ease-in-out ${
+                isOutOfStock ? "opacity-50 grayscale" : ""
+              }`}
               style={{
                 transform: `translateX(-${activeImageIndex * 100}%)`,
               }}
@@ -171,7 +183,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           ₹{price.toLocaleString("en-IN")}
         </p>
 
-        {cartItem ? (
+        {isOutOfStock ? (
+          <Button
+            disabled
+            className="h-8 w-full cursor-not-allowed rounded-full bg-white/10 text-xs font-semibold text-white/40"
+          >
+            Out of Stock
+          </Button>
+        ) : cartItem ? (
           <div className="flex h-8 items-center justify-between rounded-full border border-white/15 bg-white/5">
 
             <Button

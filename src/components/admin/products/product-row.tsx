@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import {
   deleteDoc,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 
 import { db } from "@/firebase/firebase";
@@ -35,7 +36,42 @@ export default function ProductRow({
   const [deleteOpen, setDeleteOpen] =
     useState(false);
 
+  const isInStock = product.inStock ?? true;
 
+  const [updatingStock, setUpdatingStock] =
+    useState(false);
+
+  async function handleToggleStock() {
+
+    setUpdatingStock(true);
+
+    try {
+
+      await updateDoc(
+        doc(db, "products", product.id),
+        {
+          inStock: !isInStock,
+        }
+      );
+
+      toast.success(
+        isInStock
+          ? "Marked as out of stock."
+          : "Marked as in stock."
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error("Failed to update stock status.");
+
+    } finally {
+
+      setUpdatingStock(false);
+
+    }
+  }
 
   async function handleDelete() {
 
@@ -124,6 +160,33 @@ export default function ProductRow({
 
       <td className="px-6 py-4">
         ₹{product.price}
+      </td>
+
+      <td className="px-6 py-4">
+
+        <button
+          onClick={handleToggleStock}
+          disabled={updatingStock}
+          className={`
+            rounded-full
+            border
+            px-3
+            py-1.5
+            text-xs
+            font-semibold
+            transition
+            disabled:opacity-50
+
+            ${
+              isInStock
+                ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                : "border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
+            }
+          `}
+        >
+          {isInStock ? "In Stock" : "Out of Stock"}
+        </button>
+
       </td>
 
       <td className="px-6 py-4">

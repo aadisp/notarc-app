@@ -20,6 +20,7 @@ interface ProductInfoProps {
     longDescription: string;
     price: number;
     slug: string;
+    inStock?: boolean;
 }
 
 export default function ProductInfo({
@@ -30,7 +31,10 @@ export default function ProductInfo({
     longDescription,
     price,
     slug,
+    inStock = true,
 }: ProductInfoProps) {
+
+    const isOutOfStock = !inStock;
 
     const router = useRouter();
     const { user } = useAuth();
@@ -68,6 +72,8 @@ export default function ProductInfo({
 
     function handleAddToCart() {
 
+        if (isOutOfStock) return;
+
         if (!user) {
             router.push("/login");
             return;
@@ -101,6 +107,8 @@ export default function ProductInfo({
 
     function handleBuyNow() {
 
+        if (isOutOfStock) return;
+
         if (!user) {
             router.push("/login");
             return;
@@ -117,20 +125,41 @@ export default function ProductInfo({
     return (
         <div>
 
-            <span
-                className="
-                    inline-flex
-                    rounded-full
-                    bg-emerald-500/10
-                    px-3
-                    py-1
-                    text-sm
-                    font-medium
-                    text-emerald-300
-                "
-            >
-                {category}
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+
+                <span
+                    className="
+                        inline-flex
+                        rounded-full
+                        bg-emerald-500/10
+                        px-3
+                        py-1
+                        text-sm
+                        font-medium
+                        text-emerald-300
+                    "
+                >
+                    {category}
+                </span>
+
+                {isOutOfStock && (
+                    <span
+                        className="
+                            inline-flex
+                            rounded-full
+                            bg-red-500/10
+                            px-3
+                            py-1
+                            text-sm
+                            font-medium
+                            text-red-400
+                        "
+                    >
+                        Out of Stock
+                    </span>
+                )}
+
+            </div>
 
             <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:mt-6 sm:text-4xl lg:text-5xl">
                 {name}
@@ -176,27 +205,30 @@ export default function ProductInfo({
 
             </div>
 
-            <div className="mt-6 sm:mt-8">
+            {!isOutOfStock && (
+                <div className="mt-6 sm:mt-8">
 
-                <QuantitySelector
-                    quantity={cartItem ? cartItem.quantity : quantity}
-                    onIncrease={
-                        cartItem
-                            ? () => increaseQuantity(id)
-                            : increaseLocalQuantity
-                    }
-                    onDecrease={
-                        cartItem
-                            ? () => decreaseQuantity(id)
-                            : decreaseLocalQuantity
-                    }
-                />
+                    <QuantitySelector
+                        quantity={cartItem ? cartItem.quantity : quantity}
+                        onIncrease={
+                            cartItem
+                                ? () => increaseQuantity(id)
+                                : increaseLocalQuantity
+                        }
+                        onDecrease={
+                            cartItem
+                                ? () => decreaseQuantity(id)
+                                : decreaseLocalQuantity
+                        }
+                    />
 
-            </div>
+                </div>
+            )}
 
             <ProductActions
                 onAddToCart={handleAddToCart}
                 onBuyNow={handleBuyNow}
+                disabled={isOutOfStock}
             />
 
         </div>
