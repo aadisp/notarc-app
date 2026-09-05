@@ -30,7 +30,7 @@ export default function Home() {
             <ProductsPreview />
             <GallerySection />
             <ClientsSection />
-            {/* <Testimonials /> */}
+            <Testimonials />
           </div>
 
         </div>
