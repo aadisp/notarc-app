@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Star } from "lucide-react";
 import { toast } from "sonner";
 import {
+  deleteDoc,
   doc,
   getDoc,
   serverTimestamp,
@@ -27,6 +28,7 @@ export default function LeaveAReviewPage() {
   const [text, setText] = useState("");
   const [loadingExisting, setLoadingExisting] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   // Radix components (Select, Dialog, etc.) portal their popup content to
@@ -136,6 +138,40 @@ export default function LeaveAReviewPage() {
     }
   }
 
+  async function handleDeleteReview() {
+
+    if (!auth.currentUser) return;
+
+    const confirmed = window.confirm(
+      "Delete your review? This can't be undone."
+    );
+
+    if (!confirmed) return;
+
+    setDeleting(true);
+
+    try {
+
+      await deleteDoc(
+        doc(db, "reviews", auth.currentUser.uid)
+      );
+
+      toast.success("Your review has been deleted.");
+
+      router.push("/");
+
+    } catch (error) {
+
+      console.error(error);
+      toast.error("Something went wrong. Please try again.");
+
+    } finally {
+
+      setDeleting(false);
+
+    }
+  }
+
   if (authLoading || loadingExisting) {
     return (
       <SiteLayout>
@@ -231,7 +267,7 @@ export default function LeaveAReviewPage() {
             <Button
               className="mt-6 h-12 w-full text-base font-semibold"
               onClick={handleSubmit}
-              disabled={submitting}
+              disabled={submitting || deleting}
             >
               {submitting
                 ? "Submitting..."
@@ -239,6 +275,17 @@ export default function LeaveAReviewPage() {
                 ? "Update Review"
                 : "Submit Review"}
             </Button>
+
+            {isEditing && (
+              <Button
+                variant="outline"
+                className="mt-3 h-12 w-full border-red-500/30 text-base font-semibold text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                onClick={handleDeleteReview}
+                disabled={submitting || deleting}
+              >
+                {deleting ? "Deleting..." : "Delete My Review"}
+              </Button>
+            )}
 
           </div>
 

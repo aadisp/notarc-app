@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import {
   useEffect,
   useState,
+  type MouseEvent,
 } from "react";
 import {
   doc,
@@ -28,9 +29,9 @@ const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Explore Products" },
   { href: "/courses", label: "Book a Course" },
+  { href: "/#testimonials", label: "Reviews" },
   { href: "/contact-us", label: "Contact Us" },
   { href: "/cart", label: "Cart" },
-  { href: "#testimonials", label: "Reviews" },
 ];
 
 export default function Navbar() {
@@ -154,6 +155,34 @@ export default function Navbar() {
 
   }
 
+  // For links like "/#testimonials": if we're already on the target
+  // page, smooth-scroll to the section instead of doing a full
+  // navigation. If we're on a different page, let the Link navigate
+  // normally — Next.js's router scrolls to the hash once the target
+  // page has loaded.
+  function handleNavLinkClick(
+    event: MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) {
+
+    const [path, hash] = href.split("#");
+
+    if (!hash) return;
+
+    const targetPath = path || "/";
+
+    if (window.location.pathname === targetPath) {
+
+      event.preventDefault();
+
+      document
+        .getElementById(hash)
+        ?.scrollIntoView({ behavior: "smooth" });
+
+    }
+
+  }
+
   return (
 
     <header
@@ -254,6 +283,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={(e) => handleNavLinkClick(e, link.href)}
               className="
                 rounded-full
                 px-4
@@ -493,7 +523,10 @@ export default function Navbar() {
                       <Link
                         key={link.href}
                         href={link.href}
-                        onClick={() => setSidebarOpen(false)}
+                        onClick={(e) => {
+                          handleNavLinkClick(e, link.href);
+                          setSidebarOpen(false);
+                        }}
                         className="rounded-lg px-2 py-2.5 text-sm hover:bg-white/10"
                       >
                         {link.label}
