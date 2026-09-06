@@ -310,6 +310,42 @@ finally {
 
   }, [role]);
 
+  const [seedingReviews, setSeedingReviews] =
+    useState(false);
+
+  async function handleSeedReviews() {
+
+    setSeedingReviews(true);
+
+    try {
+
+      const response = await fetch(
+        "/api/admin/seed-reviews",
+        { method: "POST" }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error ?? "Failed to seed reviews.");
+      }
+
+      toast.success(
+        `Added ${data.count} reviews. You can remove this button now.`
+      );
+
+    } catch (error) {
+
+      console.error(error);
+      toast.error("Failed to seed reviews.");
+
+    } finally {
+
+      setSeedingReviews(false);
+
+    }
+  }
+
   if (role !== "admin") {
     return (
       <main className="p-10">
@@ -335,6 +371,16 @@ finally {
         <p className="mt-3 text-slate-500">
           Manage orders, products and courses from one place.
         </p>
+
+        <button
+          onClick={handleSeedReviews}
+          disabled={seedingReviews}
+          className="mt-4 rounded-lg border border-dashed border-slate-300 px-4 py-2 text-sm font-medium text-slate-500 transition hover:border-slate-400 hover:text-slate-700 disabled:opacity-50"
+        >
+          {seedingReviews
+            ? "Adding reviews..."
+            : "One-time: Seed curated Google reviews"}
+        </button>
 
       </div>
 
