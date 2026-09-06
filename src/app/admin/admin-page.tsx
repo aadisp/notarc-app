@@ -372,16 +372,6 @@ finally {
           Manage orders, products and courses from one place.
         </p>
 
-        <button
-          onClick={handleSeedReviews}
-          disabled={seedingReviews}
-          className="mt-4 rounded-lg border border-dashed border-slate-300 px-4 py-2 text-sm font-medium text-slate-500 transition hover:border-slate-400 hover:text-slate-700 disabled:opacity-50"
-        >
-          {seedingReviews
-            ? "Adding reviews..."
-            : "One-time: Seed curated Google reviews"}
-        </button>
-
       </div>
 
       <div
