@@ -11,6 +11,7 @@ const links = [
   },
   { name: "Orders", href: "/admin/orders" },
   { name: "Enrollments", href: "/admin/enrollments" },
+  { name: "EDP Applications", href: "/admin/edp" },
   { name: "Users", href: "/admin/users" },
   { name: "Messages", href: "/admin/messages" },
 ];
