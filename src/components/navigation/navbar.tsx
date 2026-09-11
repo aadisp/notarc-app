@@ -424,7 +424,6 @@ export default function Navbar() {
                   aria-label="Open menu"
                   className="
                     hidden
-                    md:flex
                     h-10
                     w-10
                     items-center
