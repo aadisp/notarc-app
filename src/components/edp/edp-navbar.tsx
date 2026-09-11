@@ -45,7 +45,18 @@ export default function EdpNavbar() {
         "
       >
 
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/edp" 
+        onClick={(e) => {
+            if (window.location.pathname === "/edp") {
+              e.preventDefault();
+
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            }
+          }}
+          className="flex items-center gap-2">
 
           <div className="relative h-11 w-11 shrink-0">
             <Image
