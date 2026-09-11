@@ -313,7 +313,7 @@ export default function Navbar() {
 
             {!user && (
               <DialogPrimitive.Trigger asChild>
-                <button
+                {/* <button
                   aria-label="Open menu"
                   className="
                     flex
@@ -331,7 +331,7 @@ export default function Navbar() {
                   "
                 >
                   <Menu className="h-5 w-5" />
-                </button>
+                </button> */}
               </DialogPrimitive.Trigger>
             )}
 
@@ -442,7 +442,7 @@ export default function Navbar() {
 
           </div>
 
-          {/* <DialogPrimitive.Portal> */}
+          <DialogPrimitive.Portal>
 
             <DialogPrimitive.Overlay
               className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0"
@@ -851,7 +851,7 @@ export default function Navbar() {
 
             </DialogPrimitive.Content>
 
-          {/* </DialogPrimitive.Portal> */}
+          </DialogPrimitive.Portal>
 
         </DialogPrimitive.Root>
 
