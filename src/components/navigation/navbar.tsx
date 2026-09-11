@@ -29,8 +29,8 @@ const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Explore Products" },
   { href: "/courses", label: "Book a Course" },
-  { href: "/contact-us", label: "Contact Us" },
   { href: "/edp", label: "EDP" },
+  { href: "/contact-us", label: "Contact Us" },
   { href: "/cart", label: "Cart" },
   { href: "/#testimonials", label: "Reviews" },
 ];

@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
-import EdpPage from "./edp-page";
+import EdpHero from "@/components/edp/edp-hero";
+import EdpAbout from "@/components/edp/edp-about";
+import EdpExamForm from "@/components/edp/edp-exam-form";
 
 export const metadata: Metadata = {
-  title: "EDP",
+  title: "Ekalavya Drone Program — Notarc",
 };
 
-export default function Page() {
-  return <EdpPage />;
+export default function EdpPage() {
+  return (
+    <main>
+      <EdpHero />
+      <EdpAbout />
+      <EdpExamForm />
+    </main>
+  );
 }
