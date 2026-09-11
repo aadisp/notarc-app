@@ -377,7 +377,6 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   className="
-                    p-1
                     rounded-full
                     px-4
                     py-2
