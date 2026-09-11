@@ -30,6 +30,7 @@ const NAV_LINKS = [
   { href: "/products", label: "Explore Products" },
   { href: "/courses", label: "Book a Course" },
   { href: "/contact-us", label: "Contact Us" },
+  { href: "/edp", label: "EDP" },
   { href: "/cart", label: "Cart" },
   { href: "/#testimonials", label: "Reviews" },
 ];
