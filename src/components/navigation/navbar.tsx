@@ -7,6 +7,7 @@ import { auth, db } from "@/firebase/firebase";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import {ChevronDown } from "lucide-react";
 import {
   useEffect,
   useState,
@@ -386,6 +387,7 @@ export default function Navbar() {
                     {username ||
                       user.email}
                   </span>
+                  <ChevronDown className="h-4 w-4 shrink-0 text-white/50 md:hidden" />
 
                 </button>
               </DialogPrimitive.Trigger>

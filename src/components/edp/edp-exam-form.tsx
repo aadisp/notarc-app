@@ -10,6 +10,7 @@ const SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8];
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^\d{10}$/;
+const USN_PATTERN = /^\d[A-Za-z]{2}\d{2}[A-Za-z]{2}\d{3}$/;
 
 function toTitleCase(value: string): string {
     return value.replace(
@@ -58,7 +59,7 @@ export default function EdpExamForm() {
     const isValid = useMemo(() => {
         return (
             form.name.trim().length > 0 &&
-            form.usn.trim().length > 0 &&
+            USN_PATTERN.test(form.usn.trim()) &&
             form.collegeName.trim().length > 0 &&
             form.branch.trim().length > 0 &&
             form.section.trim().length > 0 &&
@@ -202,6 +203,11 @@ export default function EdpExamForm() {
                         placeholder="1XX21XX000"
                         className="h-11 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 text-sm uppercase text-white placeholder:text-white/30 placeholder:normal-case focus:border-amber-400/50 focus:outline-none"
                     />
+                    {form.usn.length > 0 && !USN_PATTERN.test(form.usn.trim()) && (
+                        <p className="mt-1 text-xs text-red-400">
+                            Enter a valid USN (e.g. 1MS21CS001).
+                        </p>
+                    )}
                 </div>
 
                 <div>
