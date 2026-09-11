@@ -374,9 +374,10 @@ export default function Navbar() {
 
               <div className="flex items-center gap-2">
 
-                {/* <Link
+                <Link
                   href="/login"
                   className="
+                    hidden
                     rounded-full
                     px-4
                     py-2
@@ -412,7 +413,7 @@ export default function Navbar() {
                   "
                 >
                   Signup
-                </Link> */}
+                </Link>
 
               </div>
 
