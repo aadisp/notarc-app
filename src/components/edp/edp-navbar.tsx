@@ -45,7 +45,7 @@ export default function EdpNavbar() {
         "
       >
 
-        <Link href="#" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
 
           <div className="relative h-11 w-11 shrink-0">
             <Image
