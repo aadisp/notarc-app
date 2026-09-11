@@ -372,13 +372,11 @@ export default function Navbar() {
 
             ) : (
 
-              <div className="flex items-center gap-2">
+              <div className="hidden md: flex items-center gap-2">
 
                 <Link
                   href="/login"
                   className="
-                    hidden
-                    md: flex
                     rounded-full
                     px-4
                     py-2
