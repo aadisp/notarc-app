@@ -311,29 +311,7 @@ export default function Navbar() {
 
           <div className="flex items-center gap-2">
 
-            {!user && (
-              <DialogPrimitive.Trigger asChild>
-                {/* <button
-                  aria-label="Open menu"
-                  className="
-                    flex
-                    h-10
-                    w-10
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-white/10
-                    bg-white/[0.08]
-                    text-white
-                    transition
-                    hover:bg-white/[0.14]
-                  "
-                >
-                  <Menu className="h-5 w-5" />
-                </button> */}
-              </DialogPrimitive.Trigger>
-            )}
+            
 
             {user ? (
 
@@ -438,6 +416,30 @@ export default function Navbar() {
 
               </div>
 
+            )}
+
+            {!user && (
+              <DialogPrimitive.Trigger asChild>
+                <button
+                  aria-label="Open menu"
+                  className="
+                    flex
+                    h-10
+                    w-10
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-white/10
+                    bg-white/[0.08]
+                    text-white
+                    transition
+                    hover:bg-white/[0.14]
+                  "
+                >
+                  <Menu className="h-5 w-5" />
+                </button>
+              </DialogPrimitive.Trigger>
             )}
 
           </div>
