@@ -1,16 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "firebase/auth";
-import { auth } from "@/firebase/firebase";
+import { doc, onSnapshot } from "firebase/firestore";
+import { auth, db } from "@/firebase/firebase";
+import { useAuth } from "@/hooks/use-auth";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { ChevronDown, LogOut } from "lucide-react";
 
 export default function EdpNavbar() {
 
+  const { user } = useAuth();
+
   const [menuOpen, setMenuOpen] = useState(false);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+
+    if (!user) return;
+
+    const unsubscribe = onSnapshot(
+      doc(db, "users", user.uid),
+      (userDoc) => {
+        if (userDoc.exists()) {
+          setUsername(userDoc.data().username || "");
+        }
+      }
+    );
+
+    return unsubscribe;
+
+  }, [user]);
 
   async function handleLogout() {
     await signOut(auth);
@@ -96,8 +118,10 @@ export default function EdpNavbar() {
                 hover:bg-white/10
               "
             >
-              Account
-              <ChevronDown className="h-4 w-4" />
+              <span className="max-w-32 truncate">
+                {username || user?.email || "Account"}
+              </span>
+              <ChevronDown className="h-4 w-4 shrink-0" />
             </button>
           </DialogPrimitive.Trigger>
 
@@ -126,6 +150,12 @@ export default function EdpNavbar() {
               <DialogPrimitive.Title className="sr-only">
                 Account menu
               </DialogPrimitive.Title>
+
+              {user?.email && (
+                <p className="truncate border-b border-white/10 px-4 py-3 text-xs text-gray-400">
+                  {user.email}
+                </p>
+              )}
 
               <Link
                 href="/"
