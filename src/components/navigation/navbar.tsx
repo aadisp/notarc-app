@@ -372,7 +372,7 @@ export default function Navbar() {
 
             ) : (
 
-              <div className="hidden md:flex items-center gap-2">
+              <div className="flex items-center gap-2">
 
                 <Link
                   href="/login"
@@ -423,7 +423,8 @@ export default function Navbar() {
                 <button
                   aria-label="Open menu"
                   className="
-                    flex
+                    hidden
+                    md:flex
                     h-10
                     w-10
                     items-center
