@@ -67,7 +67,7 @@ export default function EdpPage() {
           </h1>
 
           <p className="mt-3 text-white/60">
-            This page is under construction. Let&apos;s build it out step by step.
+            This page is under construction.
           </p>
 
         </section>
