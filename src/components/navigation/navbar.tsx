@@ -372,7 +372,7 @@ export default function Navbar() {
 
             ) : (
 
-              <div className="hidden md: flex items-center gap-2">
+              <div className="hidden md:flex items-center gap-2">
 
                 <Link
                   href="/login"
