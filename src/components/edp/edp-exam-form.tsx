@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { auth } from "@/firebase/firebase";
@@ -47,6 +47,60 @@ export default function EdpExamForm() {
     const [form, setForm] = useState<FormState>(EMPTY_FORM);
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [checkingStatus, setCheckingStatus] = useState(true);
+
+    useEffect(() => {
+
+        let cancelled = false;
+
+        async function checkExistingApplication() {
+
+            const user = auth.currentUser;
+
+            // The EDP layout already gates this whole page behind login,
+            // so a missing user here would be unexpected — but fail
+            // closed (show the form) rather than get stuck loading.
+            if (!user) {
+                setCheckingStatus(false);
+                return;
+            }
+
+            try {
+
+                const idToken = await user.getIdToken();
+
+                const response = await fetch(
+                    "/api/edp/application-status",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ idToken }),
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!cancelled && response.ok && data.hasApplied) {
+                    setSubmitted(true);
+                }
+
+            } catch (error) {
+                console.error(error);
+            } finally {
+                if (!cancelled) {
+                    setCheckingStatus(false);
+                }
+            }
+
+        }
+
+        checkExistingApplication();
+
+        return () => {
+            cancelled = true;
+        };
+
+    }, []);
 
     function updateField<K extends keyof FormState>(
         key: K,
@@ -140,6 +194,17 @@ export default function EdpExamForm() {
 
     }
 
+    if (checkingStatus) {
+        return (
+            <section
+                id="edp-exam-form"
+                className="mx-auto max-w-xl scroll-mt-16 px-4 py-16 sm:px-6 sm:py-24"
+            >
+                <div className="h-64 animate-pulse rounded-2xl border border-white/10 bg-white/[0.03]" />
+            </section>
+        );
+    }
+
     if (submitted) {
         return (
             <section
@@ -161,12 +226,9 @@ export default function EdpExamForm() {
                         exam soon.
                     </p>
 
-                    <button
-                        onClick={() => setSubmitted(false)}
-                        className="mt-6 rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-white"
-                    >
-                        Submit another application
-                    </button>
+                    <p className="mt-2 text-xs text-white/40">
+                        Only one application is allowed per account.
+                    </p>
 
                 </div>
 
