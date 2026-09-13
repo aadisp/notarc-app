@@ -1,18 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import {
-    CheckCircle2,
-    Hourglass,
-    Loader2,
-    PlayCircle,
-    XCircle,
-} from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { auth } from "@/firebase/firebase";
-import { ExamStatePayload, ExamStatus } from "@/types/edp-exam";
-import EdpExamInstructionsDialog from "@/components/edp/edp-exam-instructions-dialog";
 
 const SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -51,30 +42,18 @@ const EMPTY_FORM: FormState = {
     email: "",
 };
 
-// What this component renders after the initial state check resolves.
-// "form" is the only view where the applicant hasn't applied yet —
-// every other view replaces the form permanently, same as before.
-type View =
-    | { kind: "checking" }
-    | { kind: "form" }
-    | { kind: "exam-gate"; examStatus: Extract<ExamStatus, "not_started" | "in_progress"> }
-    | { kind: "awaiting-result" }
-    | { kind: "decided"; decision: "selected" | "rejected" };
-
 export default function EdpExamForm() {
-
-    const router = useRouter();
 
     const [form, setForm] = useState<FormState>(EMPTY_FORM);
     const [submitting, setSubmitting] = useState(false);
-    const [view, setView] = useState<View>({ kind: "checking" });
-    const [instructionsOpen, setInstructionsOpen] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+    const [checkingStatus, setCheckingStatus] = useState(true);
 
     useEffect(() => {
 
         let cancelled = false;
 
-        async function loadExamState() {
+        async function checkExistingApplication() {
 
             const user = auth.currentUser;
 
@@ -82,7 +61,7 @@ export default function EdpExamForm() {
             // so a missing user here would be unexpected — but fail
             // closed (show the form) rather than get stuck loading.
             if (!user) {
-                if (!cancelled) setView({ kind: "form" });
+                setCheckingStatus(false);
                 return;
             }
 
@@ -90,55 +69,32 @@ export default function EdpExamForm() {
 
                 const idToken = await user.getIdToken();
 
-                const response = await fetch("/api/edp/exam/state", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ idToken }),
-                });
-
-                const data = (await response.json()) as
-                    | ExamStatePayload
-                    | { error: string };
-
-                if (cancelled) return;
-
-                if (!response.ok || "error" in data) {
-                    setView({ kind: "form" });
-                    return;
-                }
-
-                if (!data.hasApplied) {
-                    setView({ kind: "form" });
-                    return;
-                }
-
-                if (data.examStatus === "submitted") {
-                    if (data.decision === "selected") {
-                        setView({ kind: "decided", decision: "selected" });
-                    } else if (data.decision === "rejected") {
-                        setView({ kind: "decided", decision: "rejected" });
-                    } else {
-                        setView({ kind: "awaiting-result" });
+                const response = await fetch(
+                    "/api/edp/application-status",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ idToken }),
                     }
-                    return;
-                }
+                );
 
-                setView({
-                    kind: "exam-gate",
-                    examStatus:
-                        data.examStatus === "in_progress"
-                            ? "in_progress"
-                            : "not_started",
-                });
+                const data = await response.json();
+
+                if (!cancelled && response.ok && data.hasApplied) {
+                    setSubmitted(true);
+                }
 
             } catch (error) {
                 console.error(error);
-                if (!cancelled) setView({ kind: "form" });
+            } finally {
+                if (!cancelled) {
+                    setCheckingStatus(false);
+                }
             }
 
         }
 
-        loadExamState();
+        checkExistingApplication();
 
         return () => {
             cancelled = true;
@@ -219,7 +175,7 @@ export default function EdpExamForm() {
                 return;
             }
 
-            setView({ kind: "exam-gate", examStatus: "not_started" });
+            setSubmitted(true);
             setForm(EMPTY_FORM);
 
             toast.success("Your application has been submitted!");
@@ -238,12 +194,7 @@ export default function EdpExamForm() {
 
     }
 
-    function handleStartExam() {
-        setInstructionsOpen(false);
-        router.push("/edp/exam");
-    }
-
-    if (view.kind === "checking") {
+    if (checkingStatus) {
         return (
             <section
                 id="edp-exam-form"
@@ -254,81 +205,7 @@ export default function EdpExamForm() {
         );
     }
 
-    if (view.kind === "exam-gate") {
-
-        const resuming = view.examStatus === "in_progress";
-
-        return (
-            <section
-                id="edp-exam-form"
-                className="mx-auto max-w-xl scroll-mt-16 px-4 py-16 text-center sm:px-6 sm:py-24"
-            >
-
-                <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] p-10">
-
-                    <PlayCircle className="mx-auto h-12 w-12 text-amber-400" />
-
-                    <h2 className="mt-4 text-2xl font-bold text-white">
-                        {resuming
-                            ? "Your Exam Is In Progress"
-                            : "You're Ready For The Entrance Exam"}
-                    </h2>
-
-                    <p className="mt-2 text-sm leading-6 text-white/60">
-                        {resuming
-                            ? "It looks like your exam session is still open. Resume to pick up where you left off — your timer keeps running in the background."
-                            : "30 questions, 30 minutes. Once you begin, please stay on this exam until you submit — leaving the page will end it automatically."}
-                    </p>
-
-                    <button
-                        type="button"
-                        onClick={() => setInstructionsOpen(true)}
-                        className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-amber-400 text-sm font-bold text-black transition hover:bg-amber-300 sm:w-auto sm:px-8"
-                    >
-                        {resuming ? "Resume Exam" : "Begin Exam"}
-                    </button>
-
-                </div>
-
-                <EdpExamInstructionsDialog
-                    open={instructionsOpen}
-                    onOpenChange={setInstructionsOpen}
-                    onStartExam={handleStartExam}
-                    resuming={resuming}
-                />
-
-            </section>
-        );
-    }
-
-    if (view.kind === "awaiting-result") {
-        return (
-            <section
-                id="edp-exam-form"
-                className="mx-auto max-w-xl scroll-mt-16 px-4 py-16 text-center sm:px-6 sm:py-24"
-            >
-
-                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10">
-
-                    <Hourglass className="mx-auto h-12 w-12 text-white/50" />
-
-                    <h2 className="mt-4 text-2xl font-bold text-white">
-                        Exam Submitted
-                    </h2>
-
-                    <p className="mt-2 text-sm leading-6 text-white/60">
-                        Thanks for completing the EDP entrance exam.
-                        We&apos;re reviewing your result and will update you
-                        here soon.
-                    </p>
-
-                </div>
-
-            </section>
-        );
-    }
-
-    if (view.kind === "decided" && view.decision === "selected") {
+    if (submitted) {
         return (
             <section
                 id="edp-exam-form"
@@ -340,41 +217,17 @@ export default function EdpExamForm() {
                     <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-400" />
 
                     <h2 className="mt-4 text-2xl font-bold text-white">
-                        You&apos;ve Been Selected!
+                        Application Submitted
                     </h2>
 
                     <p className="mt-2 text-sm leading-6 text-white/60">
-                        Congratulations — you&apos;ve been selected for the
-                        Ekalavya Drone Program. We&apos;ll be in touch soon
-                        with further details.
+                        Thank you for applying to the Ekalavya Drone Program.
+                        We&apos;ll be in touch with next steps for the entrance
+                        exam soon.
                     </p>
 
-                </div>
-
-            </section>
-        );
-    }
-
-    if (view.kind === "decided" && view.decision === "rejected") {
-        return (
-            <section
-                id="edp-exam-form"
-                className="mx-auto max-w-xl scroll-mt-16 px-4 py-16 text-center sm:px-6 sm:py-24"
-            >
-
-                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10">
-
-                    <XCircle className="mx-auto h-12 w-12 text-white/40" />
-
-                    <h2 className="mt-4 text-2xl font-bold text-white">
-                        Application Not Selected
-                    </h2>
-
-                    <p className="mt-2 text-sm leading-6 text-white/60">
-                        Thank you for your interest and for taking the time
-                        to complete our entrance exam. After careful review,
-                        we won&apos;t be moving forward with your
-                        application this time.
+                    <p className="mt-2 text-xs text-white/40">
+                        Only one application is allowed per account.
                     </p>
 
                 </div>
