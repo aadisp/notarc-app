@@ -1,10 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { CheckCircle2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { auth, db } from "@/firebase/firebase";
+import { CheckCircle2, Loader2 } from "lucide-react";
+import { auth } from "@/firebase/firebase";
 
 const SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -77,24 +76,50 @@ export default function EdpExamForm() {
 
         const user = auth.currentUser;
 
+        if (!user) {
+            toast.error("Please login first.");
+            return;
+        }
+
         setSubmitting(true);
 
         try {
 
-            await addDoc(collection(db, "edpApplications"), {
-                userId: user?.uid ?? null,
+            // The duplicate checks (one per account, one per USN) and
+            // the actual write all happen server-side — the client-facing
+            // Firestore rules only allow admins to read edpApplications,
+            // so a regular student's browser can't perform those checks
+            // itself. An ID token proves who's submitting without
+            // trusting a client-supplied user id.
+            const idToken = await user.getIdToken();
 
-                name: form.name.trim(),
-                usn: form.usn.trim().toUpperCase(),
-                collegeName: form.collegeName.trim(),
-                branch: form.branch.trim(),
-                section: form.section.trim().toUpperCase(),
-                semester: Number(form.semester),
-                phone: form.phone,
-                email: form.email.trim().toLowerCase(),
+            const response = await fetch(
+                "/api/edp/submit-application",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        idToken,
+                        name: form.name.trim(),
+                        usn: form.usn.trim(),
+                        collegeName: form.collegeName.trim(),
+                        branch: form.branch.trim(),
+                        section: form.section.trim(),
+                        semester: Number(form.semester),
+                        phone: form.phone,
+                        email: form.email.trim(),
+                    }),
+                }
+            );
 
-                createdAt: serverTimestamp(),
-            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                toast.error(
+                    data.error || "Could not submit your application."
+                );
+                return;
+            }
 
             setSubmitted(true);
             setForm(EMPTY_FORM);
