@@ -88,7 +88,7 @@ export default function EdpAnswerSheet({ applicationId }: Props) {
             </button>
 
             {expanded && (
-                <div className="space-y-6 border-t p-4">
+                <div className="max-h-[60vh] space-y-6 overflow-y-auto border-t p-4">
 
                     {loading && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
