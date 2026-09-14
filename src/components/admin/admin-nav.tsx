@@ -74,9 +74,12 @@ export default function AdminNav() {
     isLinkActive(pathname, "/admin/enrollments")
   );
 
+  // Watches BOTH fields: a brand-new application (createdAt) and an
+  // already-applied student finishing their exam (examSubmittedAt)
+  // each independently reopen this badge.
   const edpCount = useAdminSectionBadge(
     "edpApplications",
-    "createdAt",
+    ["createdAt", "examSubmittedAt"],
     "edp",
     isLinkActive(pathname, "/admin/edp")
   );

@@ -15,10 +15,19 @@ import {
 import { db } from "@/firebase/firebase";
 
 /**
- * Tracks how many documents in `collectionName` have `timestampField`
- * newer than the last time ANY admin viewed this section — shared
- * across every admin via a single Firestore doc in `adminReadState`,
- * rather than per-browser localStorage.
+ * Tracks how many documents in `collectionName` count as "unseen" —
+ * shared across every admin via a single Firestore doc in
+ * `adminReadState`, rather than per-browser localStorage.
+ *
+ * `timestampFields` can be a single field name, or an array of field
+ * names. When multiple fields are given, a document counts as unseen
+ * if ANY of those fields is newer than the last-seen threshold — e.g.
+ * for EDP applications, both a brand-new application (`createdAt`) and
+ * an existing applicant finishing their exam (`examSubmittedAt`)
+ * should reopen the badge. This is implemented as one listener per
+ * field, merged client-side into a union of matching doc ids, rather
+ * than a single Firestore OR query — that avoids needing a manual
+ * composite index in the Firebase console.
  *
  * Pass `isActive: true` while the admin is actually looking at that
  * section (e.g. the current route matches it) to mark it seen for
@@ -26,20 +35,42 @@ import { db } from "@/firebase/firebase";
  */
 export function useAdminSectionBadge(
     collectionName: string,
-    timestampField: string,
+    timestampFields: string | string[],
     readStateDocId: string,
     isActive: boolean
 ): number {
 
+    const fields = Array.isArray(timestampFields)
+        ? timestampFields
+        : [timestampFields];
+
+    const fieldsKey = fields.join(",");
+
     const [count, setCount] = useState(0);
 
-    // Live count, rebuilt whenever the shared "last seen" threshold
-    // changes (including when another admin marks the section seen).
+    // Live union count, rebuilt whenever the shared "last seen"
+    // threshold changes (including when another admin marks the
+    // section seen).
     useEffect(() => {
 
         const readStateRef = doc(db, "adminReadState", readStateDocId);
 
-        let countUnsubscribe: (() => void) | null = null;
+        let fieldUnsubscribers: Array<() => void> = [];
+
+        // One id-set per watched field; the badge count is the size of
+        // their union (a doc matching more than one field is only
+        // counted once).
+        const idsByField: Set<string>[] = fields.map(() => new Set());
+
+        function recomputeCount() {
+            const union = new Set<string>();
+
+            idsByField.forEach((idSet) => {
+                idSet.forEach((id) => union.add(id));
+            });
+
+            setCount(union.size);
+        }
 
         const readStateUnsubscribe = onSnapshot(
             readStateRef,
@@ -50,17 +81,25 @@ export function useAdminSectionBadge(
                         ? (readStateSnap.data().lastSeenAt as Timestamp)
                         : Timestamp.fromMillis(0);
 
-                if (countUnsubscribe) {
-                    countUnsubscribe();
-                }
+                fieldUnsubscribers.forEach((unsubscribe) => unsubscribe());
+                fieldUnsubscribers = [];
 
-                const countQuery = query(
-                    collection(db, collectionName),
-                    where(timestampField, ">", lastSeenAt)
-                );
+                fields.forEach((field, index) => {
 
-                countUnsubscribe = onSnapshot(countQuery, (countSnap) => {
-                    setCount(countSnap.size);
+                    const fieldQuery = query(
+                        collection(db, collectionName),
+                        where(field, ">", lastSeenAt)
+                    );
+
+                    const unsubscribe = onSnapshot(fieldQuery, (snap) => {
+                        idsByField[index] = new Set(
+                            snap.docs.map((docSnap) => docSnap.id)
+                        );
+                        recomputeCount();
+                    });
+
+                    fieldUnsubscribers.push(unsubscribe);
+
                 });
 
             }
@@ -68,10 +107,10 @@ export function useAdminSectionBadge(
 
         return () => {
             readStateUnsubscribe();
-            if (countUnsubscribe) countUnsubscribe();
+            fieldUnsubscribers.forEach((unsubscribe) => unsubscribe());
         };
 
-    }, [collectionName, timestampField, readStateDocId]);
+    }, [collectionName, fieldsKey, readStateDocId]);
 
     // Mark this section seen — for every admin — while it's active.
     useEffect(() => {
