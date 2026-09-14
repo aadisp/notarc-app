@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
+import EdpAnswerSheet from "./edp-answer-sheet";
 
 import {
     Select,
@@ -219,6 +220,10 @@ export default function EdpApplicationDialog({
                     <ExamSummary application={application} />
 
                 </div>
+
+                {application.examStatus === "submitted" && (
+                    <EdpAnswerSheet applicationId={application.id} />
+                )}
 
                 <div className="rounded-xl border p-4">
 
