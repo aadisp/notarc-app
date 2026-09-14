@@ -1,8 +1,12 @@
 "use client";
 
-import { doc, deleteDoc } from "firebase/firestore";
+import { useState } from "react";
+import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { toast } from "sonner";
 import { db } from "@/firebase/firebase";
 import { EdpApplication } from "@/types/edp-application";
+import { ExamDecision, ExamSubmitReason } from "@/types/edp-exam";
+import { TOTAL_EXAM_QUESTIONS } from "@/lib/edp/exam-config";
 
 import {
     Dialog,
@@ -12,6 +16,14 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
+
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 interface Props {
     open: boolean;
@@ -31,11 +43,64 @@ function Field({ label, value }: { label: string; value: string }) {
     );
 }
 
+const REASON_LABELS: Record<ExamSubmitReason, string> = {
+    manual: "Submitted manually",
+    timeout: "Time ran out",
+    left_page: "Left the exam page",
+};
+
+function ExamSummary({ application }: { application: EdpApplication }) {
+
+    if (!application.examStatus || application.examStatus === "not_started") {
+        return (
+            <p className="text-sm text-muted-foreground">
+                Hasn&apos;t started the exam yet.
+            </p>
+        );
+    }
+
+    if (application.examStatus === "in_progress") {
+        return (
+            <p className="text-sm text-muted-foreground">
+                Exam is currently in progress.
+            </p>
+        );
+    }
+
+    return (
+        <div className="space-y-1.5 text-sm">
+
+            <p>
+                <span className="font-semibold">Score: </span>
+                {application.score ?? 0} / {TOTAL_EXAM_QUESTIONS}
+            </p>
+
+            <p>
+                <span className="font-semibold">Submitted: </span>
+                {application.examSubmittedAt
+                    ? application.examSubmittedAt.toDate().toLocaleString()
+                    : "—"}
+            </p>
+
+            <p>
+                <span className="font-semibold">Ended because: </span>
+                {application.examSubmitReason
+                    ? REASON_LABELS[application.examSubmitReason]
+                    : "—"}
+            </p>
+
+        </div>
+    );
+
+}
+
 export default function EdpApplicationDialog({
     open,
     onOpenChange,
     application,
 }: Props) {
+
+    const [savingDecision, setSavingDecision] = useState(false);
 
     if (!application) return null;
 
@@ -54,6 +119,36 @@ export default function EdpApplicationDialog({
         );
 
         onOpenChange(false);
+
+    }
+
+    async function updateDecision(decision: ExamDecision) {
+
+        if (!application) return;
+
+        setSavingDecision(true);
+
+        try {
+
+            await updateDoc(
+                doc(db, "edpApplications", application.id),
+                { decision }
+            );
+
+            toast.success(
+                decision === "pending"
+                    ? "Marked as pending."
+                    : `Marked as ${decision}.`
+            );
+
+        } catch (error) {
+
+            console.error(error);
+            toast.error("Could not update the decision. Please try again.");
+
+        } finally {
+            setSavingDecision(false);
+        }
 
     }
 
@@ -107,6 +202,46 @@ export default function EdpApplicationDialog({
                                 : "—"
                         }
                     />
+
+                </div>
+
+                <div className="rounded-xl border p-4">
+
+                    <p className="mb-3 font-semibold">
+                        Exam Result
+                    </p>
+
+                    <ExamSummary application={application} />
+
+                </div>
+
+                <div className="rounded-xl border p-4">
+
+                    <p className="mb-3 font-semibold">
+                        Decision
+                    </p>
+
+                    <Select
+                        value={application.decision ?? "pending"}
+                        onValueChange={(value) =>
+                            updateDecision(value as ExamDecision)
+                        }
+                        disabled={savingDecision}
+                    >
+                        <SelectTrigger className="w-48">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="pending">Pending</SelectItem>
+                            <SelectItem value="selected">Selected</SelectItem>
+                            <SelectItem value="rejected">Rejected</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <p className="mt-2 text-xs text-muted-foreground">
+                        The applicant sees this decision the next time they
+                        open the EDP page.
+                    </p>
 
                 </div>
 

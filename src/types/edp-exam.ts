@@ -33,6 +33,10 @@ export interface ExamStartPayload {
     startedAt: number;
     serverNow: number;
     durationSeconds: number;
+    // Only present when resuming an in-progress exam (e.g. after a
+    // page reload) — lets the exam page restore previously-selected
+    // answers instead of starting the applicant over from blank.
+    savedAnswers?: ExamAnswerMap;
 }
 
 /**

@@ -1,12 +1,72 @@
 "use client";
 
-import { useEdpApplications } from "@/hooks/use-edp-applications";
 import { useState } from "react";
+import { useEdpApplications } from "@/hooks/use-edp-applications";
 import { Input } from "@/components/ui/input";
 import EdpApplicationDialog from "./edp-application-dialog";
 import AdminNav from "@/components/admin/admin-nav";
 
 import { EdpApplication } from "@/types/edp-application";
+import { ExamDecision } from "@/types/edp-exam";
+import { TOTAL_EXAM_QUESTIONS } from "@/lib/edp/exam-config";
+
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+
+type DecisionFilter = ExamDecision | "all";
+
+function ExamCell({ application }: { application: EdpApplication }) {
+
+    if (application.examStatus === "submitted") {
+        return (
+            <span className="font-semibold">
+                {application.score ?? 0} / {TOTAL_EXAM_QUESTIONS}
+            </span>
+        );
+    }
+
+    if (application.examStatus === "in_progress") {
+        return <span className="text-muted-foreground">In Progress</span>;
+    }
+
+    return <span className="text-muted-foreground">Not Started</span>;
+
+}
+
+function DecisionBadge({ application }: { application: EdpApplication }) {
+
+    if (application.decision === "selected") {
+        return (
+            <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                Selected
+            </span>
+        );
+    }
+
+    if (application.decision === "rejected") {
+        return (
+            <span className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700">
+                Rejected
+            </span>
+        );
+    }
+
+    if (application.examStatus === "submitted") {
+        return (
+            <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                Pending Review
+            </span>
+        );
+    }
+
+    return <span className="text-muted-foreground">—</span>;
+
+}
 
 export default function EdpApplicationsPage() {
 
@@ -23,6 +83,9 @@ export default function EdpApplicationsPage() {
 
     const [search, setSearch] = useState("");
 
+    const [decisionFilter, setDecisionFilter] =
+        useState<DecisionFilter>("all");
+
     if (loading) {
         return (
             <div className="mx-auto max-w-7xl px-6 py-12">
@@ -35,12 +98,20 @@ export default function EdpApplicationsPage() {
 
         const query = search.toLowerCase();
 
-        return (
+        const matchesSearch =
             application.name.toLowerCase().includes(query) ||
             application.usn.toLowerCase().includes(query) ||
             application.email.toLowerCase().includes(query) ||
-            application.collegeName.toLowerCase().includes(query)
-        );
+            application.collegeName.toLowerCase().includes(query);
+
+        const applicationDecision: ExamDecision =
+            application.decision ?? "pending";
+
+        const matchesDecision =
+            decisionFilter === "all" ||
+            applicationDecision === decisionFilter;
+
+        return matchesSearch && matchesDecision;
 
     });
 
@@ -61,19 +132,37 @@ export default function EdpApplicationsPage() {
                     entrance exam.
                 </p>
 
-                <div className="mt-6">
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
 
                     <Input
                         placeholder="Search by name, USN, email or college..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
+                        className="sm:max-w-sm"
                     />
+
+                    <Select
+                        value={decisionFilter}
+                        onValueChange={(value) =>
+                            setDecisionFilter(value as DecisionFilter)
+                        }
+                    >
+                        <SelectTrigger className="w-44">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Decisions</SelectItem>
+                            <SelectItem value="pending">Pending</SelectItem>
+                            <SelectItem value="selected">Selected</SelectItem>
+                            <SelectItem value="rejected">Rejected</SelectItem>
+                        </SelectContent>
+                    </Select>
 
                 </div>
 
             </div>
 
-            <div className="overflow-hidden rounded-2xl border">
+            <div className="overflow-x-auto rounded-2xl border">
 
                 <table className="w-full">
 
@@ -102,6 +191,14 @@ export default function EdpApplicationsPage() {
 
                             <th className="p-4 text-left">
                                 Email
+                            </th>
+
+                            <th className="p-4 text-left">
+                                Exam Score
+                            </th>
+
+                            <th className="p-4 text-left">
+                                Decision
                             </th>
 
                         </tr>
@@ -144,6 +241,14 @@ export default function EdpApplicationsPage() {
                                     {application.email}
                                 </td>
 
+                                <td className="p-4">
+                                    <ExamCell application={application} />
+                                </td>
+
+                                <td className="p-4">
+                                    <DecisionBadge application={application} />
+                                </td>
+
                             </tr>
 
                         ))}
@@ -151,7 +256,7 @@ export default function EdpApplicationsPage() {
                         {filteredApplications.length === 0 && (
                             <tr>
                                 <td
-                                    colSpan={6}
+                                    colSpan={8}
                                     className="p-8 text-center text-muted-foreground"
                                 >
                                     No applications found.
