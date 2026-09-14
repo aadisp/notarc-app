@@ -13,9 +13,12 @@ import {
 import { adminDb } from "@/firebase/firebase-admin";
 import { EXAM_DURATION_SECONDS } from "@/lib/edp/exam-config";
 import { ExamAnswerMap, ExamSubmitReason } from "@/types/edp-exam";
+import { BankQuestion, getQuestionById } from "./question-bank";
 import { scoreExam } from "./exam-selection";
 
 const APPLICATIONS_COLLECTION = "edpApplications";
+const MAX_TYPED_ANSWER_LENGTH = 300;
+const VALID_MCQ_OPTIONS = new Set(["A", "B", "C", "D"]);
 
 export async function findApplicationRefByUid(
     uid: string
@@ -45,25 +48,51 @@ export function isExamExpired(data: DocumentData): boolean {
 }
 
 /**
+ * Validates and normalizes a single answer against the question it's
+ * for. MCQ answers must be exactly one of A/B/C/D. Typed answers must
+ * be a non-empty string, trimmed and capped at a reasonable length —
+ * there's no "correct shape" to check beyond that, since these are
+ * graded manually later. Returns null for anything invalid, which
+ * callers treat as "don't store this".
+ */
+export function sanitizeSingleAnswer(
+    question: BankQuestion,
+    raw: unknown
+): string | null {
+    if (typeof raw !== "string") return null;
+
+    if (question.type === "mcq") {
+        return VALID_MCQ_OPTIONS.has(raw) ? raw : null;
+    }
+
+    const trimmed = raw.trim();
+    if (trimmed.length === 0) return null;
+
+    return trimmed.slice(0, MAX_TYPED_ANSWER_LENGTH);
+}
+
+/**
  * Keeps only answers for questions that were actually assigned to
- * this exam, with a valid option id — never trusts a client payload
- * (or an old autosave) as-is.
+ * this exam, each validated against that specific question's type —
+ * never trusts a client payload (or an old autosave) as-is.
  */
 export function sanitizeAnswers(
     raw: unknown,
     questionIds: number[]
 ): ExamAnswerMap {
-    const validIds = new Set(questionIds.map(String));
-    const validOptions = new Set(["A", "B", "C", "D"]);
     const out: ExamAnswerMap = {};
 
-    if (raw && typeof raw === "object") {
-        for (const [key, value] of Object.entries(
-            raw as Record<string, unknown>
-        )) {
-            if (validIds.has(key) && validOptions.has(value as string)) {
-                out[key] = value as ExamAnswerMap[string];
-            }
+    if (!raw || typeof raw !== "object") return out;
+
+    const source = raw as Record<string, unknown>;
+
+    for (const id of questionIds) {
+        const question = getQuestionById(id);
+        if (!question) continue;
+
+        const clean = sanitizeSingleAnswer(question, source[String(id)]);
+        if (clean !== null) {
+            out[String(id)] = clean;
         }
     }
 
@@ -71,11 +100,12 @@ export function sanitizeAnswers(
 }
 
 /**
- * Atomically flips an in-progress exam to "submitted" and scores it.
- * Safe to call more than once, or from overlapping requests (e.g. a
- * timeout and a tab-switch firing within milliseconds of each other)
- * — only the first call that observes "in_progress" inside the
- * transaction actually writes; every later call is a no-op.
+ * Atomically flips an in-progress exam to "submitted" and scores it
+ * (Section B multiple-choice only — see scoreExam). Safe to call more
+ * than once, or from overlapping requests (e.g. a timeout and a
+ * tab-switch firing within milliseconds of each other) — only the
+ * first call that observes "in_progress" inside the transaction
+ * actually writes; every later call is a no-op.
  *
  * When `answers` is omitted, whatever was last autosaved on the
  * document is used instead — this is the path taken when a session

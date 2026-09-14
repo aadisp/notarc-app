@@ -18,7 +18,7 @@ import {
     SECTION_B_PICK_COUNT,
 } from "@/lib/edp/exam-config";
 
-import { ClientExamQuestion } from "@/types/edp-exam";
+import { ClientExamQuestion, ExamAnswerMap } from "@/types/edp-exam";
 
 function shuffle<T>(items: T[]): T[] {
     const copy = [...items];
@@ -36,11 +36,12 @@ function pickRandom<T>(items: T[], count: number): T[] {
 }
 
 /**
- * Randomly selects SECTION_A_PICK_COUNT questions from Section A and
- * SECTION_B_PICK_COUNT from Section B, then shuffles the combined set
- * into the order the applicant will see them in. Returns just the
- * ids — the canonical record of "which questions were assigned" that
- * gets persisted on the application doc.
+ * Randomly selects SECTION_A_PICK_COUNT typed-answer questions from
+ * Section A and SECTION_B_PICK_COUNT multiple-choice questions from
+ * Section B, then shuffles the combined set into the order the
+ * applicant will see them in. Returns just the ids — the canonical
+ * record of "which questions were assigned" that gets persisted on
+ * the application doc.
  */
 export function selectExamQuestionIds(): number[] {
     const sectionA = pickRandom(SECTION_A_QUESTIONS, SECTION_A_PICK_COUNT);
@@ -52,10 +53,19 @@ export function selectExamQuestionIds(): number[] {
 }
 
 function stripAnswer(question: BankQuestion): ClientExamQuestion {
+    if (question.type === "mcq") {
+        return {
+            id: question.id,
+            type: "mcq",
+            prompt: question.prompt,
+            options: question.options.map((o) => ({ id: o.id, text: o.text })),
+        };
+    }
+
     return {
         id: question.id,
+        type: "typed",
         prompt: question.prompt,
-        options: question.options.map((o) => ({ id: o.id, text: o.text })),
     };
 }
 
@@ -80,20 +90,26 @@ export function toClientQuestions(ids: number[]): ClientExamQuestion[] {
 
 /**
  * Scores a completed exam. `answers` maps question id (as a string
- * key, matching Firestore map constraints) to the selected option id.
- * An unanswered or invalid question simply doesn't count toward the
- * score, matching the "0 marks for unanswered" rule.
+ * key, matching Firestore map constraints) to the applicant's answer.
+ *
+ * Only multiple-choice (Section B) questions are auto-graded here —
+ * typed (Section A) answers are never compared against anything
+ * automatically; they're left for an admin to review and grade
+ * manually. An unanswered or invalid MCQ simply doesn't count toward
+ * the score, matching the "0 marks for unanswered" rule. The maximum
+ * possible return value is therefore SECTION_B_PICK_COUNT (20), not
+ * the full 30-question total — see AUTO_GRADED_MARKS in exam-config.
  */
 export function scoreExam(
     questionIds: number[],
-    answers: Record<string, string | undefined>
+    answers: ExamAnswerMap
 ): number {
     let score = 0;
 
     for (const id of questionIds) {
         const question = getQuestionById(id);
 
-        if (!question) continue;
+        if (!question || question.type !== "mcq") continue;
 
         const given = answers[String(id)];
 

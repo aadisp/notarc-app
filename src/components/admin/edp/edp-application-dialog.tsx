@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { db } from "@/firebase/firebase";
 import { EdpApplication } from "@/types/edp-application";
 import { ExamDecision, ExamSubmitReason } from "@/types/edp-exam";
-import { TOTAL_EXAM_QUESTIONS } from "@/lib/edp/exam-config";
+import { AUTO_GRADED_MARKS } from "@/lib/edp/exam-config";
 
 import {
     Dialog,
@@ -71,8 +71,13 @@ function ExamSummary({ application }: { application: EdpApplication }) {
         <div className="space-y-1.5 text-sm">
 
             <p>
-                <span className="font-semibold">Score: </span>
-                {application.score ?? 0} / {TOTAL_EXAM_QUESTIONS}
+                <span className="font-semibold">Auto-graded score (MCQs): </span>
+                {application.score ?? 0} / {AUTO_GRADED_MARKS}
+            </p>
+
+            <p className="text-muted-foreground">
+                10 typed short-answer responses are not auto-graded and
+                still need your review.
             </p>
 
             <p>

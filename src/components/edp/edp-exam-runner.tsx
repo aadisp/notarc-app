@@ -27,7 +27,7 @@ type Phase =
     | "running"
     | "ended";
 
-type OptionId = "A" | "B" | "C" | "D";
+type McqOptionId = "A" | "B" | "C" | "D";
 
 function formatTime(ms: number): string {
     const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
@@ -399,14 +399,24 @@ export default function EdpExamRunner() {
         };
     }, [cleanupMedia]);
 
-    function selectAnswer(questionId: number, optionId: OptionId) {
-
+    // Updates local state only — used for every keystroke of a typed
+    // answer, and for the visual state of an MCQ selection.
+    function updateLocalAnswer(questionId: number, value: string) {
         setAnswers((current) => {
-            const next = { ...current, [String(questionId)]: optionId };
+            const next = { ...current, [String(questionId)]: value };
             answersRef.current = next;
             return next;
         });
+    }
 
+    // Sends one answer to the server. Called immediately on every MCQ
+    // click, and on blur for typed answers (so a typed question isn't
+    // firing a network request per keystroke). Either way, the final
+    // submit always reads from answersRef — the in-memory state — not
+    // from whatever last reached the server, so a typed answer that
+    // never got the chance to autosave (e.g. the app was switched away
+    // from mid-keystroke) is still included when the exam ends.
+    function persistAnswer(questionId: number, value: string) {
         const idToken = idTokenRef.current;
         if (!idToken) return;
 
@@ -414,11 +424,23 @@ export default function EdpExamRunner() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             keepalive: true,
-            body: JSON.stringify({ idToken, questionId, optionId }),
+            body: JSON.stringify({ idToken, questionId, answer: value }),
         }).catch((error) => {
             console.error("autosave failed:", error);
         });
+    }
 
+    function selectMcqOption(questionId: number, optionId: McqOptionId) {
+        updateLocalAnswer(questionId, optionId);
+        persistAnswer(questionId, optionId);
+    }
+
+    function handleTypedChange(questionId: number, value: string) {
+        updateLocalAnswer(questionId, value);
+    }
+
+    function handleTypedBlur(questionId: number, value: string) {
+        persistAnswer(questionId, value);
     }
 
     async function handleManualSubmit() {
@@ -599,72 +621,116 @@ export default function EdpExamRunner() {
                 {currentQuestion && (
                     <div>
 
-                        <h2 className="text-lg font-semibold leading-7 text-white">
+                        <div className="flex items-center gap-2">
+                            <span
+                                className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                                    currentQuestion.type === "mcq"
+                                        ? "bg-white/10 text-white/50"
+                                        : "bg-amber-400/10 text-amber-400"
+                                }`}
+                            >
+                                {currentQuestion.type === "mcq"
+                                    ? "Multiple Choice"
+                                    : "Type Your Answer"}
+                            </span>
+                        </div>
+
+                        <h2 className="mt-2 text-lg font-semibold leading-7 text-white">
                             {currentQuestion.prompt}
                         </h2>
 
-                        <div className="mt-5 space-y-3">
-                            {currentQuestion.options.map((option) => {
-                                const isSelected =
-                                    answers[String(currentQuestion.id)] ===
-                                    option.id;
-                                return (
-                                    <button
-                                        key={option.id}
-                                        type="button"
-                                        onClick={() =>
-                                            selectAnswer(
-                                                currentQuestion.id,
-                                                option.id
-                                            )
-                                        }
-                                        className={`
-                                            flex
-                                            w-full
-                                            items-start
-                                            gap-3
-                                            rounded-xl
-                                            border
-                                            px-4
-                                            py-3.5
-                                            text-left
-                                            text-sm
-                                            leading-6
-                                            transition
-                                            ${
-                                                isSelected
-                                                    ? "border-amber-400/60 bg-amber-400/[0.08] text-white"
-                                                    : "border-white/10 bg-white/[0.02] text-white/80 hover:bg-white/[0.05]"
+                        {currentQuestion.type === "mcq" ? (
+                            <div className="mt-5 space-y-3">
+                                {currentQuestion.options.map((option) => {
+                                    const isSelected =
+                                        answers[String(currentQuestion.id)] ===
+                                        option.id;
+                                    return (
+                                        <button
+                                            key={option.id}
+                                            type="button"
+                                            onClick={() =>
+                                                selectMcqOption(
+                                                    currentQuestion.id,
+                                                    option.id
+                                                )
                                             }
-                                        `}
-                                    >
-                                        <span
                                             className={`
-                                                mt-0.5
                                                 flex
-                                                h-5
-                                                w-5
-                                                shrink-0
-                                                items-center
-                                                justify-center
-                                                rounded-full
+                                                w-full
+                                                items-start
+                                                gap-3
+                                                rounded-xl
                                                 border
-                                                text-[10px]
-                                                font-bold
+                                                px-4
+                                                py-3.5
+                                                text-left
+                                                text-sm
+                                                leading-6
+                                                transition
                                                 ${
                                                     isSelected
-                                                        ? "border-amber-400 bg-amber-400 text-black"
-                                                        : "border-white/20 text-white/40"
+                                                        ? "border-amber-400/60 bg-amber-400/[0.08] text-white"
+                                                        : "border-white/10 bg-white/[0.02] text-white/80 hover:bg-white/[0.05]"
                                                 }
                                             `}
                                         >
-                                            {option.id}
-                                        </span>
-                                        <span>{option.text}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
+                                            <span
+                                                className={`
+                                                    mt-0.5
+                                                    flex
+                                                    h-5
+                                                    w-5
+                                                    shrink-0
+                                                    items-center
+                                                    justify-center
+                                                    rounded-full
+                                                    border
+                                                    text-[10px]
+                                                    font-bold
+                                                    ${
+                                                        isSelected
+                                                            ? "border-amber-400 bg-amber-400 text-black"
+                                                            : "border-white/20 text-white/40"
+                                                    }
+                                                `}
+                                            >
+                                                {option.id}
+                                            </span>
+                                            <span>{option.text}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className="mt-5">
+                                <textarea
+                                    value={
+                                        answers[String(currentQuestion.id)] ?? ""
+                                    }
+                                    onChange={(e) =>
+                                        handleTypedChange(
+                                            currentQuestion.id,
+                                            e.target.value
+                                        )
+                                    }
+                                    onBlur={(e) =>
+                                        handleTypedBlur(
+                                            currentQuestion.id,
+                                            e.target.value
+                                        )
+                                    }
+                                    rows={4}
+                                    maxLength={300}
+                                    placeholder="Type your answer here..."
+                                    className="w-full resize-none rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3.5 text-sm leading-6 text-white placeholder:text-white/30 focus:border-amber-400/50 focus:outline-none"
+                                />
+                                <p className="mt-2 text-xs text-white/30">
+                                    Short answer — this one is reviewed
+                                    manually, not auto-scored.
+                                </p>
+                            </div>
+                        )}
 
                     </div>
                 )}

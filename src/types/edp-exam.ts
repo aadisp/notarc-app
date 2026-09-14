@@ -1,8 +1,9 @@
 /**
  * Types shared between the EDP exam frontend and its API routes.
- * None of these carry correct-answer data — that lives only in the
- * server-only question bank (src/lib/edp/server/question-bank.ts) and
- * is never sent to the client.
+ * None of these carry correct-answer or reference-answer data — that
+ * lives only in the server-only question bank
+ * (src/lib/edp/server/question-bank.ts) and is never sent to the
+ * client.
  */
 
 export type ExamStatus = "not_started" | "in_progress" | "submitted";
@@ -16,11 +17,20 @@ export interface ClientExamOption {
     text: string;
 }
 
-export interface ClientExamQuestion {
+export interface ClientMcqQuestion {
     id: number;
+    type: "mcq";
     prompt: string;
     options: ClientExamOption[];
 }
+
+export interface ClientTypedQuestion {
+    id: number;
+    type: "typed";
+    prompt: string;
+}
+
+export type ClientExamQuestion = ClientMcqQuestion | ClientTypedQuestion;
 
 /**
  * What /api/edp/exam/start returns. `startedAt` and `serverNow` are
@@ -34,16 +44,18 @@ export interface ExamStartPayload {
     serverNow: number;
     durationSeconds: number;
     // Only present when resuming an in-progress exam (e.g. after a
-    // page reload) — lets the exam page restore previously-selected
+    // page reload) — lets the exam page restore previously-entered
     // answers instead of starting the applicant over from blank.
     savedAnswers?: ExamAnswerMap;
 }
 
 /**
- * A map of question id -> selected option id, keyed as strings since
- * Firestore map keys must be strings.
+ * A map of question id -> the applicant's answer, keyed as strings
+ * since Firestore map keys must be strings. For an MCQ question the
+ * value is one of "A"/"B"/"C"/"D"; for a typed question it's their
+ * free-text response.
  */
-export type ExamAnswerMap = Record<string, "A" | "B" | "C" | "D">;
+export type ExamAnswerMap = Record<string, string>;
 
 /**
  * What /api/edp/exam/state returns to drive the frontend's rendering

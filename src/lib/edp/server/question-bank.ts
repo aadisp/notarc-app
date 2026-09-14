@@ -1,16 +1,19 @@
 /**
  * SERVER-ONLY — EDP entrance exam question bank.
  *
- * This file contains the full question bank INCLUDING correct answers.
- * It must never be imported by a "use client" component or by any code
- * that ends up in a browser bundle — doing so would leak the answer key
- * to applicants. Only import this from API route handlers
- * (src/app/api/edp/exam/**) or other server-only modules.
+ * This file contains the full question bank INCLUDING correct
+ * answers / reference answers. It must never be imported by a
+ * "use client" component or by any code that ends up in a browser
+ * bundle — doing so would leak the answer key to applicants. Only
+ * import this from API route handlers (src/app/api/edp/exam/**) or
+ * other server-only modules.
  *
- * Section A: 30 one-word-answer questions, presented as MCQ with
- * generated distractors (drawn from other real terms in this bank).
- * Section B: 70 multiple-choice questions, options/answers as authored
- * in the EDP Question Bank PDF.
+ * Section A: 30 typed-answer questions. The applicant types a free-
+ * text response; these are never auto-graded — `expectedAnswer` is a
+ * reference answer shown to the admin as a grading aid, and the
+ * applicant's actual typed answer is reviewed and scored manually.
+ * Section B: 70 multiple-choice questions, auto-graded against
+ * `correctOptionId`.
  */
 
 export interface BankOption {
@@ -18,741 +21,245 @@ export interface BankOption {
   text: string;
 }
 
-export interface BankQuestion {
+export interface McqBankQuestion {
   id: number;
   section: "A" | "B";
+  type: "mcq";
   prompt: string;
   options: BankOption[];
   correctOptionId: "A" | "B" | "C" | "D";
 }
 
-export const SECTION_A_QUESTIONS: BankQuestion[] = [
+export interface TypedBankQuestion {
+  id: number;
+  section: "A";
+  type: "typed";
+  prompt: string;
+  // Reference answer for the admin's benefit while manually grading
+  // — never sent to the client, and never used for auto-scoring.
+  expectedAnswer: string;
+}
+
+export type BankQuestion = McqBankQuestion | TypedBankQuestion;
+
+export const SECTION_A_QUESTIONS: TypedBankQuestion[] = [
   {
     "id": 1,
     "section": "A",
+    "type": "typed",
     "prompt": "What does UAV stand for?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Universal Aviation Vehicle"
-      },
-      {
-        "id": "B",
-        "text": "Unmanned Aviation Unit"
-      },
-      {
-        "id": "C",
-        "text": "Automated Air Vehicle"
-      },
-      {
-        "id": "D",
-        "text": "Unmanned Aerial Vehicle"
-      }
-    ],
-    "correctOptionId": "D"
+    "expectedAnswer": "Unmanned Aerial Vehicle"
   },
   {
     "id": 2,
     "section": "A",
+    "type": "typed",
     "prompt": "What does VTOL stand for?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Visual Tracking and Object Location"
-      },
-      {
-        "id": "B",
-        "text": "Vertical Transit Operating Link"
-      },
-      {
-        "id": "C",
-        "text": "Vertical Take-Off and Landing"
-      },
-      {
-        "id": "D",
-        "text": "Variable Torque Output Level"
-      }
-    ],
-    "correctOptionId": "C"
+    "expectedAnswer": "Vertical Take-Off and Landing"
   },
   {
     "id": 3,
     "section": "A",
+    "type": "typed",
     "prompt": "What does ESC stand for?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Electronic Sensor Calibrator"
-      },
-      {
-        "id": "B",
-        "text": "Electronic Speed Controller"
-      },
-      {
-        "id": "C",
-        "text": "External Signal Converter"
-      },
-      {
-        "id": "D",
-        "text": "Emergency Shutdown Circuit"
-      }
-    ],
-    "correctOptionId": "B"
+    "expectedAnswer": "Electronic Speed Controller"
   },
   {
     "id": 4,
     "section": "A",
+    "type": "typed",
     "prompt": "What does GPS stand for?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Global Positioning System"
-      },
-      {
-        "id": "B",
-        "text": "Ground Positioning Sensor"
-      },
-      {
-        "id": "C",
-        "text": "General Payload System"
-      },
-      {
-        "id": "D",
-        "text": "Geo Photogrammetry Software"
-      }
-    ],
-    "correctOptionId": "A"
+    "expectedAnswer": "Global Positioning System"
   },
   {
     "id": 5,
     "section": "A",
+    "type": "typed",
     "prompt": "What does LiPo stand for?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Lithium Potassium"
-      },
-      {
-        "id": "B",
-        "text": "Linear Power"
-      },
-      {
-        "id": "C",
-        "text": "Light Polymer Oxide"
-      },
-      {
-        "id": "D",
-        "text": "Lithium Polymer"
-      }
-    ],
-    "correctOptionId": "D"
+    "expectedAnswer": "Lithium Polymer"
   },
   {
     "id": 6,
     "section": "A",
+    "type": "typed",
     "prompt": "What does FPV stand for?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Fixed Payload Vehicle"
-      },
-      {
-        "id": "B",
-        "text": "Forward Propulsion Vector"
-      },
-      {
-        "id": "C",
-        "text": "First-Person View"
-      },
-      {
-        "id": "D",
-        "text": "Flight Path Verification"
-      }
-    ],
-    "correctOptionId": "C"
+    "expectedAnswer": "First-Person View"
   },
   {
     "id": 7,
     "section": "A",
+    "type": "typed",
     "prompt": "What does RGB stand for in digital imaging?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Rotation, Gain and Brightness"
-      },
-      {
-        "id": "B",
-        "text": "Red, Green and Blue"
-      },
-      {
-        "id": "C",
-        "text": "Range, Gimbal and Battery"
-      },
-      {
-        "id": "D",
-        "text": "Radio, GPS and Battery"
-      }
-    ],
-    "correctOptionId": "B"
+    "expectedAnswer": "Red, Green and Blue"
   },
   {
     "id": 8,
     "section": "A",
+    "type": "typed",
     "prompt": "What is the equipment carried by a drone for a particular mission called?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Payload"
-      },
-      {
-        "id": "B",
-        "text": "Frame"
-      },
-      {
-        "id": "C",
-        "text": "Telemetry"
-      },
-      {
-        "id": "D",
-        "text": "Waypoint"
-      }
-    ],
-    "correctOptionId": "A"
+    "expectedAnswer": "Payload"
   },
   {
     "id": 9,
     "section": "A",
+    "type": "typed",
     "prompt": "What is the structure that holds the drone's components called?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Payload"
-      },
-      {
-        "id": "B",
-        "text": "Gimbal"
-      },
-      {
-        "id": "C",
-        "text": "Fuselage Cover"
-      },
-      {
-        "id": "D",
-        "text": "Frame"
-      }
-    ],
-    "correctOptionId": "D"
+    "expectedAnswer": "Frame"
   },
   {
     "id": 10,
     "section": "A",
+    "type": "typed",
     "prompt": "What component processes flight commands and onboard sensor data?",
-    "options": [
-      {
-        "id": "A",
-        "text": "ESC"
-      },
-      {
-        "id": "B",
-        "text": "Ground Control Station"
-      },
-      {
-        "id": "C",
-        "text": "Flight Controller"
-      },
-      {
-        "id": "D",
-        "text": "Receiver"
-      }
-    ],
-    "correctOptionId": "C"
+    "expectedAnswer": "Flight Controller"
   },
   {
     "id": 11,
     "section": "A",
+    "type": "typed",
     "prompt": "What component regulates motor speed in an electric drone?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Voltage Regulator"
-      },
-      {
-        "id": "B",
-        "text": "ESC"
-      },
-      {
-        "id": "C",
-        "text": "Flight Controller"
-      },
-      {
-        "id": "D",
-        "text": "Receiver"
-      }
-    ],
-    "correctOptionId": "B"
+    "expectedAnswer": "ESC"
   },
   {
     "id": 12,
     "section": "A",
+    "type": "typed",
     "prompt": "What component receives control signals from a remote controller?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Receiver"
-      },
-      {
-        "id": "B",
-        "text": "Transmitter"
-      },
-      {
-        "id": "C",
-        "text": "Flight Controller"
-      },
-      {
-        "id": "D",
-        "text": "Datalink"
-      }
-    ],
-    "correctOptionId": "A"
+    "expectedAnswer": "Receiver"
   },
   {
     "id": 13,
     "section": "A",
+    "type": "typed",
     "prompt": "What device transmits pilot commands to the drone?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Receiver"
-      },
-      {
-        "id": "B",
-        "text": "Gimbal"
-      },
-      {
-        "id": "C",
-        "text": "Telemetry Module"
-      },
-      {
-        "id": "D",
-        "text": "Transmitter"
-      }
-    ],
-    "correctOptionId": "D"
+    "expectedAnswer": "Transmitter"
   },
   {
     "id": 14,
     "section": "A",
+    "type": "typed",
     "prompt": "What component stabilizes a camera during aerial filming?",
-    "options": [
-      {
-        "id": "A",
-        "text": "ESC"
-      },
-      {
-        "id": "B",
-        "text": "Landing Gear"
-      },
-      {
-        "id": "C",
-        "text": "Gimbal"
-      },
-      {
-        "id": "D",
-        "text": "Frame"
-      }
-    ],
-    "correctOptionId": "C"
+    "expectedAnswer": "Gimbal"
   },
   {
     "id": 15,
     "section": "A",
+    "type": "typed",
     "prompt": "What is the operating data sent from a drone to the pilot called?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Payload Data"
-      },
-      {
-        "id": "B",
-        "text": "Telemetry"
-      },
-      {
-        "id": "C",
-        "text": "Waypoint"
-      },
-      {
-        "id": "D",
-        "text": "Geofence"
-      }
-    ],
-    "correctOptionId": "B"
+    "expectedAnswer": "Telemetry"
   },
   {
     "id": 16,
     "section": "A",
+    "type": "typed",
     "prompt": "What is a programmed geographic point in a mission route called?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Waypoint"
-      },
-      {
-        "id": "B",
-        "text": "Geofence"
-      },
-      {
-        "id": "C",
-        "text": "Home Point"
-      },
-      {
-        "id": "D",
-        "text": "Orthomosaic Point"
-      }
-    ],
-    "correctOptionId": "A"
+    "expectedAnswer": "Waypoint"
   },
   {
     "id": 17,
     "section": "A",
+    "type": "typed",
     "prompt": "What is a virtual geographic operational boundary called?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Waypoint"
-      },
-      {
-        "id": "B",
-        "text": "Home Point"
-      },
-      {
-        "id": "C",
-        "text": "Range"
-      },
-      {
-        "id": "D",
-        "text": "Geofence"
-      }
-    ],
-    "correctOptionId": "D"
+    "expectedAnswer": "Geofence"
   },
   {
     "id": 18,
     "section": "A",
+    "type": "typed",
     "prompt": "What is the saved reference position used for automatic return called?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Geofence"
-      },
-      {
-        "id": "B",
-        "text": "Failsafe Point"
-      },
-      {
-        "id": "C",
-        "text": "Home Point"
-      },
-      {
-        "id": "D",
-        "text": "Waypoint"
-      }
-    ],
-    "correctOptionId": "C"
+    "expectedAnswer": "Home Point"
   },
   {
     "id": 19,
     "section": "A",
+    "type": "typed",
     "prompt": "What return feature guides a drone back toward its saved location?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Auto-Landing"
-      },
-      {
-        "id": "B",
-        "text": "Return-to-Home"
-      },
-      {
-        "id": "C",
-        "text": "Failsafe"
-      },
-      {
-        "id": "D",
-        "text": "Geofencing"
-      }
-    ],
-    "correctOptionId": "B"
+    "expectedAnswer": "Return-to-Home"
   },
   {
     "id": 20,
     "section": "A",
+    "type": "typed",
     "prompt": "What term refers to the time a drone can remain airborne?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Endurance"
-      },
-      {
-        "id": "B",
-        "text": "Range"
-      },
-      {
-        "id": "C",
-        "text": "Altitude"
-      },
-      {
-        "id": "D",
-        "text": "Payload Capacity"
-      }
-    ],
-    "correctOptionId": "A"
+    "expectedAnswer": "Endurance"
   },
   {
     "id": 21,
     "section": "A",
+    "type": "typed",
     "prompt": "What term refers to the practical operating distance of a drone?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Endurance"
-      },
-      {
-        "id": "B",
-        "text": "Altitude"
-      },
-      {
-        "id": "C",
-        "text": "Frequency"
-      },
-      {
-        "id": "D",
-        "text": "Range"
-      }
-    ],
-    "correctOptionId": "D"
+    "expectedAnswer": "Range"
   },
   {
     "id": 22,
     "section": "A",
+    "type": "typed",
     "prompt": "What term refers to vertical height above a chosen reference level?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Endurance"
-      },
-      {
-        "id": "B",
-        "text": "Elevation Offset"
-      },
-      {
-        "id": "C",
-        "text": "Altitude"
-      },
-      {
-        "id": "D",
-        "text": "Range"
-      }
-    ],
-    "correctOptionId": "C"
+    "expectedAnswer": "Altitude"
   },
   {
     "id": 23,
     "section": "A",
+    "type": "typed",
     "prompt": "What process aligns or adjusts drone sensors for reliable operation?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Telemetry Sync"
-      },
-      {
-        "id": "B",
-        "text": "Calibration"
-      },
-      {
-        "id": "C",
-        "text": "Arming"
-      },
-      {
-        "id": "D",
-        "text": "Failsafe"
-      }
-    ],
-    "correctOptionId": "B"
+    "expectedAnswer": "Calibration"
   },
   {
     "id": 24,
     "section": "A",
+    "type": "typed",
     "prompt": "What is the process of enabling a drone's motors for operation?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Arming"
-      },
-      {
-        "id": "B",
-        "text": "Disarming"
-      },
-      {
-        "id": "C",
-        "text": "Calibration"
-      },
-      {
-        "id": "D",
-        "text": "Failsafe"
-      }
-    ],
-    "correctOptionId": "A"
+    "expectedAnswer": "Arming"
   },
   {
     "id": 25,
     "section": "A",
+    "type": "typed",
     "prompt": "What is the process of disabling the drone's motors?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Arming"
-      },
-      {
-        "id": "B",
-        "text": "Failsafe"
-      },
-      {
-        "id": "C",
-        "text": "Return-to-Home"
-      },
-      {
-        "id": "D",
-        "text": "Disarming"
-      }
-    ],
-    "correctOptionId": "D"
+    "expectedAnswer": "Disarming"
   },
   {
     "id": 26,
     "section": "A",
+    "type": "typed",
     "prompt": "What is the automated protective response to a technical issue called?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Calibration"
-      },
-      {
-        "id": "B",
-        "text": "Geofence"
-      },
-      {
-        "id": "C",
-        "text": "Failsafe"
-      },
-      {
-        "id": "D",
-        "text": "Arming"
-      }
-    ],
-    "correctOptionId": "C"
+    "expectedAnswer": "Failsafe"
   },
   {
     "id": 27,
     "section": "A",
+    "type": "typed",
     "prompt": "What method creates maps or measurements from overlapping aerial images?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Telemetry Logging"
-      },
-      {
-        "id": "B",
-        "text": "Photogrammetry"
-      },
-      {
-        "id": "C",
-        "text": "Orthomosaic Mapping"
-      },
-      {
-        "id": "D",
-        "text": "Thermal Imaging"
-      }
-    ],
-    "correctOptionId": "B"
+    "expectedAnswer": "Photogrammetry"
   },
   {
     "id": 28,
     "section": "A",
+    "type": "typed",
     "prompt": "What type of camera records temperature-related imagery?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Thermal"
-      },
-      {
-        "id": "B",
-        "text": "RGB"
-      },
-      {
-        "id": "C",
-        "text": "Gimbal-Stabilized"
-      },
-      {
-        "id": "D",
-        "text": "Multispectral"
-      }
-    ],
-    "correctOptionId": "A"
+    "expectedAnswer": "Thermal"
   },
   {
     "id": 29,
     "section": "A",
+    "type": "typed",
     "prompt": "What is a geometrically corrected aerial map image called?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Photogrammetry"
-      },
-      {
-        "id": "B",
-        "text": "Waypoint Map"
-      },
-      {
-        "id": "C",
-        "text": "Geofence Map"
-      },
-      {
-        "id": "D",
-        "text": "Orthomosaic"
-      }
-    ],
-    "correctOptionId": "D"
+    "expectedAnswer": "Orthomosaic"
   },
   {
     "id": 30,
     "section": "A",
+    "type": "typed",
     "prompt": "What communication connection carries control and telemetry information?",
-    "options": [
-      {
-        "id": "A",
-        "text": "Geofence"
-      },
-      {
-        "id": "B",
-        "text": "Payload Bus"
-      },
-      {
-        "id": "C",
-        "text": "Datalink"
-      },
-      {
-        "id": "D",
-        "text": "Telemetry"
-      }
-    ],
-    "correctOptionId": "C"
+    "expectedAnswer": "Datalink"
   }
 ];
 
-export const SECTION_B_QUESTIONS: BankQuestion[] = [
+export const SECTION_B_QUESTIONS: McqBankQuestion[] = [
   {
     "id": 31,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which statement best describes a UAV?",
     "options": [
       {
@@ -777,6 +284,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 32,
     "section": "B",
+    "type": "mcq",
     "prompt": "A drone that follows a planned route using programmed instructions is best described as:",
     "options": [
       {
@@ -801,6 +309,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 33,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which characteristic generally makes a fixed-wing drone suitable for long-area survey work?",
     "options": [
       {
@@ -825,6 +334,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 34,
     "section": "B",
+    "type": "mcq",
     "prompt": "A project requires aerial coverage of a large agricultural field in a single mission. Which platform is generally more suitable?",
     "options": [
       {
@@ -849,6 +359,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 35,
     "section": "B",
+    "type": "mcq",
     "prompt": "A project requires close inspection of a building facade from different heights. Which drone capability is especially useful?",
     "options": [
       {
@@ -873,6 +384,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 36,
     "section": "B",
+    "type": "mcq",
     "prompt": "A VTOL drone is designed to:",
     "options": [
       {
@@ -897,6 +409,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 37,
     "section": "B",
+    "type": "mcq",
     "prompt": "When selecting a drone for an assignment, the most important consideration is:",
     "options": [
       {
@@ -921,6 +434,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 38,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which change would most likely decrease the total available flight time?",
     "options": [
       {
@@ -945,6 +459,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 39,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which is the clearest example of a drone mission objective?",
     "options": [
       {
@@ -969,6 +484,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 40,
     "section": "B",
+    "type": "mcq",
     "prompt": "Why should a drone mission objective be decided before choosing equipment?",
     "options": [
       {
@@ -993,6 +509,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 41,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which component interprets flight-related information and coordinates commands to the drone's electronic systems?",
     "options": [
       {
@@ -1017,6 +534,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 42,
     "section": "B",
+    "type": "mcq",
     "prompt": "The primary purpose of an ESC in an electric drone is to:",
     "options": [
       {
@@ -1041,6 +559,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 43,
     "section": "B",
+    "type": "mcq",
     "prompt": "A drone suddenly shuts down shortly after take-off, despite correct control input. Which system should be checked first for available power?",
     "options": [
       {
@@ -1065,6 +584,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 44,
     "section": "B",
+    "type": "mcq",
     "prompt": "Why is a drone frame designed to be strong but lightweight?",
     "options": [
       {
@@ -1089,6 +609,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 45,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which item is most likely considered a mission payload?",
     "options": [
       {
@@ -1113,6 +634,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 46,
     "section": "B",
+    "type": "mcq",
     "prompt": "A gimbal is especially important when a drone is being used to:",
     "options": [
       {
@@ -1137,6 +659,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 47,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which component receives the commands transmitted by the pilot's remote controller?",
     "options": [
       {
@@ -1161,6 +684,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 48,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which statement best explains the role of a transmitter?",
     "options": [
       {
@@ -1185,6 +709,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 49,
     "section": "B",
+    "type": "mcq",
     "prompt": "Brushless motors are commonly used in drones mainly because they:",
     "options": [
       {
@@ -1209,6 +734,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 50,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which electrical term refers to the potential difference that drives current through a circuit?",
     "options": [
       {
@@ -1233,6 +759,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 51,
     "section": "B",
+    "type": "mcq",
     "prompt": "A drone battery marked 2200 mAh is indicating its:",
     "options": [
       {
@@ -1257,6 +784,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 52,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which battery practice is most appropriate after a demanding flight when the battery is warm?",
     "options": [
       {
@@ -1281,6 +809,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 53,
     "section": "B",
+    "type": "mcq",
     "prompt": "A heavy camera is added to a drone without changing anything else. What is the most likely effect?",
     "options": [
       {
@@ -1305,6 +834,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 54,
     "section": "B",
+    "type": "mcq",
     "prompt": "Why is it important to connect a battery with correct polarity?",
     "options": [
       {
@@ -1329,6 +859,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 55,
     "section": "B",
+    "type": "mcq",
     "prompt": "Deeply discharging a rechargeable drone battery repeatedly may:",
     "options": [
       {
@@ -1353,6 +884,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 56,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which unit is most commonly used to describe a battery's voltage?",
     "options": [
       {
@@ -1377,6 +909,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 57,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which factor is most likely to increase a drone's energy use during a mission?",
     "options": [
       {
@@ -1401,6 +934,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 58,
     "section": "B",
+    "type": "mcq",
     "prompt": "What is the most suitable device for charging a LiPo drone battery?",
     "options": [
       {
@@ -1425,6 +959,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 59,
     "section": "B",
+    "type": "mcq",
     "prompt": "A battery's voltage primarily represents:",
     "options": [
       {
@@ -1449,6 +984,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 60,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which situation is most likely to shorten a drone's available flight duration?",
     "options": [
       {
@@ -1473,6 +1009,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 61,
     "section": "B",
+    "type": "mcq",
     "prompt": "A drone uses GPS mainly to obtain:",
     "options": [
       {
@@ -1497,6 +1034,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 62,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which set of information is most likely included in drone telemetry?",
     "options": [
       {
@@ -1521,6 +1059,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 63,
     "section": "B",
+    "type": "mcq",
     "prompt": "A command-and-control data link is used primarily to:",
     "options": [
       {
@@ -1545,6 +1084,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 64,
     "section": "B",
+    "type": "mcq",
     "prompt": "In a programmed drone mission, a waypoint is:",
     "options": [
       {
@@ -1569,6 +1109,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 65,
     "section": "B",
+    "type": "mcq",
     "prompt": "A geofence is most accurately described as:",
     "options": [
       {
@@ -1593,6 +1134,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 66,
     "section": "B",
+    "type": "mcq",
     "prompt": "The saved home point is especially important for:",
     "options": [
       {
@@ -1617,6 +1159,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 67,
     "section": "B",
+    "type": "mcq",
     "prompt": "A Return-to-Home feature is designed to:",
     "options": [
       {
@@ -1641,6 +1184,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 68,
     "section": "B",
+    "type": "mcq",
     "prompt": "FPV technology allows a pilot to:",
     "options": [
       {
@@ -1665,6 +1209,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 69,
     "section": "B",
+    "type": "mcq",
     "prompt": "If control signals are not reaching the drone, which component is directly responsible for receiving those pilot commands onboard?",
     "options": [
       {
@@ -1689,6 +1234,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 70,
     "section": "B",
+    "type": "mcq",
     "prompt": "What is a likely response when a drone loses its control communication link?",
     "options": [
       {
@@ -1713,6 +1259,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 71,
     "section": "B",
+    "type": "mcq",
     "prompt": "In drone operation, arming means:",
     "options": [
       {
@@ -1737,6 +1284,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 72,
     "section": "B",
+    "type": "mcq",
     "prompt": "In drone operation, disarming means:",
     "options": [
       {
@@ -1761,6 +1309,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 73,
     "section": "B",
+    "type": "mcq",
     "prompt": "A failsafe is best described as:",
     "options": [
       {
@@ -1785,6 +1334,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 74,
     "section": "B",
+    "type": "mcq",
     "prompt": "Why should operators identify obstacles in the operating area?",
     "options": [
       {
@@ -1809,6 +1359,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 75,
     "section": "B",
+    "type": "mcq",
     "prompt": "Why can strong wind affect a drone mission?",
     "options": [
       {
@@ -1833,6 +1384,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 76,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which situation is likely to require greater operational caution?",
     "options": [
       {
@@ -1857,6 +1409,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 77,
     "section": "B",
+    "type": "mcq",
     "prompt": "What is the most responsible practice when people are close to the operating area?",
     "options": [
       {
@@ -1881,6 +1434,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 78,
     "section": "B",
+    "type": "mcq",
     "prompt": "A restricted or no-fly zone is an area where drone operations are:",
     "options": [
       {
@@ -1905,6 +1459,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 79,
     "section": "B",
+    "type": "mcq",
     "prompt": "Why should an operator consider airspace and local operating requirements?",
     "options": [
       {
@@ -1929,6 +1484,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 80,
     "section": "B",
+    "type": "mcq",
     "prompt": "If an unexpected technical or environmental issue occurs during a flight, the best general priority is to:",
     "options": [
       {
@@ -1953,6 +1509,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 81,
     "section": "B",
+    "type": "mcq",
     "prompt": "Photogrammetry is the process of:",
     "options": [
       {
@@ -1977,6 +1534,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 82,
     "section": "B",
+    "type": "mcq",
     "prompt": "A farmer wants to monitor crop health over a large field. Which application is most relevant?",
     "options": [
       {
@@ -2001,6 +1559,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 83,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which drone task is most relevant for examining a bridge, tower or pipeline without sending a person close to it?",
     "options": [
       {
@@ -2025,6 +1584,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 84,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which payload is best suited to identify unusual heat patterns in electrical equipment?",
     "options": [
       {
@@ -2049,6 +1609,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 85,
     "section": "B",
+    "type": "mcq",
     "prompt": "During a rescue mission, drone imagery is most valuable because it can:",
     "options": [
       {
@@ -2073,6 +1634,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 86,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which industry could use drones to calculate stockpile volumes and monitor excavation activity?",
     "options": [
       {
@@ -2097,6 +1659,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 87,
     "section": "B",
+    "type": "mcq",
     "prompt": "Transporting emergency medical supplies by drone is an example of:",
     "options": [
       {
@@ -2121,6 +1684,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 88,
     "section": "B",
+    "type": "mcq",
     "prompt": "In disaster management, drones can be used first to:",
     "options": [
       {
@@ -2145,6 +1709,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 89,
     "section": "B",
+    "type": "mcq",
     "prompt": "A construction company needs an updated accurate top-view image of its project site. Which output is most useful?",
     "options": [
       {
@@ -2169,6 +1734,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 90,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which drone application is focused on understanding land, terrain and site features from aerial data?",
     "options": [
       {
@@ -2193,6 +1759,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 91,
     "section": "B",
+    "type": "mcq",
     "prompt": "In drone imaging, FPV is mainly used for:",
     "options": [
       {
@@ -2217,6 +1784,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 92,
     "section": "B",
+    "type": "mcq",
     "prompt": "RGB is a colour model based on:",
     "options": [
       {
@@ -2241,6 +1809,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 93,
     "section": "B",
+    "type": "mcq",
     "prompt": "A higher camera resolution generally provides:",
     "options": [
       {
@@ -2265,6 +1834,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 94,
     "section": "B",
+    "type": "mcq",
     "prompt": "An orthomosaic is created by:",
     "options": [
       {
@@ -2289,6 +1859,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 95,
     "section": "B",
+    "type": "mcq",
     "prompt": "During a drone mission, altitude refers to:",
     "options": [
       {
@@ -2313,6 +1884,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 96,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which type of information is most useful for planning a mapping mission over an uneven site?",
     "options": [
       {
@@ -2337,6 +1909,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 97,
     "section": "B",
+    "type": "mcq",
     "prompt": "Why are overlapping aerial photographs important in photogrammetry?",
     "options": [
       {
@@ -2361,6 +1934,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 98,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which factor is most important when choosing a camera payload for a mapping task?",
     "options": [
       {
@@ -2385,6 +1959,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 99,
     "section": "B",
+    "type": "mcq",
     "prompt": "What is the main benefit of using drone imagery for site progress monitoring?",
     "options": [
       {
@@ -2409,6 +1984,7 @@ export const SECTION_B_QUESTIONS: BankQuestion[] = [
   {
     "id": 100,
     "section": "B",
+    "type": "mcq",
     "prompt": "Which task best demonstrates the use of drone data in GIS work?",
     "options": [
       {

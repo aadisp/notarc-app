@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth } from "@/firebase/firebase-admin";
+import { getQuestionById } from "@/lib/edp/server/question-bank";
 import {
     autoFinalizeIfExpired,
     findApplicationRefByUid,
+    sanitizeSingleAnswer,
 } from "@/lib/edp/server/exam-store";
-
-const VALID_OPTIONS = new Set(["A", "B", "C", "D"]);
 
 export async function POST(request: NextRequest) {
     try {
         const body = (await request.json()) as {
             idToken: string;
             questionId: number;
-            optionId: string;
+            answer: string;
         };
 
         if (!body.idToken) {
@@ -34,10 +34,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        if (
-            typeof body.questionId !== "number" ||
-            !VALID_OPTIONS.has(body.optionId)
-        ) {
+        if (typeof body.questionId !== "number") {
             return NextResponse.json(
                 { error: "Invalid answer." },
                 { status: 400 }
@@ -84,8 +81,28 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        const question = getQuestionById(body.questionId);
+
+        if (!question) {
+            return NextResponse.json(
+                { error: "Invalid question." },
+                { status: 400 }
+            );
+        }
+
+        // Validated per the question's own type — MCQ must be A/B/C/D,
+        // typed must be a non-empty (and length-capped) string.
+        const cleanAnswer = sanitizeSingleAnswer(question, body.answer);
+
+        if (cleanAnswer === null) {
+            return NextResponse.json(
+                { error: "Invalid answer." },
+                { status: 400 }
+            );
+        }
+
         await ref.update({
-            [`examAnswers.${body.questionId}`]: body.optionId,
+            [`examAnswers.${body.questionId}`]: cleanAnswer,
         });
 
         return NextResponse.json({ success: true });

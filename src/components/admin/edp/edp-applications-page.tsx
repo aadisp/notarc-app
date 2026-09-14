@@ -8,7 +8,7 @@ import AdminNav from "@/components/admin/admin-nav";
 
 import { EdpApplication } from "@/types/edp-application";
 import { ExamDecision } from "@/types/edp-exam";
-import { TOTAL_EXAM_QUESTIONS } from "@/lib/edp/exam-config";
+import { AUTO_GRADED_MARKS } from "@/lib/edp/exam-config";
 
 import {
     Select,
@@ -24,9 +24,14 @@ function ExamCell({ application }: { application: EdpApplication }) {
 
     if (application.examStatus === "submitted") {
         return (
-            <span className="font-semibold">
-                {application.score ?? 0} / {TOTAL_EXAM_QUESTIONS}
-            </span>
+            <div>
+                <span className="font-semibold">
+                    {application.score ?? 0} / {AUTO_GRADED_MARKS}
+                </span>
+                <span className="ml-1.5 text-xs text-muted-foreground">
+                    (MCQs)
+                </span>
+            </div>
         );
     }
 
