@@ -75,7 +75,7 @@ export default function CheckoutItems({
                             </div>
 
                             <h2 className="text-xl font-bold text-white">
-                                ₹{item.price * item.quantity}
+                                ₹{(item.price * item.quantity).toLocaleString("en-IN")}
                             </h2>
 
                         </div>

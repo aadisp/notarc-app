@@ -30,7 +30,7 @@ export default function OrderSummary({
             <div className="space-y-3 text-white/70">
                 <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span className="text-white">₹{subtotal}</span>
+                    <span className="text-white">₹{subtotal.toLocaleString("en-IN")}</span>
                 </div>
 
                 <div className="flex justify-between">
@@ -42,7 +42,7 @@ export default function OrderSummary({
 
                 <div className="flex justify-between text-xl font-bold text-white">
                     <span>Total</span>
-                    <span>₹{total}</span>
+                    <span>₹{total.toLocaleString("en-IN")}</span>
                 </div>
             </div>
 

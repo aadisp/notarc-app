@@ -61,7 +61,7 @@ export default function OrderCard({
                     </p>
 
                     <h2 className="text-3xl font-bold">
-                        ₹{order.total}
+                        ₹{order.total.toLocaleString("en-IN")}
                     </h2>
 
                 </div>
@@ -177,7 +177,7 @@ export default function OrderCard({
                         </div>
 
                         <p className="font-semibold">
-                            ₹{item.price * item.quantity}
+                            ₹{(item.price * item.quantity).toLocaleString("en-IN")}
                         </p>
 
                     </div>
