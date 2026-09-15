@@ -9,6 +9,7 @@ import AdminNav from "@/components/admin/admin-nav";
 import { EdpApplication } from "@/types/edp-application";
 import { ExamDecision } from "@/types/edp-exam";
 import { AUTO_GRADED_MARKS } from "@/lib/edp/exam-config";
+import { EXAM_TOTAL_MARKS } from "@/lib/edp/exam-config";
 
 import {
     Select,
@@ -19,10 +20,23 @@ import {
 } from "@/components/ui/select";
 
 type DecisionFilter = ExamDecision | "all";
-
 function ExamCell({ application }: { application: EdpApplication }) {
 
     if (application.examStatus === "submitted") {
+
+        if (application.finalScore !== undefined) {
+            return (
+                <div>
+                    <span className="font-semibold">
+                        {application.finalScore} / {EXAM_TOTAL_MARKS}
+                    </span>
+                    <span className="ml-1.5 text-xs text-emerald-600">
+                        (Reviewed)
+                    </span>
+                </div>
+            );
+        }
+
         return (
             <div>
                 <span className="font-semibold">
