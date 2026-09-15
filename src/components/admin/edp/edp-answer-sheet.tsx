@@ -1,19 +1,31 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { auth } from "@/firebase/firebase";
 import type { AnswerSheetEntry } from "@/app/api/edp/admin/answer-sheet/route";
 
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+
 interface Props {
     applicationId: string;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
 }
 
 type MarkingMap = Record<string, "right" | "wrong">;
 
-export default function EdpAnswerSheet({ applicationId }: Props) {
+export default function EdpAnswerSheet({
+    applicationId,
+    open,
+    onOpenChange,
+}: Props) {
 
-    const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -24,67 +36,73 @@ export default function EdpAnswerSheet({ applicationId }: Props) {
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
 
-    async function handleExpand() {
+    // Load the answer sheet the first time this popup is opened for a
+    // given application — same fetch as before, just triggered by the
+    // Dialog's open state instead of an inline expand/collapse toggle.
+    useEffect(() => {
 
-        const next = !expanded;
-        setExpanded(next);
+        if (!open || loaded) return;
 
-        if (!next || loaded) return;
+        async function loadAnswerSheet() {
 
-        setLoading(true);
-        setError(null);
+            setLoading(true);
+            setError(null);
 
-        try {
+            try {
 
-            const user = auth.currentUser;
+                const user = auth.currentUser;
 
-            if (!user) {
-                setError("Not logged in.");
-                return;
-            }
-
-            const idToken = await user.getIdToken();
-
-            const response = await fetch(
-                "/api/edp/admin/answer-sheet",
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ idToken, applicationId }),
+                if (!user) {
+                    setError("Not logged in.");
+                    return;
                 }
-            );
 
-            const data = await response.json();
+                const idToken = await user.getIdToken();
 
-            if (!response.ok) {
-                setError(data.error || "Could not load the answer sheet.");
-                return;
-            }
+                const response = await fetch(
+                    "/api/edp/admin/answer-sheet",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ idToken, applicationId }),
+                    }
+                );
 
-            const sheet: AnswerSheetEntry[] = data.answerSheet;
+                const data = await response.json();
 
-            setAnswerSheet(sheet);
-
-            const initialMarking: MarkingMap = {};
-            for (const entry of sheet) {
-                if (entry.marking) {
-                    initialMarking[String(entry.id)] = entry.marking;
+                if (!response.ok) {
+                    setError(data.error || "Could not load the answer sheet.");
+                    return;
                 }
+
+                const sheet: AnswerSheetEntry[] = data.answerSheet;
+
+                setAnswerSheet(sheet);
+
+                const initialMarking: MarkingMap = {};
+                for (const entry of sheet) {
+                    if (entry.marking) {
+                        initialMarking[String(entry.id)] = entry.marking;
+                    }
+                }
+                setMarking(initialMarking);
+
+                setLoaded(true);
+
+            } catch (err) {
+
+                console.error(err);
+                setError("Could not load the answer sheet.");
+
+            } finally {
+                setLoading(false);
             }
-            setMarking(initialMarking);
 
-            setLoaded(true);
-
-        } catch (err) {
-
-            console.error(err);
-            setError("Could not load the answer sheet.");
-
-        } finally {
-            setLoading(false);
         }
 
-    }
+        loadAnswerSheet();
+
+    }, [open, loaded, applicationId]);
 
     function markQuestion(questionId: number, value: "right" | "wrong") {
         setSaved(false);
@@ -146,81 +164,86 @@ export default function EdpAnswerSheet({ applicationId }: Props) {
     ).length;
 
     return (
-        <div className="rounded-xl border">
 
-            <button
-                type="button"
-                onClick={handleExpand}
-                className="flex w-full items-center justify-between p-4 text-left font-semibold"
+        <Dialog open={open} onOpenChange={onOpenChange}>
+
+            <DialogContent
+                showCloseButton={false}
+                className="
+                    flex
+                    h-[88vh]
+                    w-[95vw]
+                    max-w-3xl
+                    flex-col
+                    overflow-hidden
+                    p-0
+                    gap-0
+                "
             >
-                Answer Sheet
-                {expanded ? (
-                    <ChevronUp className="h-4 w-4" />
-                ) : (
-                    <ChevronDown className="h-4 w-4" />
+
+                <DialogHeader className="sr-only">
+                    <DialogTitle>Answer Sheet</DialogTitle>
+                </DialogHeader>
+
+                {loading && (
+                    <div className="flex flex-1 items-center justify-center gap-2 text-sm text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Loading answer sheet...
+                    </div>
                 )}
-            </button>
 
-            {expanded && (
-                <div className="border-t">
+                {error && (
+                    <p className="p-4 text-sm text-red-600">{error}</p>
+                )}
 
-                    {loading && (
-                        <div className="flex items-center gap-2 p-4 text-sm text-muted-foreground">
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            Loading answer sheet...
-                        </div>
-                    )}
+                {!loading && loaded && currentEntry && (
+                    <div className="flex min-h-0 flex-1 flex-col bg-[#0b0d10]">
 
-                    {error && (
-                        <p className="p-4 text-sm text-red-600">{error}</p>
-                    )}
+                        {/* Header, styled to match the applicant's exam view */}
+                        <div className="shrink-0 border-b border-white/10 bg-[#0b0d10]/95 px-4 py-3 backdrop-blur-xl">
 
-                    {!loading && loaded && currentEntry && (
-                        <div className="max-h-[75vh] overflow-y-auto rounded-b-xl bg-[#0b0d10]">
-
-                            {/* Header, styled to match the applicant's exam view */}
-                            <div className="sticky top-0 z-10 border-b border-white/10 bg-[#0b0d10]/95 px-4 py-3 backdrop-blur-xl">
-
-                                <div className="flex items-center justify-between">
-                                    <div className="text-xs font-semibold uppercase tracking-wide text-white/40">
-                                        Question {currentIndex + 1}
-                                        <span className="text-white/20">
-                                            {" "}/ {answerSheet.length}
-                                        </span>
-                                    </div>
-
-                                    <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-bold tabular-nums text-white">
-                                        {rightCount} / {answerSheet.length} marked right
-                                    </div>
+                            <div className="flex items-center justify-between">
+                                <div className="text-xs font-semibold uppercase tracking-wide text-white/40">
+                                    Question {currentIndex + 1}
+                                    <span className="text-white/20">
+                                        {" "}/ {answerSheet.length}
+                                    </span>
                                 </div>
 
-                                <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1">
-                                    {answerSheet.map((entry, index) => {
-                                        const mark = marking[String(entry.id)];
-                                        return (
-                                            <button
-                                                key={entry.id}
-                                                type="button"
-                                                onClick={() => setCurrentIndex(index)}
-                                                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition ${
-                                                    index === currentIndex
-                                                        ? "bg-amber-400 text-black"
-                                                        : mark === "right"
-                                                        ? "bg-emerald-400/20 text-emerald-300"
-                                                        : mark === "wrong"
-                                                        ? "bg-red-400/20 text-red-300"
-                                                        : "bg-white/5 text-white/40"
-                                                }`}
-                                            >
-                                                {index + 1}
-                                            </button>
-                                        );
-                                    })}
+                                <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-bold tabular-nums text-white">
+                                    {rightCount} / {answerSheet.length} marked right
                                 </div>
-
                             </div>
 
-                            {/* Question content, mirroring the applicant's exam layout exactly */}
+                            <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1">
+                                {answerSheet.map((entry, index) => {
+                                    const mark = marking[String(entry.id)];
+                                    return (
+                                        <button
+                                            key={entry.id}
+                                            type="button"
+                                            onClick={() => setCurrentIndex(index)}
+                                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition ${
+                                                index === currentIndex
+                                                    ? "bg-amber-400 text-black"
+                                                    : mark === "right"
+                                                    ? "bg-emerald-400/20 text-emerald-300"
+                                                    : mark === "wrong"
+                                                    ? "bg-red-400/20 text-red-300"
+                                                    : "bg-white/5 text-white/40"
+                                            }`}
+                                        >
+                                            {index + 1}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                        </div>
+
+                        {/* Question content, mirroring the applicant's exam layout exactly */}
+                        <div className="min-h-0 flex-1 overflow-y-auto">
+
                             <div className="mx-auto w-full max-w-2xl px-4 py-6">
 
                                 <span
@@ -349,66 +372,81 @@ export default function EdpAnswerSheet({ applicationId }: Props) {
 
                             </div>
 
-                            {/* Footer nav, mirroring the applicant's exam layout */}
-                            <div className="sticky bottom-0 z-10 border-t border-white/10 bg-[#0b0d10]/95 px-4 py-3 backdrop-blur-xl">
-                                <div className="mx-auto flex max-w-2xl items-center gap-3">
+                        </div>
 
+                        {/* Footer nav, mirroring the applicant's exam layout */}
+                        <div className="shrink-0 border-t border-white/10 bg-[#0b0d10]/95 px-4 py-3 backdrop-blur-xl">
+                            <div className="mx-auto flex max-w-2xl items-center gap-3">
+
+                                <button
+                                    type="button"
+                                    disabled={currentIndex === 0}
+                                    onClick={() =>
+                                        setCurrentIndex((i) => Math.max(0, i - 1))
+                                    }
+                                    className="h-11 flex-1 rounded-full border border-white/15 text-sm font-semibold text-white/70 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
+                                >
+                                    Previous
+                                </button>
+
+                                {currentIndex < answerSheet.length - 1 ? (
                                     <button
                                         type="button"
-                                        disabled={currentIndex === 0}
                                         onClick={() =>
-                                            setCurrentIndex((i) => Math.max(0, i - 1))
+                                            setCurrentIndex((i) =>
+                                                Math.min(answerSheet.length - 1, i + 1)
+                                            )
                                         }
-                                        className="h-11 flex-1 rounded-full border border-white/15 text-sm font-semibold text-white/70 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
+                                        className="h-11 flex-1 rounded-full bg-white/10 text-sm font-semibold text-white transition hover:bg-white/20"
                                     >
-                                        Previous
+                                        Next
                                     </button>
-
-                                    {currentIndex < answerSheet.length - 1 ? (
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setCurrentIndex((i) =>
-                                                    Math.min(answerSheet.length - 1, i + 1)
-                                                )
-                                            }
-                                            className="h-11 flex-1 rounded-full bg-white/10 text-sm font-semibold text-white transition hover:bg-white/20"
-                                        >
-                                            Next
-                                        </button>
-                                    ) : (
-                                        <button
-                                            type="button"
-                                            onClick={handleSave}
-                                            disabled={saving || markedCount < answerSheet.length}
-                                            className="flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-amber-400 text-sm font-bold text-black transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-40"
-                                        >
-                                            {saving && (
-                                                <Loader2 className="h-4 w-4 animate-spin" />
-                                            )}
-                                            {saved
-                                                ? "Saved ✓"
-                                                : `Save Marking (${rightCount}/${answerSheet.length})`}
-                                        </button>
-                                    )}
-
-                                </div>
-
-                                {markedCount < answerSheet.length && currentIndex === answerSheet.length - 1 && (
-                                    <p className="mx-auto mt-2 max-w-2xl text-center text-xs text-amber-400">
-                                        Mark every question (right or wrong) before saving —
-                                        {" "}{answerSheet.length - markedCount} left.
-                                    </p>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={handleSave}
+                                        disabled={saving || markedCount < answerSheet.length}
+                                        className="flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-amber-400 text-sm font-bold text-black transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-40"
+                                    >
+                                        {saving && (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                        )}
+                                        {saved
+                                            ? "Saved ✓"
+                                            : `Save Marking (${rightCount}/${answerSheet.length})`}
+                                    </button>
                                 )}
 
                             </div>
 
+                            <div className="mx-auto mt-2 flex max-w-2xl items-center justify-between">
+
+                                {markedCount < answerSheet.length && currentIndex === answerSheet.length - 1 ? (
+                                    <p className="text-xs text-amber-400">
+                                        Mark every question (right or wrong) before saving —
+                                        {" "}{answerSheet.length - markedCount} left.
+                                    </p>
+                                ) : (
+                                    <span />
+                                )}
+
+                                <button
+                                    type="button"
+                                    onClick={() => onOpenChange(false)}
+                                    className="text-xs font-medium text-white/40 hover:text-white/70"
+                                >
+                                    Close
+                                </button>
+
+                            </div>
+
                         </div>
-                    )}
 
-                </div>
-            )}
+                    </div>
+                )}
 
-        </div>
+            </DialogContent>
+
+        </Dialog>
     );
 }

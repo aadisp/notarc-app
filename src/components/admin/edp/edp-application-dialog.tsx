@@ -107,6 +107,7 @@ export default function EdpApplicationDialog({
 }: Props) {
 
     const [savingDecision, setSavingDecision] = useState(false);
+    const [answerSheetOpen, setAnswerSheetOpen] = useState(false);
 
     if (!application) return null;
 
@@ -159,6 +160,8 @@ export default function EdpApplicationDialog({
     }
 
     return (
+
+        <>
 
         <Dialog
             open={open}
@@ -222,7 +225,13 @@ export default function EdpApplicationDialog({
                 </div>
 
                 {application.examStatus === "submitted" && (
-                    <EdpAnswerSheet applicationId={application.id} />
+                    <Button
+                        variant="outline"
+                        onClick={() => setAnswerSheetOpen(true)}
+                        className="w-full"
+                    >
+                        View Answer Sheet
+                    </Button>
                 )}
 
                 <div className="rounded-xl border p-4">
@@ -269,5 +278,13 @@ export default function EdpApplicationDialog({
             </DialogContent>
 
         </Dialog>
+
+        <EdpAnswerSheet
+            applicationId={application.id}
+            open={answerSheetOpen}
+            onOpenChange={setAnswerSheetOpen}
+        />
+
+        </>
     );
 }
