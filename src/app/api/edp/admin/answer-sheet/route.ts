@@ -9,6 +9,7 @@ export interface AnswerSheetEntry {
   type: "typed" | "mcq";
   prompt: string;
   givenAnswer: string | null;
+  marking: "right" | "wrong" | null;
 
   // Only present for MCQ questions.
   options?: { id: "A" | "B" | "C" | "D"; text: string }[];
@@ -76,6 +77,8 @@ export async function POST(request: NextRequest) {
 
     const questionIds: number[] = data.examQuestionIds ?? [];
     const answers: ExamAnswerMap = data.examAnswers ?? {};
+    const existingMarking: Record<string, "right" | "wrong"> =
+      data.examMarking ?? {};
 
     const answerSheet: AnswerSheetEntry[] = questionIds.map((id) => {
       const question = getQuestionById(id);
@@ -93,6 +96,8 @@ export async function POST(request: NextRequest) {
       const given = answers[String(id)] ?? null;
 
       if (question.type === "mcq") {
+        const isCorrect = given === question.correctOptionId;
+
         return {
           id: question.id,
           section: question.section,
@@ -101,7 +106,10 @@ export async function POST(request: NextRequest) {
           options: question.options,
           correctOptionId: question.correctOptionId,
           givenAnswer: given,
-          isCorrect: given === question.correctOptionId,
+          isCorrect,
+          marking:
+            existingMarking[String(id)] ??
+            (isCorrect ? "right" : "wrong"),
         };
       }
 
@@ -112,10 +120,14 @@ export async function POST(request: NextRequest) {
         prompt: question.prompt,
         correctAnswer: question.expectedAnswer,
         givenAnswer: given,
+        marking: existingMarking[String(id)] ?? null,
       };
     });
 
-    return NextResponse.json({ answerSheet });
+    return NextResponse.json({
+      answerSheet,
+      finalScore: data.finalScore ?? null,
+    });
   } catch (error) {
     console.error("edp answer-sheet error:", error);
 
