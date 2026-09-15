@@ -90,6 +90,7 @@ export async function POST(request: NextRequest) {
           type: "typed",
           prompt: "(Question no longer exists in the question bank)",
           givenAnswer: answers[String(id)] ?? null,
+          marking: null,
         };
       }
 
