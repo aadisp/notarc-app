@@ -78,7 +78,7 @@ function DecisionBadge({ application }: { application: EdpApplication }) {
     if (application.examStatus === "submitted") {
         return (
             <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
-                Pending Review
+                Pending
             </span>
         );
     }
