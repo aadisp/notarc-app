@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { db } from "@/firebase/firebase";
 import { EdpApplication } from "@/types/edp-application";
 import { ExamDecision, ExamSubmitReason } from "@/types/edp-exam";
-import { AUTO_GRADED_MARKS } from "@/lib/edp/exam-config";
+import { AUTO_GRADED_MARKS, EXAM_TOTAL_MARKS } from "@/lib/edp/exam-config";
 
 import {
     Dialog,
@@ -68,18 +68,35 @@ function ExamSummary({ application }: { application: EdpApplication }) {
         );
     }
 
+    const hasFinalScore = application.finalScore !== undefined;
+
     return (
         <div className="space-y-1.5 text-sm">
 
-            <p>
-                <span className="font-semibold">Auto-graded score (MCQs): </span>
-                {application.score ?? 0} / {AUTO_GRADED_MARKS}
-            </p>
+            {hasFinalScore ? (
 
-            <p className="text-muted-foreground">
-                10 typed short-answer responses are not auto-graded and
-                still need your review.
-            </p>
+                <p>
+                    <span className="font-semibold">Final score (reviewed): </span>
+                    {application.finalScore} / {EXAM_TOTAL_MARKS}
+                </p>
+
+            ) : (
+
+                <>
+
+                    <p>
+                        <span className="font-semibold">Auto-graded score (MCQs): </span>
+                        {application.score ?? 0} / {AUTO_GRADED_MARKS}
+                    </p>
+
+                    <p className="text-muted-foreground">
+                        10 typed short-answer responses are not auto-graded and
+                        still need your review.
+                    </p>
+
+                </>
+
+            )}
 
             <p>
                 <span className="font-semibold">Submitted: </span>
@@ -107,7 +124,7 @@ export default function EdpApplicationDialog({
 }: Props) {
 
     const [savingDecision, setSavingDecision] = useState(false);
-    const [answerSheetOpen, setAnswerSheetOpen] = useState(false);
+    const [answerSheetOpen, setAnswerSheetOpen] = useState(false); 
 
     if (!application) return null;
 
@@ -279,12 +296,12 @@ export default function EdpApplicationDialog({
 
         </Dialog>
 
-        <EdpAnswerSheet
+        <EdpAnswerSheet             
             applicationId={application.id}
             open={answerSheetOpen}
             onOpenChange={setAnswerSheetOpen}
         />
 
-        </>
+        </>  
     );
 }

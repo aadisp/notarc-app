@@ -36,6 +36,11 @@ export interface EdpApplication {
     // back to the applicant's browser — only read by admin-facing
     // code, which is already gated behind admin-only Firestore access.
     score?: number;
+    // Set once an admin has reviewed and saved marking for the typed
+    // Section A answers — the true combined score out of
+    // EXAM_TOTAL_MARKS (30), covering both the auto-graded MCQs and
+    // the admin's manual review.
+    finalScore?: number;
 
     // Set by an admin after reviewing the exam result.
     decision?: ExamDecision;
