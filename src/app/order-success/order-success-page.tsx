@@ -10,11 +10,12 @@ export default function OrderSuccessPage() {
             <CheckCircle2 className="h-20 w-20 text-green-400" />
 
             <h1 className="mt-8 text-5xl font-bold text-white">
-                Order Placed!
+                Payment Submitted!
             </h1>
 
             <p className="mt-4 text-lg text-white/60">
-                Thank you for your purchase. Your order has been received and is being processed.
+                Thanks — we've received your order and payment confirmation.
+                We'll verify it shortly and update your order status.
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center gap-4">

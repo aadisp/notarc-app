@@ -3,6 +3,7 @@ interface OrderSummaryProps {
     shipping: number;
     total: number;
     onPlaceOrder: () => void;
+    placing?: boolean;
 }
 
 export default function OrderSummary({
@@ -10,6 +11,7 @@ export default function OrderSummary({
     shipping,
     total,
     onPlaceOrder,
+    placing = false,
 }: OrderSummaryProps) {
     return (
         <div
@@ -48,6 +50,7 @@ export default function OrderSummary({
 
             <button
                 onClick={onPlaceOrder}
+                disabled={placing}
                 className="
                     mt-8
                     w-full
@@ -58,9 +61,11 @@ export default function OrderSummary({
                     text-black
                     transition
                     hover:bg-white/90
+                    disabled:cursor-not-allowed
+                    disabled:opacity-60
                 "
             >
-                Place Order
+                {placing ? "Placing Order..." : "Place Order"}
             </button>
         </div>
     );

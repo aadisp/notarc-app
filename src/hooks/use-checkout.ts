@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { auth, db } from "@/firebase/firebase";
 import { useCartStore } from "@/store/cart-store";
 import {
@@ -6,6 +7,7 @@ import {
     doc,
     getDoc,
     serverTimestamp,
+    updateDoc,
 } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -30,11 +32,21 @@ export function useCheckout({
 
     const router = useRouter();
 
-
     const clearCart = useCartStore(
         (state) => state.clearCart
     );
 
+    // "summary": reviewing the cart, about to create the order.
+    // "payment": order created, showing the UPI QR code.
+    const [step, setStep] = useState<"summary" | "payment">("summary");
+    const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
+    const [placingOrder, setPlacingOrder] = useState(false);
+    const [confirmingPayment, setConfirmingPayment] = useState(false);
+
+    // Creates the order (paymentStatus: "Pending") and moves to the
+    // payment step. The cart is intentionally NOT cleared yet — if the
+    // person abandons the payment step, their cart should still be
+    // there when they come back.
     async function placeOrder() {
 
         const user = auth.currentUser;
@@ -43,6 +55,13 @@ export function useCheckout({
             toast.error("Please login first.");
             return;
         }
+
+        if (items.length === 0) {
+            toast.error("Your cart is empty.");
+            return;
+        }
+
+        setPlacingOrder(true);
 
         try {
 
@@ -75,7 +94,7 @@ export function useCheckout({
                 };
             });
 
-            await addDoc(
+            const orderRef = await addDoc(
                 collection(
                     db,
                     "orders"
@@ -97,7 +116,7 @@ export function useCheckout({
 
                     shippingStatus: "Pending",
 
-                    paymentMethod: "Not Specified",
+                    paymentMethod: "UPI",
 
                     tax: 0,
 
@@ -106,15 +125,10 @@ export function useCheckout({
                 }
             );
 
-            clearCart();
+            setPendingOrderId(orderRef.id);
+            setStep("payment");
 
-            toast.success(
-                "Order placed successfully!"
-            );
-
-            router.push("/order-success");
-
-        } catch (error: any) {
+        } catch (error) {
 
             console.error(error);
 
@@ -124,12 +138,61 @@ export function useCheckout({
                     : "Something went wrong."
             );
 
+        } finally {
+            setPlacingOrder(false);
+        }
+
+    }
+
+    // Called when the person taps "I've Paid" on the QR screen. Marks
+    // the order as awaiting verification — NOT as paid, since nothing
+    // here has actually confirmed the money arrived. An admin still
+    // needs to check and mark it "Paid" from the orders dashboard.
+    async function confirmPayment() {
+
+        if (!pendingOrderId) return;
+
+        setConfirmingPayment(true);
+
+        try {
+
+            await updateDoc(
+                doc(db, "orders", pendingOrderId),
+                {
+                    paymentStatus: "Submitted",
+                    updatedAt: serverTimestamp(),
+                }
+            );
+
+            clearCart();
+
+            toast.success("Payment submitted — we'll confirm it shortly.");
+
+            router.push("/order-success");
+
+        } catch (error) {
+
+            console.error(error);
+
+            toast.error(
+                error instanceof Error
+                    ? error.message
+                    : "Something went wrong."
+            );
+
+        } finally {
+            setConfirmingPayment(false);
         }
 
     }
 
     return {
+        step,
+        pendingOrderId,
+        placingOrder,
+        confirmingPayment,
         placeOrder,
+        confirmPayment,
     };
 
 }
