@@ -6,7 +6,6 @@ import { useCartStore } from "@/store/cart-store";
 import { useRouter } from "next/navigation";
 import OrderSummary from "@/components/checkout/order-summary";
 import CheckoutItems from "@/components/checkout/checkout-items";
-import UpiQrPayment from "@/components/checkout/upi-qr-payment";
 import { useCheckout } from "@/hooks/use-checkout";
 import { useProducts } from "@/hooks/use-products";
 import type { Product } from "@/types/product";
@@ -46,14 +45,7 @@ export default function CheckoutPage() {
   const total =
     subtotal + shipping;
 
-  const {
-      step,
-      pendingOrderId,
-      placingOrder,
-      confirmingPayment,
-      placeOrder,
-      confirmPayment,
-  } = useCheckout({
+  const { placeOrder } = useCheckout({
       items,
       subtotal,
       shipping,
@@ -75,39 +67,17 @@ export default function CheckoutPage() {
 
           <div className="grid gap-10 lg:grid-cols-3">
 
-            {step === "summary" ? (
+            <CheckoutItems
+                items={items}
+                productsById={productsById}
+            />
 
-                <>
-
-                    <CheckoutItems
-                        items={items}
-                        productsById={productsById}
-                    />
-
-                    <OrderSummary
-                      subtotal={subtotal}
-                      shipping={shipping}
-                      total={total}
-                      onPlaceOrder={placeOrder}
-                      placing={placingOrder}
-                  />
-
-                </>
-
-            ) : (
-
-                <div className="lg:col-span-3 lg:mx-auto lg:max-w-md">
-
-                    <UpiQrPayment
-                        orderId={pendingOrderId ?? ""}
-                        amount={total}
-                        onConfirmPaid={confirmPayment}
-                        confirming={confirmingPayment}
-                    />
-
-                </div>
-
-            )}
+            <OrderSummary
+              subtotal={subtotal}
+              shipping={shipping}
+              total={total}
+              onPlaceOrder={placeOrder}
+          />
 
           </div>
 

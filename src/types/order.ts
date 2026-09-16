@@ -8,7 +8,6 @@ export type OrderStatus =
 
 export type PaymentStatus =
     | "Pending"
-    | "Submitted"
     | "Paid"
     | "Refunded";
 

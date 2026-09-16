@@ -35,10 +35,6 @@ export default function PaymentStatusSelect({
             🟡 Pending
           </SelectItem>
 
-          <SelectItem value="Submitted">
-            🔵 Submitted (Verify)
-          </SelectItem>
-
           <SelectItem value="Paid">
             🟢 Paid
           </SelectItem>
