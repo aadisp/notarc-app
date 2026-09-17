@@ -130,7 +130,7 @@ export default function OrderSummary({
                     : !canSubmit
                     ? "Add a Shipping Address"
                     : paymentMethod === "cod"
-                    ? "Place Order (Pay on Delivery)"
+                    ? "Place Order"
                     : "Place Order"}
             </button>
         </div>

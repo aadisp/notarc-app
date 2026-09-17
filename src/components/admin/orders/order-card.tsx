@@ -117,6 +117,27 @@ export default function OrderCard({
               {order.status}
           </span>
 
+          <span
+              className={`
+                  ml-2
+                  inline-block
+                  rounded-full
+                  px-3
+                  py-1
+                  text-xs
+                  font-semibold
+                  ${
+                      order.paymentMethod === "COD"
+                          ? "bg-orange-100 text-orange-800"
+                          : "bg-purple-100 text-purple-800"
+                  }
+              `}
+          >
+              {order.paymentMethod === "COD"
+                  ? "Pay on Delivery"
+                  : "UPI"}
+          </span>
+
           <h2 className="mt-3 text-3xl font-bold">
               ₹{order.total.toLocaleString()}
           </h2>
