@@ -84,11 +84,16 @@ async function resolveShippingAddress(
 
 export async function POST(request: NextRequest) {
     try {
-        const { idToken, items, address } = (await request.json()) as {
-            idToken: string;
-            items: RequestedItem[];
-            address?: AddressInput;
-        };
+        const { idToken, items, address, paymentMethod } =
+            (await request.json()) as {
+                idToken: string;
+                items: RequestedItem[];
+                address?: AddressInput;
+                paymentMethod?: "upi" | "cod";
+            };
+
+        const method: "upi" | "cod" =
+            paymentMethod === "cod" ? "cod" : "upi";
 
         if (!idToken) {
             return NextResponse.json(
@@ -111,7 +116,9 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        if (!isUpiConfigured()) {
+        // Cash on Delivery doesn't touch UPI at all, so only require it
+        // to be configured when it's actually going to be used.
+        if (method === "upi" && !isUpiConfigured()) {
             return NextResponse.json(
                 { error: "UPI payments aren't configured yet." },
                 { status: 500 }
@@ -217,7 +224,7 @@ export async function POST(request: NextRequest) {
             status: "pending",
 
             paymentStatus: "Pending",
-            paymentMethod: "UPI",
+            paymentMethod: method === "cod" ? "COD" : "UPI",
 
             shippingStatus: "Pending",
 
@@ -226,6 +233,13 @@ export async function POST(request: NextRequest) {
             createdAt: FieldValue.serverTimestamp(),
             updatedAt: FieldValue.serverTimestamp(),
         });
+
+        if (method === "cod") {
+            return NextResponse.json({
+                orderId: orderRef.id,
+                amount: total,
+            });
+        }
 
         const upiUri = buildUpiUri({
             amount: total,

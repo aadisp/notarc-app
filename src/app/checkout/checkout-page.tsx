@@ -9,7 +9,7 @@ import CheckoutItems from "@/components/checkout/checkout-items";
 import AddressSelector, {
     AddressSelection,
 } from "@/components/checkout/address-selector";
-import { useCheckout } from "@/hooks/use-checkout";
+import { useCheckout, PaymentMethodChoice } from "@/hooks/use-checkout";
 import { useProducts } from "@/hooks/use-products";
 import type { Product } from "@/types/product";
 
@@ -59,6 +59,9 @@ export default function CheckoutPage() {
   const [addressSelection, setAddressSelection] =
       useState<AddressSelection | null>(null);
 
+  const [paymentMethod, setPaymentMethod] =
+      useState<PaymentMethodChoice>("upi");
+
 
   return (
     <SiteLayout>
@@ -88,9 +91,11 @@ export default function CheckoutPage() {
               subtotal={subtotal}
               shipping={shipping}
               total={total}
-              onPlaceOrder={() => placeOrder(addressSelection)}
+              onPlaceOrder={() => placeOrder(addressSelection, paymentMethod)}
               placing={placing}
               canSubmit={addressSelection !== null}
+              paymentMethod={paymentMethod}
+              onPaymentMethodChange={setPaymentMethod}
           />
 
           </div>
