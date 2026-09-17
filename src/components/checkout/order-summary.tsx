@@ -4,6 +4,7 @@ interface OrderSummaryProps {
     total: number;
     onPlaceOrder: () => void;
     placing?: boolean;
+    canSubmit?: boolean;
 }
 
 export default function OrderSummary({
@@ -12,6 +13,7 @@ export default function OrderSummary({
     total,
     onPlaceOrder,
     placing = false,
+    canSubmit = true,
 }: OrderSummaryProps) {
     return (
         <div
@@ -50,7 +52,7 @@ export default function OrderSummary({
 
             <button
                 onClick={onPlaceOrder}
-                disabled={placing}
+                disabled={placing || !canSubmit}
                 className="
                     mt-8
                     w-full
@@ -65,7 +67,11 @@ export default function OrderSummary({
                     disabled:opacity-60
                 "
             >
-                {placing ? "Placing Order..." : "Place Order"}
+                {placing
+                    ? "Placing Order..."
+                    : !canSubmit
+                    ? "Add a Shipping Address"
+                    : "Place Order"}
             </button>
         </div>
     );

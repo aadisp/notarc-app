@@ -1,11 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import SiteLayout from "@/components/layout/site-layout";
 import { useCartStore } from "@/store/cart-store";
 import { useRouter } from "next/navigation";
 import OrderSummary from "@/components/checkout/order-summary";
 import CheckoutItems from "@/components/checkout/checkout-items";
+import AddressSelector, {
+    AddressSelection,
+} from "@/components/checkout/address-selector";
 import { useCheckout } from "@/hooks/use-checkout";
 import { useProducts } from "@/hooks/use-products";
 import type { Product } from "@/types/product";
@@ -53,6 +56,9 @@ export default function CheckoutPage() {
       products,
   });
 
+  const [addressSelection, setAddressSelection] =
+      useState<AddressSelection | null>(null);
+
 
   return (
     <SiteLayout>
@@ -67,17 +73,24 @@ export default function CheckoutPage() {
 
           <div className="grid gap-10 lg:grid-cols-3">
 
-            <CheckoutItems
-                items={items}
-                productsById={productsById}
-            />
+          <div className="space-y-6 lg:col-span-2">
+
+              <AddressSelector onSelectionChange={setAddressSelection} />
+
+              <CheckoutItems
+                  items={items}
+                  productsById={productsById}
+              />
+
+          </div>
 
             <OrderSummary
               subtotal={subtotal}
               shipping={shipping}
               total={total}
-              onPlaceOrder={placeOrder}
+              onPlaceOrder={() => placeOrder(addressSelection)}
               placing={placing}
+              canSubmit={addressSelection !== null}
           />
 
           </div>

@@ -5,6 +5,7 @@ import { auth } from "@/firebase/firebase";
 import { useCartStore } from "@/store/cart-store";
 import type { CartItem } from "@/store/cart-store";
 import type { Product } from "@/types/product";
+import type { AddressSelection } from "@/components/checkout/address-selector";
 
 interface UseCheckoutProps {
     items: CartItem[];
@@ -23,7 +24,7 @@ export function useCheckout({ items }: UseCheckoutProps) {
         (state) => state.clearCart
     );
 
-    async function placeOrder() {
+    async function placeOrder(addressSelection: AddressSelection | null) {
 
         const user = auth.currentUser;
 
@@ -34,6 +35,11 @@ export function useCheckout({ items }: UseCheckoutProps) {
 
         if (items.length === 0) {
             toast.error("Your cart is empty.");
+            return;
+        }
+
+        if (!addressSelection) {
+            toast.error("Please add a shipping address.");
             return;
         }
 
@@ -52,6 +58,10 @@ export function useCheckout({ items }: UseCheckoutProps) {
                         id: item.id,
                         quantity: item.quantity,
                     })),
+                    address:
+                        addressSelection.kind === "saved"
+                            ? { addressId: addressSelection.addressId }
+                            : { newAddress: addressSelection.address },
                 }),
             });
 

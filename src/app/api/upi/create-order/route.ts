@@ -2,17 +2,92 @@ import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/firebase/firebase-admin";
 import { buildUpiUri, isUpiConfigured } from "@/lib/upi";
+import type { Address } from "@/types/address";
 
 interface RequestedItem {
     id: string;
     quantity: number;
 }
 
+type AddressInput =
+    | { addressId: string }
+    | { newAddress: Address };
+
+const PHONE_PATTERN = /^\d{10}$/;
+const PINCODE_PATTERN = /^\d{6}$/;
+
+function validateNewAddress(address: Address | undefined): string | null {
+    if (!address) return "Missing address.";
+    if (!address.fullName?.trim()) return "Missing full name.";
+    if (!PHONE_PATTERN.test(address.phone ?? "")) return "Invalid phone number.";
+    if (!address.line1?.trim()) return "Missing address line 1.";
+    if (!address.city?.trim()) return "Missing city.";
+    if (!address.state?.trim()) return "Missing state.";
+    if (!PINCODE_PATTERN.test(address.pincode ?? "")) return "Invalid pincode.";
+    return null;
+}
+
+/**
+ * Resolves whatever address input the client sent into the address
+ * snapshot that gets embedded on the order. For a saved address, this
+ * also bumps lastUsedAt so it stays near the top of the buyer's
+ * "recent addresses" list. For a brand new address, this creates the
+ * saved-address doc so it's available to pick from next time.
+ */
+async function resolveShippingAddress(
+    uid: string,
+    input: AddressInput | undefined
+): Promise<{ address: Address } | { error: string }> {
+
+    if (!input) {
+        return { error: "Please provide a shipping address." };
+    }
+
+    if ("addressId" in input) {
+        const addressRef = adminDb.collection("addresses").doc(input.addressId);
+        const snap = await addressRef.get();
+
+        if (!snap.exists) {
+            return { error: "That saved address no longer exists." };
+        }
+
+        const data = snap.data()!;
+
+        if (data.userId !== uid) {
+            return { error: "That address doesn't belong to you." };
+        }
+
+        await addressRef.update({ lastUsedAt: FieldValue.serverTimestamp() });
+
+        const { fullName, phone, line1, line2, city, state, pincode } = data;
+        return {
+            address: { fullName, phone, line1, line2, city, state, pincode },
+        };
+    }
+
+    const validationError = validateNewAddress(input.newAddress);
+    if (validationError) {
+        return { error: validationError };
+    }
+
+    const address = input.newAddress;
+
+    await adminDb.collection("addresses").add({
+        userId: uid,
+        ...address,
+        createdAt: FieldValue.serverTimestamp(),
+        lastUsedAt: FieldValue.serverTimestamp(),
+    });
+
+    return { address };
+}
+
 export async function POST(request: NextRequest) {
     try {
-        const { idToken, items } = (await request.json()) as {
+        const { idToken, items, address } = (await request.json()) as {
             idToken: string;
             items: RequestedItem[];
+            address?: AddressInput;
         };
 
         if (!idToken) {
@@ -115,6 +190,15 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        const resolvedAddress = await resolveShippingAddress(uid, address);
+
+        if ("error" in resolvedAddress) {
+            return NextResponse.json(
+                { error: resolvedAddress.error },
+                { status: 400 }
+            );
+        }
+
         const userSnap = await adminDb.collection("users").doc(uid).get();
         const username = userSnap.data()?.username ?? "";
 
@@ -136,6 +220,8 @@ export async function POST(request: NextRequest) {
             paymentMethod: "UPI",
 
             shippingStatus: "Pending",
+
+            shippingAddress: resolvedAddress.address,
 
             createdAt: FieldValue.serverTimestamp(),
             updatedAt: FieldValue.serverTimestamp(),

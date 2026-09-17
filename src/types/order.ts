@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { Address } from "./address";
 
 export type OrderStatus =
     | "pending"
@@ -51,6 +52,13 @@ export interface Order {
     shippingStatus: ShippingStatus;
 
     paymentMethod: string;
+
+    // A snapshot of the address at the moment the order was placed —
+    // not a reference to the saved address doc, since that doc can be
+    // edited or deleted later and the order should keep exactly what
+    // was used at checkout. Optional only because orders placed
+    // before this feature shipped won't have it.
+    shippingAddress?: Address;
 
     // Only set for UPI orders, once the buyer submits it — the UTR /
     // reference number their UPI app shows after paying. This is what

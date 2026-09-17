@@ -141,6 +141,25 @@ export default function OrderCard({
 
       </div>
 
+      {order.shippingAddress && (
+          <div className="mt-4 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-sm">
+              <p className="font-semibold text-gray-700">
+                  Ship to: {order.shippingAddress.fullName}
+                  <span className="ml-2 font-normal text-gray-500">
+                      {order.shippingAddress.phone}
+                  </span>
+              </p>
+              <p className="mt-0.5 text-gray-600">
+                  {order.shippingAddress.line1}
+                  {order.shippingAddress.line2
+                      ? `, ${order.shippingAddress.line2}`
+                      : ""}
+                  , {order.shippingAddress.city}, {order.shippingAddress.state}{" "}
+                  - {order.shippingAddress.pincode}
+              </p>
+          </div>
+      )}
+
       <div className="mt-6 flex flex-wrap gap-8">
 
     <OrderStatusSelect
