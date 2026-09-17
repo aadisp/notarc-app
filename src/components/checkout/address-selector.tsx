@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import {
     collection,
     getDocs,
-    limit,
-    orderBy,
     query,
     where,
 } from "firebase/firestore";
 import { Loader2, MapPin, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { auth, db } from "@/firebase/firebase";
 import type { Address, SavedAddress } from "@/types/address";
 
@@ -72,21 +71,37 @@ export default function AddressSelector({ onSelectionChange }: Props) {
 
             try {
 
+                // Deliberately no orderBy() here: pairing an equality
+                // where() with orderBy() on a *different* field (userId
+                // vs. lastUsedAt) requires a Firestore composite index.
+                // This project doesn't have one deployed, so that
+                // version of the query used to fail every time with
+                // "FAILED_PRECONDITION: The query requires an index" —
+                // caught below and only logged, which is why saved
+                // addresses never appeared. Filtering by userId alone
+                // only needs the automatic single-field index, so we
+                // sort and take the top 3 client-side instead.
                 const addressesQuery = query(
                     collection(db, "addresses"),
-                    where("userId", "==", user.uid),
-                    orderBy("lastUsedAt", "desc"),
-                    limit(3)
+                    where("userId", "==", user.uid)
                 );
 
                 const snap = await getDocs(addressesQuery);
 
                 if (cancelled) return;
 
-                const results = snap.docs.map((docSnap) => ({
+                const all = snap.docs.map((docSnap) => ({
                     id: docSnap.id,
                     ...docSnap.data(),
                 })) as SavedAddress[];
+
+                const results = all
+                    .sort((a, b) => {
+                        const aTime = a.lastUsedAt?.toMillis() ?? 0;
+                        const bTime = b.lastUsedAt?.toMillis() ?? 0;
+                        return bTime - aTime;
+                    })
+                    .slice(0, 3);
 
                 setSavedAddresses(results);
 
@@ -99,6 +114,9 @@ export default function AddressSelector({ onSelectionChange }: Props) {
 
             } catch (error) {
                 console.error("Could not load saved addresses:", error);
+                toast.error(
+                    "Couldn't load your saved addresses — you can still enter one below."
+                );
             } finally {
                 if (!cancelled) setLoading(false);
             }
