@@ -9,7 +9,8 @@ import CheckoutItems from "@/components/checkout/checkout-items";
 import AddressSelector, {
     AddressSelection,
 } from "@/components/checkout/address-selector";
-import { useCheckout, PaymentMethodChoice } from "@/hooks/use-checkout";
+import { useCheckout } from "@/hooks/use-checkout";
+import type { PaymentMethodChoice } from "@/hooks/use-checkout";
 import { useProducts } from "@/hooks/use-products";
 import type { Product } from "@/types/product";
 

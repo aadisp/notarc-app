@@ -7,6 +7,8 @@ import type { CartItem } from "@/store/cart-store";
 import type { Product } from "@/types/product";
 import type { AddressSelection } from "@/components/checkout/address-selector";
 
+export type PaymentMethodChoice = "upi" | "cod";
+
 interface UseCheckoutProps {
     items: CartItem[];
     subtotal: number;
@@ -24,7 +26,10 @@ export function useCheckout({ items }: UseCheckoutProps) {
         (state) => state.clearCart
     );
 
-    async function placeOrder(addressSelection: AddressSelection | null) {
+    async function placeOrder(
+        addressSelection: AddressSelection | null,
+        paymentMethod: PaymentMethodChoice
+    ) {
 
         const user = auth.currentUser;
 
@@ -62,6 +67,7 @@ export function useCheckout({ items }: UseCheckoutProps) {
                         addressSelection.kind === "saved"
                             ? { addressId: addressSelection.addressId }
                             : { newAddress: addressSelection.address },
+                    paymentMethod,
                 }),
             });
 
@@ -74,7 +80,15 @@ export function useCheckout({ items }: UseCheckoutProps) {
 
             clearCart();
 
-            router.push(`/checkout/pay/${data.orderId}`);
+            // Pay on Delivery has nothing left to collect right now, so
+            // there's no QR step — straight to the same confirmation
+            // screen the old "no payment at all" flow used to land on.
+            // UPI still needs the QR/reference step.
+            if (paymentMethod === "cod") {
+                router.push("/order-success");
+            } else {
+                router.push(`/checkout/pay/${data.orderId}`);
+            }
 
         } catch (error) {
 
