@@ -35,8 +35,16 @@ export default function PaymentStatusSelect({
             🟡 Pending
           </SelectItem>
 
+          <SelectItem value="Submitted">
+            🔵 Submitted
+          </SelectItem>
+
           <SelectItem value="Paid">
             🟢 Paid
+          </SelectItem>
+
+          <SelectItem value="Rejected">
+            🟠 Rejected
           </SelectItem>
 
           <SelectItem value="Refunded">

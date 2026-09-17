@@ -45,7 +45,7 @@ export default function CheckoutPage() {
   const total =
     subtotal + shipping;
 
-  const { placeOrder } = useCheckout({
+  const { placeOrder, placing } = useCheckout({
       items,
       subtotal,
       shipping,
@@ -77,6 +77,7 @@ export default function CheckoutPage() {
               shipping={shipping}
               total={total}
               onPlaceOrder={placeOrder}
+              placing={placing}
           />
 
           </div>

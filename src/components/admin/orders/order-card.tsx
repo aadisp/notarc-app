@@ -175,6 +175,17 @@ export default function OrderCard({
 
 </div>
 
+      {order.paymentReference && (
+          <div className="mt-4 flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-4 py-2.5 text-sm">
+              <span className="font-medium text-blue-800">
+                  UPI Reference:
+              </span>
+              <span className="font-mono text-blue-900">
+                  {order.paymentReference}
+              </span>
+          </div>
+      )}
+
       <OrderItems
         items={order.items}
       />

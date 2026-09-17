@@ -8,7 +8,9 @@ export type OrderStatus =
 
 export type PaymentStatus =
     | "Pending"
+    | "Submitted"
     | "Paid"
+    | "Rejected"
     | "Refunded";
 
 export type ShippingStatus =
@@ -49,6 +51,12 @@ export interface Order {
     shippingStatus: ShippingStatus;
 
     paymentMethod: string;
+
+    // Only set for UPI orders, once the buyer submits it — the UTR /
+    // reference number their UPI app shows after paying. This is what
+    // an admin checks against the bank statement before moving
+    // paymentStatus to "Paid".
+    paymentReference?: string;
 
     createdAt: Timestamp;
     updatedAt: Timestamp;
