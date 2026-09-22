@@ -60,11 +60,11 @@ export default function HeroBackground() {
           hover:bg-white/20
         "
       >
-        {isMuted ? (
+        {/* {isMuted ? (
           <VolumeX className="h-4 w-4" />
         ) : (
           <Volume2 className="h-4 w-4" />
-        )}
+        )} */}
       </button>
     </>
   );
