@@ -4,7 +4,7 @@ import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import InternshipNavbar from "@/components/internship/internship-navbar";
-import Footer from "@/components/layout/footer";
+import InternshipFooter from "@/components/internship/internship-footer";
 
 export default function InternshipLayout({
   children,
@@ -36,7 +36,7 @@ export default function InternshipLayout({
     <div className="min-h-screen bg-white">
       <InternshipNavbar />
       {children}
-      <Footer />
+      <InternshipFooter />
     </div>
   );
 
