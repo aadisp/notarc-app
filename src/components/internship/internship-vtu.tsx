@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
 const DETAILS = [
@@ -19,6 +20,16 @@ export default function InternshipVtu() {
     >
 
       <div className="mx-auto max-w-3xl text-center">
+
+        <div className="relative mx-auto mb-4 h-16 w-16 overflow-hidden rounded-full ring-2 ring-white shadow-md sm:h-20 sm:w-20">
+          <Image
+            src="/vtu-logo.png"
+            alt="Visvesvaraya Technological University"
+            fill
+            sizes="80px"
+            className="object-cover"
+          />
+        </div>
 
         <span className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
           VTU
