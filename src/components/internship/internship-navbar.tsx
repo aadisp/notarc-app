@@ -69,6 +69,7 @@ export default function InternshipNavbar() {
 
       <div
         className="
+          relative
           flex
           h-16
           w-full
@@ -79,7 +80,7 @@ export default function InternshipNavbar() {
         "
       >
 
-        {/* Logo — flush to the absolute left edge */}
+        {/* Logo — flush to the absolute left edge, reads "notarc Internship" */}
         <Link
           href="/internship"
           onClick={(e) => {
@@ -92,28 +93,38 @@ export default function InternshipNavbar() {
               });
             }
           }}
-          className="flex shrink-0 items-center gap-2 pl-0"
+          className="flex shrink-0 items-center gap-1 pl-0"
         >
 
-          <div className="relative h-9 w-32 shrink-0">
+          <div className="relative h-12 w-40 shrink-0">
             <Image
               src="/ntrclogo.png"
               alt="NOTARC"
               fill
               priority
-              sizes="128px"
+              sizes="160px"
               className="object-contain object-left filter brightness-0"
             />
           </div>
 
-          <span className="hidden text-sm font-bold tracking-wide text-gray-900 sm:block">
+          <span className="hidden -ml-2 text-base font-bold text-gray-900 sm:block">
             Internship
           </span>
 
         </Link>
 
-        {/* Nav links — middle */}
-        <nav className="hidden items-center gap-8 sm:flex">
+        {/* Nav links — true center of the header, independent of side widths */}
+        <nav
+          className="
+            absolute
+            left-1/2
+            hidden
+            -translate-x-1/2
+            items-center
+            gap-8
+            sm:flex
+          "
+        >
 
           {NAV_LINKS.map((link) => (
             <button
