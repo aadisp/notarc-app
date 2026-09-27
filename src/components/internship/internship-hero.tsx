@@ -29,7 +29,7 @@ export default function InternshipHero() {
         className="object-cover"
       />
 
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-white/75 to-white" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/20 via-white/55 to-white" />
 
       <div className="relative z-10 flex flex-col items-center">
 

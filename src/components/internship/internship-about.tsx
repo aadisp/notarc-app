@@ -19,26 +19,20 @@ export default function InternshipAbout() {
           to the Real World.
         </h2>
 
-        <div className="mx-auto mt-6 max-w-2xl space-y-4 text-sm leading-7 text-gray-600 sm:text-base">
+        <div className="mx-auto mt-6 max-w-xl space-y-4 text-left text-sm leading-7 text-gray-600 sm:text-base">
 
           <p>
             Internships bridge the gap between classroom learning and
-            real-world industry experience.
-          </p>
-
-          <p>
-            Students gain hands-on skills by working on practical projects
-            and real engineering challenges.
+            real-world industry experience. Students gain hands-on skills
+            by working on practical projects and real engineering
+            challenges.
           </p>
 
           <p>
             They develop technical knowledge, problem-solving abilities,
-            teamwork, and professional skills.
-          </p>
-
-          <p>
-            A good internship helps students become industry-ready and
-            confident for their future careers.
+            teamwork, and professional skills. A good internship helps
+            students become industry-ready and confident for their future
+            careers.
           </p>
 
         </div>

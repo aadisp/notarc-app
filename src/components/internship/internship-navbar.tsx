@@ -96,19 +96,19 @@ export default function InternshipNavbar() {
           className="flex shrink-0 items-center gap-2"
         >
 
-          <div className="relative h-11 w-11 shrink-0">
+          <div className="relative h-9 w-32 shrink-0">
             <Image
-              src="/internship-logo.png"
-              alt="Internship Program"
+              src="/ntrclogo.png"
+              alt="NOTARC"
               fill
               priority
-              sizes="44px"
-              className="object-contain"
+              sizes="128px"
+              className="object-contain object-left"
             />
           </div>
 
           <span className="hidden text-sm font-bold tracking-wide text-gray-900 sm:block">
-            INTERNSHIP PROGRAM
+            Internship
           </span>
 
         </Link>
