@@ -102,7 +102,7 @@ export default function InternshipNavbar() {
             width={254}
             height={38}
             priority
-            className="h-9 w-auto"
+            className="h-7 w-auto"
           />
 
         </Link>
