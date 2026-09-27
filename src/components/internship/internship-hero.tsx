@@ -20,6 +20,16 @@ export default function InternshipHero() {
   return (
     <section className="relative flex min-h-[88vh] items-center justify-center overflow-hidden px-4 py-20 text-center sm:min-h-screen sm:px-6">
 
+      <style>{`
+        @keyframes drone-hover {
+          0%, 100% { transform: translateY(0px) rotate(-3deg); }
+          50% { transform: translateY(-8px) rotate(3deg); }
+        }
+        .animate-drone-hover {
+          animation: drone-hover 3.5s ease-in-out infinite;
+        }
+      `}</style>
+
       <Image
         src="/internship-hero.png"
         alt=""
@@ -33,26 +43,60 @@ export default function InternshipHero() {
 
       <div className="relative z-10 flex flex-col items-center">
 
-        <span
-          className="
-            mb-4
-            rounded-full
-            border
-            border-gray-300
-            bg-white/70
-            px-4
-            py-1.5
-            text-xs
-            font-semibold
-            uppercase
-            tracking-[0.2em]
-            text-gray-700
-            backdrop-blur-sm
-            sm:text-sm
-          "
-        >
-          Notarc Drones &amp; Robotics
-        </span>
+        <div className="relative mb-4">
+
+          {/* Drone hovering above the tag */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              left-1/2
+              -top-10
+              z-10
+              -translate-x-1/2
+              sm:-top-12
+            "
+          >
+            <div className="animate-drone-hover">
+              <svg
+                viewBox="0 0 64 64"
+                fill="none"
+                className="h-8 w-8 text-gray-900 drop-shadow-md sm:h-10 sm:w-10"
+              >
+                <line x1="32" y1="32" x2="14" y2="14" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                <line x1="32" y1="32" x2="50" y2="14" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                <line x1="32" y1="32" x2="14" y2="50" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                <line x1="32" y1="32" x2="50" y2="50" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                <circle cx="14" cy="14" r="8" stroke="currentColor" strokeWidth="2.5" />
+                <circle cx="50" cy="14" r="8" stroke="currentColor" strokeWidth="2.5" />
+                <circle cx="14" cy="50" r="8" stroke="currentColor" strokeWidth="2.5" />
+                <circle cx="50" cy="50" r="8" stroke="currentColor" strokeWidth="2.5" />
+                <rect x="26" y="26" width="12" height="12" rx="3" fill="currentColor" />
+              </svg>
+            </div>
+          </div>
+
+          <span
+            className="
+              rounded-full
+              border
+              border-gray-300
+              bg-white/70
+              px-4
+              py-1.5
+              text-xs
+              font-semibold
+              uppercase
+              tracking-[0.2em]
+              text-gray-700
+              backdrop-blur-sm
+              sm:text-sm
+            "
+          >
+            Notarc Drones &amp; Robotics
+          </span>
+
+        </div>
 
         <h1 className="text-4xl font-extrabold leading-tight text-gray-900 sm:text-6xl">
           Internship
