@@ -115,7 +115,7 @@ export default function InternshipNavbar() {
             hidden
             -translate-x-1/2
             items-center
-            gap-8
+            gap-14
             sm:flex
           "
         >
@@ -127,9 +127,9 @@ export default function InternshipNavbar() {
               className="
                 text-sm
                 font-semibold
-                text-gray-600
+                text-gray-900
                 transition
-                hover:text-gray-900
+                hover:text-amber-600
               "
             >
               {link.label}
