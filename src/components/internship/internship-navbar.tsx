@@ -80,7 +80,7 @@ export default function InternshipNavbar() {
         "
       >
 
-        {/* Logo — flush to the absolute left edge, reads "notarc Internship" */}
+        {/* Logo — flush to the absolute left edge */}
         <Link
           href="/internship"
           onClick={(e) => {
@@ -93,23 +93,17 @@ export default function InternshipNavbar() {
               });
             }
           }}
-          className="flex shrink-0 items-center gap-1 pl-0"
+          className="flex shrink-0 items-center pl-0"
         >
 
-          <div className="relative h-12 w-40 shrink-0">
-            <Image
-              src="/ntrclogo.png"
-              alt="NOTARC"
-              fill
-              priority
-              sizes="160px"
-              className="object-contain object-left filter brightness-0"
-            />
-          </div>
-
-          <span className="hidden -ml-2 text-base font-bold text-gray-900 sm:block">
-            Internship
-          </span>
+          <Image
+            src="/notarc-internship-logo.png"
+            alt="notarc Internship"
+            width={256}
+            height={171}
+            priority
+            className="h-12 w-auto"
+          />
 
         </Link>
 
