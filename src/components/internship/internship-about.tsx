@@ -4,7 +4,7 @@ export default function InternshipAbout() {
   return (
     <section
       id="internship-about"
-      className="mx-auto max-w-4xl scroll-mt-16 px-4 py-16 sm:px-6 sm:py-24"
+      className="mx-auto max-w-4xl scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24"
     >
 
       <div className="text-center">
