@@ -71,7 +71,7 @@ export default function InternshipNavbar() {
         className="
           relative
           flex
-          h-24
+          h-16
           w-full
           items-center
           justify-between
@@ -99,15 +99,15 @@ export default function InternshipNavbar() {
           <Image
             src="/notarc-internship-logo.png"
             alt="notarc Internship"
-            width={256}
-            height={171}
+            width={254}
+            height={38}
             priority
-            className="h-24 w-auto"
+            className="h-9 w-auto"
           />
 
         </Link>
 
-        {/* Nav links — true center of the header, independent of side widths
+        {/* Nav links — true center of the header, independent of side widths */}
         <nav
           className="
             absolute
@@ -136,7 +136,7 @@ export default function InternshipNavbar() {
             </button>
           ))}
 
-        </nav> */}
+        </nav>
 
         {/* Account dropdown — right edge */}
         <DialogPrimitive.Root open={menuOpen} onOpenChange={setMenuOpen}>
