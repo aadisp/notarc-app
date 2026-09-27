@@ -107,7 +107,7 @@ export default function InternshipNavbar() {
 
         </Link>
 
-        {/* Nav links — true center of the header, independent of side widths */}
+        {/* Nav links — true center of the header, independent of side widths
         <nav
           className="
             absolute
@@ -136,7 +136,7 @@ export default function InternshipNavbar() {
             </button>
           ))}
 
-        </nav>
+        </nav> */}
 
         {/* Account dropdown — right edge */}
         <DialogPrimitive.Root open={menuOpen} onOpenChange={setMenuOpen}>
