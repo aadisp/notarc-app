@@ -4,7 +4,7 @@ export default function InternshipIndustry() {
   return (
     <section
       id="internship-industry"
-      className="scroll-mt-24 border-t border-gray-100 bg-white px-4 py-16 sm:px-6 sm:py-24"
+      className="scroll-mt-16 border-t border-gray-100 bg-white px-4 py-16 sm:px-6 sm:py-24"
     >
 
       <div className="mx-auto max-w-4xl text-center">
