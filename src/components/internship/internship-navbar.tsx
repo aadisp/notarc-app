@@ -69,18 +69,17 @@ export default function InternshipNavbar() {
 
       <div
         className="
-          mx-auto
           flex
           h-16
-          max-w-7xl
+          w-full
           items-center
           justify-between
-          px-4
-          sm:px-6
+          pr-4
+          sm:pr-6
         "
       >
 
-        {/* Logo — left edge */}
+        {/* Logo — flush to the absolute left edge */}
         <Link
           href="/internship"
           onClick={(e) => {
@@ -93,7 +92,7 @@ export default function InternshipNavbar() {
               });
             }
           }}
-          className="flex shrink-0 items-center gap-2"
+          className="flex shrink-0 items-center gap-2 pl-0"
         >
 
           <div className="relative h-9 w-32 shrink-0">
@@ -103,7 +102,7 @@ export default function InternshipNavbar() {
               fill
               priority
               sizes="128px"
-              className="object-contain object-left"
+              className="object-contain object-left filter brightness-0"
             />
           </div>
 
