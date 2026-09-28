@@ -124,7 +124,7 @@ export default function InternshipHero() {
                 rounded-full
                 border-2
                 border-gray-900
-                bg-white
+                bg-amber-500
                 px-6
                 py-3
                 text-sm
