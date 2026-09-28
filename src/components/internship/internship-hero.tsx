@@ -123,8 +123,8 @@ export default function InternshipHero() {
                 w-full
                 rounded-full
                 border-2
-                border-gray-900
-                bg-amber-500
+                border-amber-500
+                bg-amber-300
                 px-6
                 py-3
                 text-sm
