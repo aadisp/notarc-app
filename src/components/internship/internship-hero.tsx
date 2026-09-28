@@ -123,16 +123,16 @@ export default function InternshipHero() {
                 w-full
                 rounded-full
                 border-2
-                border-amber-500
+                border-amber-300
                 bg-amber-300
                 px-6
                 py-3
                 text-sm
                 font-semibold
-                text-gray-900
+                text-white
                 shadow-sm
                 transition
-                hover:border-gray-500
+                hover:border-gray-900
                 hover:bg-gray-900
                 hover:text-white
                 sm:w-auto
