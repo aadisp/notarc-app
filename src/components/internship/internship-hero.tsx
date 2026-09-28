@@ -132,7 +132,6 @@ export default function InternshipHero() {
                 text-white
                 shadow-sm
                 transition
-                hover:border-gray-900
                 hover:bg-gray-900
                 hover:text-white
                 sm:w-auto
