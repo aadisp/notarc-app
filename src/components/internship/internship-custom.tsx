@@ -75,12 +75,12 @@ export default function InternshipCustom() {
 
         <Link
           href="https://docs.google.com/forms/d/e/1FAIpQLSf-rg7Pr3T162EYVOTifs75gCyPgvZo09maeSU-yiZdjQSR3g/viewform?usp=dialog"
+          target="_blank"
           className="
             mt-10
             inline-block
             rounded-full
             bg-amber-500
-            target=_blank
             px-8
             py-3
             text-sm
