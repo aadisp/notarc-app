@@ -84,7 +84,7 @@ export default function InternshipVtu() {
         </div>
 
         <Link
-          href="/contact-us"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSf-rg7Pr3T162EYVOTifs75gCyPgvZo09maeSU-yiZdjQSR3g/viewform?usp=dialog"
           className="
             mt-10
             inline-block
