@@ -28,6 +28,7 @@ interface SavedAccount {
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
+  { href: "/internship", label: "Internship" },
   { href: "/edp", label: "EDP" },
   { href: "/products", label: "Explore Products" },
   { href: "/courses", label: "Book a Course" },
