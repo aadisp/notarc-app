@@ -36,7 +36,6 @@ const NAV_LINKS = [
   { href: "/courses", label: "Book a Course" },
   { href: "/contact-us", label: "Contact Us" },
   { href: "/cart", label: "Cart" },
-  { href: "/#testimonials", label: "Reviews" },
 ];
 
 export default function Navbar() {
@@ -273,14 +272,15 @@ export default function Navbar() {
             hidden
             md:flex
             items-center
-            gap-1
+            gap-0.5
             rounded-full
             border
             border-white/[0.08]
             bg-white/[0.04]
             p-1
-            text-sm
+            text-xs
             font-medium
+            xl:text-sm
           "
         >
 
@@ -290,8 +290,9 @@ export default function Navbar() {
               href={link.href}
               onClick={(e) => handleNavLinkClick(e, link.href)}
               className="
+                whitespace-nowrap
                 rounded-full
-                px-4
+                px-2.5
                 py-2
                 text-white/75
                 transition-all
@@ -302,6 +303,7 @@ export default function Navbar() {
                 hover:-translate-y-0.5
                 hover:shadow-[0_0_16px_rgba(255,255,255,0.08)]
                 active:translate-y-0
+                xl:px-4
               "
             >
               {link.label}
