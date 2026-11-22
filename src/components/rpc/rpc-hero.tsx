@@ -1,17 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import HeroBackground from "@/components/sections/hero-background";
 
 export default function RpcHero() {
   return (
     <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden px-4 py-24 text-center sm:px-6">
 
-      <HeroBackground />
-
-      {/* Extra fade at the foot of the hero so the video blends into
-          the page's flat dark background instead of cutting off hard */}
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#0b0d10]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-transparent" />
 
       <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center">
 
