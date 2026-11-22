@@ -15,50 +15,42 @@ export default function RpcPartners() {
   return (
     <section
       id="rpc-partners"
-      className="scroll-mt-24 bg-[#0b1220] px-4 py-20 sm:px-6 sm:py-28"
+      className="mx-auto max-w-4xl scroll-mt-24 px-4 py-16 text-center sm:px-6 sm:py-24"
     >
 
-      <div className="mx-auto max-w-3xl text-center">
+      <h2 className="text-3xl font-bold text-white sm:text-4xl">
+        Our Training Partners
+      </h2>
 
-        <p className="font-mono text-xs uppercase tracking-[0.25em] text-sky-400">
-          03 — Our Training Partners
-        </p>
+      <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-200 sm:text-base">
+        Bringing professional drone education and certified pilot
+        training together.
+      </p>
 
-        <h2 className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">
-          NOTARC <span className="text-sky-400">&times;</span> Vayuratha
-        </h2>
+      <div className="mx-auto mt-10 grid max-w-2xl gap-4 sm:grid-cols-2">
 
-        <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-400 sm:text-base">
-          Bringing professional drone education and certified pilot
-          training together.
-        </p>
+        {PARTNERS.map((partner) => (
 
-        <div className="mx-auto mt-10 grid max-w-2xl gap-4 sm:grid-cols-2">
+          <div
+            key={partner.name}
+            className="rounded-2xl border border-white/10 bg-white/5 p-6 text-left backdrop-blur-md"
+          >
+            <h3 className="text-base font-bold text-white">
+              {partner.name}
+            </h3>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
+              {partner.role}
+            </p>
+          </div>
 
-          {PARTNERS.map((partner) => (
-
-            <div
-              key={partner.name}
-              className="border border-white/10 bg-white/[0.03] p-6 text-left"
-            >
-              <h3 className="text-base font-bold uppercase tracking-wide text-white">
-                {partner.name}
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-slate-400">
-                {partner.role}
-              </p>
-            </div>
-
-          ))}
-
-        </div>
-
-        <p className="mx-auto mt-8 max-w-xl text-sm leading-7 text-slate-500">
-          Training is jointly managed by both organisations and
-          conducted at the Vayuratha training centre.
-        </p>
+        ))}
 
       </div>
+
+      <p className="mx-auto mt-8 max-w-xl text-sm leading-7 text-slate-400">
+        Training is jointly managed by both organisations and
+        conducted at the Vayuratha training centre.
+      </p>
 
     </section>
   );

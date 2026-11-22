@@ -1,5 +1,7 @@
 "use client";
 
+import { Check } from "lucide-react";
+
 const WHY_RPC = [
   "Learn professional drone operation.",
   "Gain practical flying experience.",
@@ -12,24 +14,18 @@ export default function RpcAbout() {
   return (
     <section
       id="rpc-about"
-      className="mx-auto max-w-5xl scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28"
+      className="mx-auto max-w-5xl scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24"
     >
 
-      <div className="grid gap-12 lg:grid-cols-2">
+      <div className="grid gap-10 rounded-3xl border bg-card p-8 shadow-sm sm:p-12 lg:grid-cols-2">
 
         <div>
 
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-sky-600">
-            01 — About RPC
-          </p>
-
-          <h2 className="mt-3 text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">
-            What is a Remote
-            <br />
-            Pilot Certificate?
+          <h2 className="text-3xl font-bold sm:text-4xl">
+            What is a Remote Pilot Certificate?
           </h2>
 
-          <div className="mt-6 space-y-4 text-sm leading-7 text-slate-600 sm:text-base">
+          <div className="mt-5 space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
 
             <p>
               A Remote Pilot Certificate (RPC) is an official
@@ -50,47 +46,21 @@ export default function RpcAbout() {
 
         <div>
 
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-sky-600">
-            Why Get Certified
-          </p>
+          <h3 className="text-xl font-bold">
+            Why Get RPC Certified?
+          </h3>
 
-          {/* Ticket-stub list — a dashed spine with each benefit as a
-              stub reading off of it, instead of a card grid */}
-          <ul className="mt-4 border-l-2 border-dashed border-slate-300 pl-6">
-
-            {WHY_RPC.map((item, index) => (
-              <li
-                key={item}
-                className="
-                  relative
-                  border-b
-                  border-slate-100
-                  py-4
-                  text-sm
-                  leading-6
-                  text-slate-700
-                  last:border-b-0
-                  sm:text-base
-                "
-              >
-                <span
-                  className="
-                    absolute
-                    -left-[29px]
-                    top-5
-                    h-2.5
-                    w-2.5
-                    rounded-full
-                    bg-sky-500
-                  "
-                />
-                <span className="mr-2 font-mono text-xs text-slate-400">
-                  {String(index + 1).padStart(2, "0")}
+          <ul className="mt-5 space-y-3">
+            {WHY_RPC.map((item) => (
+              <li key={item} className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                  <Check className="h-3 w-3 text-primary" />
                 </span>
-                {item}
+                <span className="text-sm leading-6 text-muted-foreground sm:text-base">
+                  {item}
+                </span>
               </li>
             ))}
-
           </ul>
 
         </div>
