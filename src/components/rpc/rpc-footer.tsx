@@ -1,6 +1,6 @@
 export default function RpcFooter() {
   return (
-    <footer className="border-t border-gray-200 bg-white py-10 text-center text-gray-500">
+    <footer className="border-t border-white/10 bg-[#0b1220] py-10 text-center font-mono text-xs uppercase tracking-[0.2em] text-slate-500">
       © NOTARC
     </footer>
   );

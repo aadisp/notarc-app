@@ -26,10 +26,10 @@ export default function RpcLayout({
   }, [user, loading, router]);
 
   // While auth state is resolving, or right before the redirect kicks
-  // in for a logged-out visitor, show a blank light screen rather than
-  // flashing the real RPC content.
+  // in for a logged-out visitor, show a blank ink-navy screen — matches
+  // the hero so there's no white flash before it paints.
   if (loading || !user) {
-    return <div className="min-h-screen bg-white" />;
+    return <div className="min-h-screen bg-[#0b1220]" />;
   }
 
   return (

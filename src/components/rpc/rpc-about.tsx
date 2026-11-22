@@ -1,7 +1,5 @@
 "use client";
 
-import { CheckCircle2 } from "lucide-react";
-
 const WHY_RPC = [
   "Learn professional drone operation.",
   "Gain practical flying experience.",
@@ -14,59 +12,86 @@ export default function RpcAbout() {
   return (
     <section
       id="rpc-about"
-      className="mx-auto max-w-4xl scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24"
+      className="mx-auto max-w-5xl scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28"
     >
 
-      <div className="text-center">
+      <div className="grid gap-12 lg:grid-cols-2">
 
-        <span className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
-          About RPC
-        </span>
+        <div>
 
-        <h2 className="mt-3 text-3xl font-extrabold text-gray-900 sm:text-4xl">
-          What is a Remote Pilot Certificate?
-        </h2>
-
-        <div className="mx-auto mt-6 max-w-2xl space-y-4 text-left text-sm leading-7 text-gray-600 sm:text-base">
-
-          <p>
-            A Remote Pilot Certificate (RPC) is an official certification
-            issued through the DGCA-authorised process for individuals
-            who successfully complete the prescribed remote pilot
-            training and assessment.
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-sky-600">
+            01 — About RPC
           </p>
 
-          <p>
-            It enables eligible individuals to operate drones in the
-            applicable category and class, subject to Indian aviation
-            regulations.
-          </p>
+          <h2 className="mt-3 text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">
+            What is a Remote
+            <br />
+            Pilot Certificate?
+          </h2>
+
+          <div className="mt-6 space-y-4 text-sm leading-7 text-slate-600 sm:text-base">
+
+            <p>
+              A Remote Pilot Certificate (RPC) is an official
+              certification issued through the DGCA-authorised process
+              for individuals who successfully complete the prescribed
+              remote pilot training and assessment.
+            </p>
+
+            <p>
+              It enables eligible individuals to operate drones in the
+              applicable category and class, subject to Indian aviation
+              regulations.
+            </p>
+
+          </div>
 
         </div>
 
-      </div>
+        <div>
 
-      <div className="mt-14">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-sky-600">
+            Why Get Certified
+          </p>
 
-        <h3 className="text-center text-xl font-bold text-gray-900 sm:text-2xl">
-          Why Get RPC Certified?
-        </h3>
+          {/* Ticket-stub list — a dashed spine with each benefit as a
+              stub reading off of it, instead of a card grid */}
+          <ul className="mt-4 border-l-2 border-dashed border-slate-300 pl-6">
 
-        <div className="mx-auto mt-6 grid max-w-2xl gap-3 sm:grid-cols-2">
-
-          {WHY_RPC.map((item) => (
-
-            <div
-              key={item}
-              className="flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4"
-            >
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-              <span className="text-sm leading-6 text-gray-700">
+            {WHY_RPC.map((item, index) => (
+              <li
+                key={item}
+                className="
+                  relative
+                  border-b
+                  border-slate-100
+                  py-4
+                  text-sm
+                  leading-6
+                  text-slate-700
+                  last:border-b-0
+                  sm:text-base
+                "
+              >
+                <span
+                  className="
+                    absolute
+                    -left-[29px]
+                    top-5
+                    h-2.5
+                    w-2.5
+                    rounded-full
+                    bg-sky-500
+                  "
+                />
+                <span className="mr-2 font-mono text-xs text-slate-400">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
                 {item}
-              </span>
-            </div>
+              </li>
+            ))}
 
-          ))}
+          </ul>
 
         </div>
 

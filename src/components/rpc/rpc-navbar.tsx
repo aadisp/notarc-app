@@ -63,8 +63,8 @@ export default function RpcNavbar() {
         z-50
         w-full
         border-b
-        border-gray-200
-        bg-white/80
+        border-slate-200
+        bg-white/90
         backdrop-blur-xl
       "
     >
@@ -82,7 +82,7 @@ export default function RpcNavbar() {
         "
       >
 
-        {/* Logo — flush to the left edge, reads "notarc RPC" */}
+        {/* Logo only — the page itself already identifies as RPC */}
         <Link
           href="/rpc"
           onClick={(e) => {
@@ -95,7 +95,7 @@ export default function RpcNavbar() {
               });
             }
           }}
-          className="flex shrink-0 items-center gap-1.5 pl-4 sm:pl-6"
+          className="flex shrink-0 items-center pl-4 sm:pl-6"
         >
 
           <div className="relative h-7 w-28 shrink-0">
@@ -109,10 +109,6 @@ export default function RpcNavbar() {
             />
           </div>
 
-          <span className="hidden text-base font-bold text-gray-900 sm:block">
-            RPC
-          </span>
-
         </Link>
 
         {/* Nav links — true center of the header, independent of side widths */}
@@ -123,7 +119,7 @@ export default function RpcNavbar() {
             hidden
             -translate-x-1/2
             items-center
-            gap-10
+            gap-9
             sm:flex
           "
         >
@@ -133,14 +129,30 @@ export default function RpcNavbar() {
               key={link.id}
               onClick={() => scrollToSection(link.id)}
               className="
+                group
+                relative
+                py-1
                 text-sm
                 font-semibold
-                text-gray-900
+                text-slate-600
                 transition
-                hover:text-amber-600
+                hover:text-slate-900
               "
             >
               {link.label}
+              <span
+                className="
+                  absolute
+                  -bottom-0.5
+                  left-0
+                  h-[2px]
+                  w-0
+                  bg-sky-500
+                  transition-all
+                  duration-300
+                  group-hover:w-full
+                "
+              />
             </button>
           ))}
 
@@ -155,17 +167,18 @@ export default function RpcNavbar() {
                 flex
                 items-center
                 gap-2
-                rounded-full
+                rounded-lg
                 border
-                border-gray-200
-                bg-gray-50
+                border-slate-200
+                bg-slate-50
                 px-3
                 py-2
                 text-sm
                 font-medium
-                text-gray-900
+                text-slate-900
                 transition
-                hover:bg-gray-100
+                hover:border-slate-300
+                hover:bg-slate-100
               "
             >
               <span className="max-w-32 truncate">
@@ -177,7 +190,7 @@ export default function RpcNavbar() {
 
           <DialogPrimitive.Portal>
 
-            <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/20" />
+            <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-slate-900/20" />
 
             <DialogPrimitive.Content
               className="
@@ -187,11 +200,11 @@ export default function RpcNavbar() {
                 z-50
                 w-48
                 overflow-hidden
-                rounded-2xl
+                rounded-lg
                 border
-                border-gray-200
+                border-slate-200
                 bg-white
-                text-gray-900
+                text-slate-900
                 shadow-2xl
                 outline-none
               "
@@ -202,7 +215,7 @@ export default function RpcNavbar() {
               </DialogPrimitive.Title>
 
               {user?.email && (
-                <p className="truncate border-b border-gray-200 px-4 py-3 text-xs text-gray-500">
+                <p className="truncate border-b border-slate-200 px-4 py-3 text-xs text-slate-500">
                   {user.email}
                 </p>
               )}
@@ -210,7 +223,7 @@ export default function RpcNavbar() {
               <Link
                 href="/"
                 onClick={() => setMenuOpen(false)}
-                className="block px-4 py-3 text-sm hover:bg-gray-50"
+                className="block px-4 py-3 text-sm hover:bg-slate-50"
               >
                 Notarc
               </Link>
@@ -223,7 +236,7 @@ export default function RpcNavbar() {
                   items-center
                   gap-2
                   border-t
-                  border-gray-200
+                  border-slate-200
                   px-4
                   py-3
                   text-left

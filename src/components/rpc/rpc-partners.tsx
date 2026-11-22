@@ -15,24 +15,20 @@ export default function RpcPartners() {
   return (
     <section
       id="rpc-partners"
-      className="scroll-mt-24 border-t border-gray-100 bg-white px-4 py-16 sm:px-6 sm:py-24"
+      className="scroll-mt-24 bg-[#0b1220] px-4 py-20 sm:px-6 sm:py-28"
     >
 
       <div className="mx-auto max-w-3xl text-center">
 
-        <span className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
-          Partners
-        </span>
-
-        <h2 className="mt-3 text-3xl font-extrabold text-gray-900 sm:text-4xl">
-          Our Training Partners
-        </h2>
-
-        <p className="mt-2 text-sm font-medium uppercase tracking-[0.2em] text-gray-500">
-          NOTARC &times; Vayuratha Pvt. Ltd.
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-sky-400">
+          03 — Our Training Partners
         </p>
 
-        <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-gray-600 sm:text-base">
+        <h2 className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">
+          NOTARC <span className="text-sky-400">&times;</span> Vayuratha
+        </h2>
+
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-400 sm:text-base">
           Bringing professional drone education and certified pilot
           training together.
         </p>
@@ -43,12 +39,12 @@ export default function RpcPartners() {
 
             <div
               key={partner.name}
-              className="rounded-2xl border border-gray-200 bg-gray-50 p-6 text-left"
+              className="border border-white/10 bg-white/[0.03] p-6 text-left"
             >
-              <h3 className="text-base font-bold uppercase tracking-wide text-gray-900">
+              <h3 className="text-base font-bold uppercase tracking-wide text-white">
                 {partner.name}
               </h3>
-              <p className="mt-2 text-sm leading-6 text-gray-600">
+              <p className="mt-2 text-sm leading-6 text-slate-400">
                 {partner.role}
               </p>
             </div>
@@ -57,7 +53,7 @@ export default function RpcPartners() {
 
         </div>
 
-        <p className="mx-auto mt-8 max-w-xl text-sm leading-7 text-gray-500">
+        <p className="mx-auto mt-8 max-w-xl text-sm leading-7 text-slate-500">
           Training is jointly managed by both organisations and
           conducted at the Vayuratha training centre.
         </p>
