@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono, Poppins, DM_Sans } from "next/font/google";
 import { Toaster } from "sonner";
+import RouteProgressBar from "@/components/layout/route-progress-bar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -48,6 +50,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${dmSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#0b0d10]">
+
+        <Suspense fallback={null}>
+          <RouteProgressBar />
+        </Suspense>
 
         {children}
 
