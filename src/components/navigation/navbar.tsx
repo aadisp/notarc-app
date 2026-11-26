@@ -29,7 +29,7 @@ interface SavedAccount {
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/rpc", label: "RPC" },
-  { href: "/agriculture-drone", label: "Agriculture Drone" },
+  { href: "https://notarc.in/products/22222", label: "Agriculture Drone" },
   { href: "/internship", label: "Internship" },
   { href: "/edp", label: "EDP" },
   { href: "/products", label: "Explore Products" },
