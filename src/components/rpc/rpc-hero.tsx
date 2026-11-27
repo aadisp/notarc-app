@@ -13,30 +13,30 @@ export default function RpcHero() {
 
         {/* Logo lockup — moved up from the Partners section so the
             partnership is the first thing visitors see */}
-        <div className="mb-6 flex items-center justify-center gap-5 sm:mb-8 sm:gap-7">
+        <div className="mb-6 flex items-center justify-center gap-6 sm:mb-8 sm:gap-10">
 
-          <div className="relative h-7 w-24 sm:h-8 sm:w-28">
+          <div className="relative h-9 w-32">
             <Image
               src="/ntrclogo.png"
               alt="NOTARC"
               fill
               priority
-              sizes="112px"
+              sizes="128px"
               className="object-contain"
             />
           </div>
 
-          <span className="text-lg font-light text-slate-400 sm:text-xl">
+          <span className="text-xl font-light text-slate-400">
             &times;
           </span>
 
-          <div className="relative h-8 w-28 sm:h-9 sm:w-32">
+          <div className="relative h-10 w-40">
             <Image
               src="/vayuratha-logo.png"
               alt="Vayuratha"
               fill
               priority
-              sizes="128px"
+              sizes="160px"
               className="object-contain"
             />
           </div>
