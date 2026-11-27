@@ -15,13 +15,13 @@ export default function RpcHero() {
             partnership is the first thing visitors see */}
         <div className="mb-6 flex items-center justify-center gap-6 sm:mb-8 sm:gap-10">
 
-          <div className="relative h-9 w-32">
+          <div className="relative h-14 w-48">
             <Image
               src="/ntrclogo.png"
               alt="NOTARC"
               fill
               priority
-              sizes="128px"
+              sizes="192px"
               className="object-contain"
             />
           </div>
