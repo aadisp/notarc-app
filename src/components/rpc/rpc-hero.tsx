@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 export default function RpcHero() {
@@ -10,30 +11,56 @@ export default function RpcHero() {
 
       <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center">
 
-        <span
+        {/* Logo lockup — moved up from the Partners section so the
+            partnership is the first thing visitors see */}
+        <div
           className="
-            mb-4
+            mb-6
+            flex
+            items-center
+            justify-center
+            gap-5
             rounded-full
             border
             border-white/20
             bg-white/10
-            px-3.5
-            py-1.5
-            text-[10px]
-            font-medium
-            uppercase
-            tracking-[0.18em]
-            text-white
+            px-6
+            py-3
             backdrop-blur-md
-            sm:mb-6
-            sm:px-5
-            sm:py-2
-            sm:text-sm
-            sm:tracking-widest
+            sm:mb-8
+            sm:gap-7
+            sm:px-8
+            sm:py-4
           "
         >
-          NOTARC &times; Vayuratha Pvt. Ltd.
-        </span>
+
+          <div className="relative h-7 w-24 sm:h-8 sm:w-28">
+            <Image
+              src="/ntrclogo.png"
+              alt="NOTARC"
+              fill
+              priority
+              sizes="112px"
+              className="object-contain"
+            />
+          </div>
+
+          <span className="text-lg font-light text-slate-400 sm:text-xl">
+            &times;
+          </span>
+
+          <div className="relative h-8 w-28 sm:h-9 sm:w-32">
+            <Image
+              src="/vayuratha-logo.png"
+              alt="Vayuratha"
+              fill
+              priority
+              sizes="128px"
+              className="object-contain"
+            />
+          </div>
+
+        </div>
 
         <h1
           className="text-4xl font-black tracking-tight text-white drop-shadow-2xl sm:text-6xl"
