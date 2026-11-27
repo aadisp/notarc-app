@@ -1,12 +1,18 @@
 "use client";
 
+import Image from "next/image";
+
 const PARTNERS = [
   {
     name: "NOTARC",
+    logo: "/ntrclogo.png",
+    logoClassName: "h-9",
     role: "Technology, drone education, student outreach and training coordination.",
   },
   {
     name: "Vayuratha Pvt. Ltd.",
+    logo: "/vayuratha-logo.png",
+    logoClassName: "h-10",
     role: "Training infrastructure, practical flying sessions and authorised RPTO training operations.",
   },
 ];
@@ -22,7 +28,34 @@ export default function RpcPartners() {
         Our Training Partners
       </h2>
 
-      <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-200 sm:text-base">
+      {/* Logo lockup — the two partner marks separated by an × */}
+      <div className="mx-auto mt-8 flex max-w-xl items-center justify-center gap-6 sm:gap-10">
+
+        <div className="relative h-9 w-32">
+          <Image
+            src="/ntrclogo.png"
+            alt="NOTARC"
+            fill
+            sizes="128px"
+            className="object-contain"
+          />
+        </div>
+
+        <span className="text-xl font-light text-slate-500">&times;</span>
+
+        <div className="relative h-10 w-40">
+          <Image
+            src="/vayuratha-logo.png"
+            alt="Vayuratha"
+            fill
+            sizes="160px"
+            className="object-contain"
+          />
+        </div>
+
+      </div>
+
+      <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-slate-200 sm:text-base">
         Bringing professional drone education and certified pilot
         training together.
       </p>

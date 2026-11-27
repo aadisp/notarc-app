@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SiteLayout from "@/components/layout/site-layout";
+import RpcSkyfield from "@/components/rpc/rpc-skyfield";
 import RpcHero from "@/components/rpc/rpc-hero";
 import RpcAbout from "@/components/rpc/rpc-about";
 import RpcCategories from "@/components/rpc/rpc-categories";
@@ -14,12 +15,22 @@ export const metadata: Metadata = {
 export default function RpcPage() {
   return (
     <SiteLayout>
-      <RpcHero />
-      <RpcAbout />
-      <RpcCategories />
-      <RpcPartners />
-      <RpcProgramme />
-      <RpcEnquiryForm />
+
+      <div className="relative bg-[#0b0d10]">
+
+        <RpcSkyfield />
+
+        <div className="relative z-10">
+          <RpcHero />
+          <RpcAbout />
+          <RpcCategories />
+          <RpcPartners />
+          <RpcProgramme />
+          <RpcEnquiryForm />
+        </div>
+
+      </div>
+
     </SiteLayout>
   );
 }
