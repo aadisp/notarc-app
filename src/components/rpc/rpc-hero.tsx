@@ -13,26 +13,7 @@ export default function RpcHero() {
 
         {/* Logo lockup — moved up from the Partners section so the
             partnership is the first thing visitors see */}
-        <div
-          className="
-            mb-6
-            flex
-            items-center
-            justify-center
-            gap-5
-            rounded-full
-            border
-            border-white/20
-            bg-white/10
-            px-6
-            py-3
-            backdrop-blur-md
-            sm:mb-8
-            sm:gap-7
-            sm:px-8
-            sm:py-4
-          "
-        >
+        <div className="mb-6 flex items-center justify-center gap-5 sm:mb-8 sm:gap-7">
 
           <div className="relative h-7 w-24 sm:h-8 sm:w-28">
             <Image
