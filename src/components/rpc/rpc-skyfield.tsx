@@ -41,7 +41,7 @@ export default function RpcSkyfield() {
     // Far fewer than Starfield's dots — each one is a small shape
     // rather than a single pixel, so a sparse field reads cleaner
     // than a dense one here.
-    const speckCount = 500;
+    const speckCount = 250;
 
     for (let i = 0; i < speckCount; i++) {
 
